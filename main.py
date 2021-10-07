@@ -152,9 +152,6 @@ for i in range(numRow):
     data.append(temp)
     line = matrixFile.readline()
 
-
-
-
 #Stats 2
 homoCount = 0
 totalCount = 0
@@ -179,6 +176,7 @@ for i in range(numRow):
     for j in (data[i]):
         for k in j:
             totalCount = totalCount + 1
+            #AA CC TT GG
             if (k == '0101' or k == '0202' or k == '0303' or k == '0404'): #What was actg?
                 homoDiff = int(k) - stat2
             totalHomoDiff = totalHomoDiff + homoDiff
@@ -187,5 +185,9 @@ for i in range(numRow):
 stat3 = totalHomoDiff/(totalCount-1)
 print ("Stats3 is ", stat3)
 
+#Resetting value of data to iterate through columns
+data = data[0]
 #Stat5
 #opposite direction of 2?
+
+print(data[0][1][:2])
