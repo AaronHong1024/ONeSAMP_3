@@ -147,8 +147,8 @@ data = []
 i = 0;
 for i in range(numRow):
     temp = []
-    temp.append(line.split())
-    temp[0].pop(1) #Getting rid of comma in array
+    temp = line.split()
+    temp.pop(1) #Getting rid of comma in array
     data.append(temp)
     line = matrixFile.readline()
 
@@ -157,9 +157,8 @@ homoCount = 0
 totalCount = 0
 for i in range(numRow):
     for j in (data[i]):
-        for k in j:
-            totalCount = totalCount + 1
-            if (k == '0101' or k == '0202' or k == '0303' or k == '0404'): #What was actg?
+        totalCount = totalCount + 1
+        if (j == '0101' or j == '0202' or j == '0303' or j == '0404'): #What was actg?
                 homoCount = homoCount + 1
 
 print('Homozygosity Count: ',homoCount)
@@ -174,20 +173,24 @@ totalHomoDiff = 0
 #Total count is same as above stats
 for i in range(numRow):
     for j in (data[i]):
-        for k in j:
-            totalCount = totalCount + 1
-            #AA CC TT GG
-            if (k == '0101' or k == '0202' or k == '0303' or k == '0404'): #What was actg?
-                homoDiff = int(k) - stat2
-            totalHomoDiff = totalHomoDiff + homoDiff
+        totalCount = totalCount + 1
+        #AA CC TT GG
+        if (j == '0101' or j == '0202' or j == '0303' or j == '0404'): #What was actg?
+            homoDiff = int(j) - stat2
+        totalHomoDiff = totalHomoDiff + homoDiff
 
 #'print(k)' prints 0303 meaning it correctly converts from str to int
 stat3 = totalHomoDiff/(totalCount-1)
 print ("Stats3 is ", stat3)
 
 #Resetting value of data to iterate through columns
-data = data[0]
-#Stat5
-#opposite direction of 2?
+#data = data[0]
+#print (data)
 
-print(data[0][1][:2])
+#Stat5 and stat4
+
+#print(data[0][1][:2])
+#iterating by columns
+for i in range(numCol):
+    for j in range(numRow):
+            print(data[j][i])
