@@ -21,7 +21,7 @@ def stat1(data):
       newdic={}
       temp=0
       for i in range(len(alleleA)):
-          if(alleleA[i][j]==alleleB[i][j]):
+          if(alleleA[i][j]==alleleB[i][j] and alleleA[i][j]==alleleA[i][0]):
               temp+=1
 
           if(alleleA[i][j] in newdic):
