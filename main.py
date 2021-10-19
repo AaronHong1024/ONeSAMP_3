@@ -81,7 +81,7 @@ print("__________________")
 if (args.lD):
     durationLower = float(args.lD)
 else:
-    durationLower = 0
+    durationLower = 2
 
 print(durationLower)
 print("__________________")
@@ -89,7 +89,7 @@ print("__________________")
 if (args.uD):
     durationUpper = float(args.uD)
 else:
-    durationUpper = 0
+    durationUpper = 8
 
 print(durationUpper)
 print("__________________")
@@ -98,6 +98,8 @@ if (args.o):
     fileName = str(args.o)
 else:
     fileName = "None Provided"
+    #Close program?
+    #No file no data
 
 print(fileName)
 print("__________________")
@@ -109,7 +111,7 @@ myfile = open(fileName, "r")
 line = myfile.readline()
 
 #Reading number of columns
-numCol = -1;
+numCol = 0;
 while line:
     #print(line)
     if line == "Pop\n":
@@ -154,16 +156,15 @@ for i in range(numRow):
 
 #Stats 2
 homoCount = 0
-totalCount = 0
+totalAlleles = (numCol-1) * numRow
 for i in range(numRow):
     for j in (data[i]):
-        totalCount = totalCount + 1
         if (j == '0101' or j == '0202' or j == '0303' or j == '0404'): #What was actg?
                 homoCount = homoCount + 1
 
 print('Homozygosity Count: ',homoCount)
-print("Total number of alleles", totalCount)
-stat2 = homoCount/totalCount
+print("Total number of alleles", totalAlleles)
+stat2 = homoCount/totalAlleles
 print ("Stats2 is ", stat2)
 #print(arr);
 
@@ -173,24 +174,138 @@ totalHomoDiff = 0
 #Total count is same as above stats
 for i in range(numRow):
     for j in (data[i]):
-        totalCount = totalCount + 1
         #AA CC TT GG
         if (j == '0101' or j == '0202' or j == '0303' or j == '0404'): #What was actg?
             homoDiff = int(j) - stat2
         totalHomoDiff = totalHomoDiff + homoDiff
 
 #'print(k)' prints 0303 meaning it correctly converts from str to int
-stat3 = totalHomoDiff/(totalCount-1)
+stat3 = totalHomoDiff/(totalAlleles-1)
 print ("Stats3 is ", stat3)
 
-#Resetting value of data to iterate through columns
-#data = data[0]
-#print (data)
 
 #Stat5 and stat4
 
-#print(data[0][1][:2])
-#iterating by columns
+a = 0
+c = 0
+t = 0
+g = 0
+num = []
+stat5 = 0
 for i in range(numCol):
+    # Setting to zero
+    num *= 0
+    addStat5 = 0
+    a = 0
+    c = 0
+    t = 0
+    g = 0
     for j in range(numRow):
-            print(data[j][i])
+            #Checking freq of first two numbers
+            if (data[j][i][2:] == '01'):
+                a = a + 1
+            elif (data[j][i][2:] == '02'):
+                c = c + 1
+            elif (data[j][i][2:] == '03'):
+                t = t + 1
+            elif (data[j][i][2:] == '04'):
+                g = g + 1
+
+            #Checking last two numbers
+            if (data[j][i][:2] == '01'):
+                a = a + 1
+            elif (data[j][i][:2] == '02'):
+                c = c + 1
+            elif (data[j][i][:2] == '03'):
+                t = t + 1
+            elif (data[j][i][:2] == '04'):
+                g = g + 1
+
+    divisor = numCol * 2
+    a = a / divisor
+    c = c / divisor
+    t = t / divisor
+    g = g / divisor
+
+    if (a > 0):
+        num.append(float(a))
+    if (c > 0):
+        num.append(float(c))
+    if (t > 0):
+        num.append(float(t))
+    if (g > 0):
+        num.append(float(g))
+
+    if (num):
+        for i in num:
+            addStat5 = float(addStat5) + float(i * i)
+        y = 1 - addStat5
+        stat5 = stat5 + y
+
+    #stat 5 divided by number of loci? ie 20 for genepoptinytiny??
+
+print('Stat5 is ', stat5)
+
+#Stat4
+stat4 = 0.0
+tempstat4 = 0.0
+for i in range(numCol):
+    # Setting to zero
+    num *= 0
+    addStat5 = 0.0
+    stat4Math = 0.0
+    a = 0
+    c = 0
+    t = 0
+    g = 0
+    for j in range(numRow):
+            #Checking freq of first two numbers
+            if (data[j][i][2:] == '01'):
+                a = a + 1
+            elif (data[j][i][2:] == '02'):
+                c = c + 1
+            elif (data[j][i][2:] == '03'):
+                t = t + 1
+            elif (data[j][i][2:] == '04'):
+                g = g + 1
+
+            #Checking last two numbers
+            if (data[j][i][:2] == '01'):
+                a = a + 1
+            elif (data[j][i][:2] == '02'):
+                c = c + 1
+            elif (data[j][i][:2] == '03'):
+                t = t + 1
+            elif (data[j][i][:2] == '04'):
+                g = g + 1
+
+            if ((len(data[j][i])  == 4) and (data[j][i][2:] != data[j][i][:2])):
+                stat4Math = stat4Math + 1
+            
+    divisor = numCol * 2
+    a = a / divisor
+    c = c / divisor
+    t = t / divisor
+    g = g / divisor
+
+    if (a > 0):
+        num.append(float(a))
+    if (c > 0):
+        num.append(float(c))
+    if (t > 0):
+        num.append(float(t))
+    if (g > 0):
+        num.append(float(g))
+
+    if (num):
+        for i in num:
+            addStat5 = float(addStat5) + float(i * i)
+
+    if (addStat5 > 0.0  and stat4Math > 0.0):
+        addStat5 = addStat5/(numCol*2)
+        stat4Math = stat4Math/numCol
+        tempstat4 = stat4Math / addStat5
+    stat4 = stat4 + tempstat4
+
+#REMEBER to divide by 1-(1/L) ask abt  value of L <<<<<<<<<<<<
+print ('Stat4 is ',stat4)
