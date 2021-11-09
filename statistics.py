@@ -166,7 +166,7 @@ class statisticsClass:
                 if (j == '0101' or j == '0202' or j == '0303' or j == '0404'):  # What was actg?
                     homoCount = homoCount + 1
 
-        stat2 = homoCount / totalAlleles
+        stat2 = homoCount / numRow
         print("Stats2 is ", stat2)
 
         self.stat2 = stat2
@@ -180,16 +180,19 @@ class statisticsClass:
 
         # Stats3
         homoDiff = 0
+        homoCount = 0
         totalHomoDiff = 0
         # Total count is same as above stats
         for i in range(numRow):
             for j in (data[i]):
                 # AA CC TT GG
                 if (j == '0101' or j == '0202' or j == '0303' or j == '0404'):  # What was actg?
-                    homoDiff = int(j) - self.stat2
-                totalHomoDiff = totalHomoDiff + homoDiff
+                    homoCount = homoCount + 1
+            homoDiff = homoCount - self.stat2
+            homoCount = 0
+            totalHomoDiff = totalHomoDiff + (homoDiff * homoDiff)
 
-        stat3 = totalHomoDiff / (self.totalAlleles - 1)
+        stat3 = (totalHomoDiff) / (self.numRow - 1)
         print("Stats3 is ", stat3)
         self.stat3 = stat3
 
@@ -327,6 +330,75 @@ class statisticsClass:
             if (num):
                 for i in num:
                     addStat5 = float(addStat5) + float(i * i)
+                y = 1 - addStat5
+                stat5 = stat5 + y
+
+        print('stat5 before dividing', stat5)
+        stat5 = stat5 / numLoci
+        print('Stat5 is ', stat5)
+
+        self.stat5 = stat5
+
+    def stat5New(self):
+        data = self.data
+        numCol = self.numCol
+        numRow = self.numRow
+        numLoci = self.numLoci
+
+        # Stat5
+        a = 0
+        c = 0
+        t = 0
+        g = 0
+        stat5 = 0
+        num = []
+        for i in range(numRow):
+            # Setting to zero
+            num *= 0
+            addStat5 = 0
+            a = 0
+            c = 0
+            t = 0
+            g = 0
+            for j in range(numCol):
+                # Checking freq of first two numbers
+                if (data[i][j][2:] == '01'):
+                    a = a + 1
+                elif (data[i][j][2:] == '02'):
+                    c = c + 1
+                elif (data[i][j][2:] == '03'):
+                    t = t + 1
+                elif (data[i][j][2:] == '04'):
+                    g = g + 1
+
+                # Checking last two numbers
+                if (data[i][j][:2] == '01'):
+                    a = a + 1
+                elif (data[i][j][:2] == '02'):
+                    c = c + 1
+                elif (data[i][j][:2] == '03'):
+                    t = t + 1
+                elif (data[i][j][:2] == '04'):
+                    g = g + 1
+
+            divisor = numCol * 2
+            a = a / divisor
+            c = c / divisor
+            t = t / divisor
+            g = g / divisor
+
+            if (a > 0):
+                num.append(float(a))
+            if (c > 0):
+                num.append(float(c))
+            if (t > 0):
+                num.append(float(t))
+            if (g > 0):
+                num.append(float(g))
+
+            if (num):
+                for i in num:
+                    addStat5 = float(addStat5) + float(i)
                 y = 1 - addStat5
                 stat5 = stat5 + y
 
