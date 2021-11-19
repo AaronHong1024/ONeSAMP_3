@@ -3,10 +3,12 @@ import math
 
 class statisticsClass:
 
+####### Members of Class
+
     PERCENT_MISSING = 0.2
     data = []
-    numCol = 0
-    numRow = -1
+#    numCol = 0      ##  = numLoci
+ #   numRow = -1     ##  = sampleSize        ## Matrix is [individuals by loci]
     stat1 = 0
     stat2 = 0
     stat3 = 0
@@ -16,7 +18,9 @@ class statisticsClass:
     totalAlleles = 0
     sampleSize = 0;
 
-
+    ######################################################################
+    # readData                                                          ##
+    ######################################################################
     def readData(self, myFileName):
         matrixFile = open(myFileName, "r")
         line = matrixFile.readline()
@@ -30,7 +34,7 @@ class statisticsClass:
             line = matrixFile.readline()
 
         if (popReached == 0)
-            print("ERROR:statistics:line 32:: POP not contained in file. Fatal error")
+            print("ERROR:statistics.py:line 32:: POP not contained in file. Fatal error")
             exit()
 
 
@@ -49,19 +53,21 @@ class statisticsClass:
             data.append(temp)
             line = matrixFile.readline()
             if (len(temp) != currLociCnt):
-                print("ERROR:statistics.py:line 73:: There is an incorrect number of loci.")
+                print("ERROR:statistics.py:line 56:: There is an incorrect number of loci. Fatal Error.")
                 exit()
 
         self.data = data
         self.numLoci = currLociCnt
         self.sampleSize = len(self.data)
-        self.numRow = self.sampleSize
-        self.numCol = self.numLoci
+    #    self.numRow = self.sampleSize
+     #   self.numCol = self.numLoci
 
-    # filterIndividuals
-    # Filters the data for all individuals that have > 20% missing data
+    ######################################################################
+    # filterIndividuals                                                 ##
+    # Filters the data for all individuals that have > 20% missing data ##
+    ######################################################################
     def filterIndividuals(self):
-        for i in range(len(self.data)):
+        for i in range(self.sampleSize):
             individual = self.data[i]
             numMissing = 0
             for j in (individual):
@@ -70,8 +76,9 @@ class statisticsClass:
             if (numMissing > PERCENT_MISSING*self.numLoci):
                 del self.data[j]
 
-    # filterIndividuals
-    # Filters the data for all individuals that have > 20% missing data
+    ######################################################################
+    # filterLoci                                                        ##
+    ######################################################################
     def filterLoci(self):
         for i in range(len(self.data)):
             individual = self.data[i]
@@ -82,8 +89,9 @@ class statisticsClass:
             if (numMissing > PERCENT_MISSING*self.numLoci):
                 del self.data[j]
 
-
-
+    ######################################################################
+    # stat1                                                        ##
+    ######################################################################
     def stat1(self):
         print("printing for stat1 begin:")
         data = self.data
@@ -169,16 +177,16 @@ class statisticsClass:
         print("printing for stat1 end")
 
     def stat2(self):
-        data = self.data
-        numCol = self.numCol
-        numRow = self.numRow
-        numLoci = self.numLoci
+        #data = self.data
+    #    numCol = self.numCol
+    #    numRow = self.numRow
+    #    numLoci = self.numLoci
 
         # Stat 2
         homoCount = 0
         totalAlleles = (numCol - 1) * numRow
         for i in range(numRow):
-            for j in (data[i]):
+            for j in (self.data[i]):
                 if (j == '0101' or j == '0202' or j == '0303' or j == '0404'):  # What was actg?
                     homoCount = homoCount + 1
 

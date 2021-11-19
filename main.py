@@ -1,11 +1,11 @@
 ### TO DO:
-### 0. Statistic 1 fixed?
 ### 1. Run refactor with correct parameters
 ### 2. Check we are using all input parameters, remove those that are unused
 ### 3. Regression?
 ### 4. Filter for individuals with > 20% missing data & lcoi with > 20% missing data
 ### 5. Handle missing data
-### 6.
+
+### 6. Mixed up rows vs columns --> Discussed Fixing
 
 
 import sys
@@ -16,6 +16,7 @@ import os
 import numpy as np
 from sklearn.linear_model import LinearRegression
 import time
+
 start_time = time.time()
 
 DEBUG = 0       ## BOUCHER: Change this to 1 for debuggin mode
@@ -109,8 +110,7 @@ if(DEBUG) :
 
 currStatistics = oneSampStatistics.statisticsClass()
 currStatistics.readData(fileName)
-#Something wrong w func stat1
-#currStatistics.stat1()
+currStatistics.stat1()
 currStatistics.stat2()
 currStatistics.stat3()
 currStatistics.stat4()
@@ -147,26 +147,29 @@ for x in range(numOneSampTrials) :
         NeVals = 256 # This needs to be fixed
         intermediateFilename = "currRefactorFile"
         cmd = "./refactor.main -t1 -rC -b%s -d1 -u%s -v%s  -s -l%s -i%s -o1 -f%s -p > %s" % (NeVals, mutationRate, lowerTheta, numLoci, sampleSize, minAlleleFreq, intermediateFilename)
+
+        if(DEBUG) :
+            print(cmd)
+
         returned_value = os.system(cmd)  # returns the exit code in unix
 
         if returned_value :
             print("ERROR:main:Refactor did not run")
             exit()
 
-        else :
-            refactorFileStatistics = oneSampStatistics.statisticsClass()
-            refactorFileStatistics.readData( intermediateFilename )
-            # Something wrong w func stat1
-            # currStatistics.stat1()
-            refactorFileStatistics.stat2()
-            refactorFileStatistics.stat3()
-            refactorFileStatistics.stat4()
-            refactorFileStatistics.stat5()
-            #statistics1[x] =  refactorFileStatistics.stat1
-            statistics2[x] = refactorFileStatistics.stat2
-            statistics3[x] = refactorFileStatistics.stat3
-            statistics4[x] = refactorFileStatistics.stat4
-            statistics5[x] = refactorFileStatistics.stat5
+
+        refactorFileStatistics = oneSampStatistics.statisticsClass()
+        refactorFileStatistics.readData( intermediateFilename )
+        refactorFileStatistics.stat1()
+        refactorFileStatistics.stat2()
+        refactorFileStatistics.stat3()
+        refactorFileStatistics.stat4()
+        refactorFileStatistics.stat5()
+        statistics1[x] = refactorFileStatistics.stat1
+        statistics2[x] = refactorFileStatistics.stat2
+        statistics3[x] = refactorFileStatistics.stat3
+        statistics4[x] = refactorFileStatistics.stat4
+        statistics5[x] = refactorFileStatistics.stat5
 
 if (DEBUG):
     print("Start calculation of statistics for ALL populations")
@@ -177,8 +180,8 @@ if (DEBUG):
     print("Start linear regression")
 
 
-model = LinearRegression()
-model = LinearRegression().fit(x, y)
+#model = LinearRegression()
+#model = LinearRegression().fit(statistics1, statistics2)
 
 
 if (DEBUG):
