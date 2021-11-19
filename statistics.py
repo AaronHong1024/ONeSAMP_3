@@ -90,7 +90,7 @@ class statisticsClass:
                 del self.data[j]
 
     ######################################################################
-    # stat1                                                        ##
+    # stat1                                                       ##
     ######################################################################
     def stat1(self):
         print("printing for stat1 begin:")
@@ -176,6 +176,9 @@ class statisticsClass:
         # return 2*running_sum/(numloci*(numloci-1))
         print("printing for stat1 end")
 
+    ######################################################################
+    # stat2                                                       ##
+    ######################################################################
     def stat2(self):
         #data = self.data
     #    numCol = self.numCol
@@ -196,13 +199,15 @@ class statisticsClass:
         self.stat2 = stat2
         self.totalAlleles = totalAlleles
 
+    ######################################################################
+    # stat3                                                        ##
+    ######################################################################
     def stat3(self):
         data = self.data
         numCol = self.numCol
         numRow = self.numRow
         numLoci = self.numLoci
 
-        # Stats3
         homoDiff = 0
         homoCount = 0
         totalHomoDiff = 0
@@ -298,13 +303,12 @@ class statisticsClass:
 
         self.stat4 = stat4
 
-    def stat5Old(self):
+    def stat5(self):
         data = self.data
         numCol = self.numCol
         numRow = self.numRow
         numLoci = self.numLoci
 
-        # Stat5
         a = 0
         c = 0
         t = 0
@@ -312,7 +316,6 @@ class statisticsClass:
         stat5 = 0
         num = []
         for i in range(numCol):
-            # Setting to zero
             num *= 0
             addStat5 = 0
             a = 0
