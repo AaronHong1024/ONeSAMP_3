@@ -3,6 +3,7 @@ import math
 
 class statisticsClass:
 
+    PERCENT_MISSING = 0.2
     data = []
     numCol = 0
     numRow = -1
@@ -13,60 +14,75 @@ class statisticsClass:
     stat5 = 0
     numLoci = 0
     totalAlleles = 0
+    sampleSize = 0;
+
 
     def readData(self, myFileName):
-        # Opening file
-        myfile = open(myFileName, "r")
-        line = myfile.readline()
-
-        # Reading number of columns
-        numCol = self.numCol;
-        while line:
-            if line == "Pop\n":
-                break
-            line = myfile.readline()
-            numCol = numCol + 1
-
-        print('The number of columns is:', numCol)
-
-        # Reading number of rows
-        numRow = self.numRow
-        while line:
-            if line == "":
-                break
-            line = myfile.readline()
-            numRow = numRow + 1
-
-        print('The number of rows is: ', numRow)
-        myfile.close()
-
-        # Reopening file to create matrix
         matrixFile = open(myFileName, "r")
         line = matrixFile.readline()
 
         # Read until "Pop" in file
+        popReached = 0;
         while line:
-            if line == "Pop\n":
+            if ((line == "Pop\n") or (line == "POP\n") or (line == "pop\n")) :
+                popReached = 1
                 break
             line = matrixFile.readline()
 
-        line = matrixFile.readline()  # Reads "Pop"
+        if (popReached == 0)
+            print("ERROR:statistics:line 32:: POP not contained in file. Fatal error")
+            exit()
+
 
         # Starts creating data matrix
         data = self.data
-        i = 0;
-        for i in range(numRow):
-            temp = []
+        temp = []
+        temp = line.split()
+        temp.pop(1)  # Getting rid of comma in array
+        data.append(temp)
+        line = matrixFile.readline()
+        currLociCnt = tempLociCnt;
+
+        while(line) :
             temp = line.split()
             temp.pop(1)  # Getting rid of comma in array
             data.append(temp)
             line = matrixFile.readline()
+            if (len(temp) != currLociCnt):
+                print("ERROR:statistics.py:line 73:: There is an incorrect number of loci.")
+                exit()
 
-        #Setting variables to updated ones
-        self.numRow = numRow
-        self.numCol = numCol
         self.data = data
-        self.numLoci = numCol - 1
+        self.numLoci = currLociCnt
+        self.sampleSize = len(self.data)
+        self.numRow = self.sampleSize
+        self.numCol = self.numLoci
+
+    # filterIndividuals
+    # Filters the data for all individuals that have > 20% missing data
+    def filterIndividuals(self):
+        for i in range(len(self.data)):
+            individual = self.data[i]
+            numMissing = 0
+            for j in (individual):
+                if (j == '0100' or j == '0001' or j == '0000'):
+                    numMissing += 1
+            if (numMissing > PERCENT_MISSING*self.numLoci):
+                del self.data[j]
+
+    # filterIndividuals
+    # Filters the data for all individuals that have > 20% missing data
+    def filterLoci(self):
+        for i in range(len(self.data)):
+            individual = self.data[i]
+            numMissing = 0
+            for j in (individual):
+                if (j == '0100' or j == '0001' or j == '0000'):
+                    numMissing += 1
+            if (numMissing > PERCENT_MISSING*self.numLoci):
+                del self.data[j]
+
+
 
     def stat1(self):
         print("printing for stat1 begin:")
