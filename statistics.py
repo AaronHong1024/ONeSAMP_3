@@ -277,7 +277,7 @@ class statisticsClass:
         print('(Wrights) Stat4 is ',  self.stat4)
 
     ######################################################################
-    # stat5 Expected Heterozygosity                                     ##
+    # stat5 Expected Heterozygosity                                      ##
     ######################################################################
     def stat5(self):
         totalhomozygosityCnt = 0
