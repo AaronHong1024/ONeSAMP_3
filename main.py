@@ -35,34 +35,9 @@ parser.add_argument("--o", type = str, help="The File Name")
 
 args = parser.parse_args()
 
-#est variables
-#set defaults for variables and reads in what user provides
-
 minAlleleFreq = 0.005
 if (args.m):
     minAlleleFreq = float(args.m)
-
-#print(minAlleleFreq)
-#print("__________________")
-#print(mutationRate)
-#print(lowerNe)
-#print("__________________")
-#print(upperNe)
-#print("__________________")
-#print(lowerTheta)
-#print("__________________")
-#print(upperTheta)
-#print("__________________")
-#print(numOneSampTrials)
-#print("__________________")
-#print(durationLower)
-#print("__________________")
-#print(durationUpper)
-#print("__________________")
-#print(fileName)
-#print("__________________")
-
-
 
 mutationRate = 0.000000012
 if (args.r):
@@ -77,8 +52,7 @@ if (args.uNe):
     upperNe = int(args.uNe)
 
 rangeNe = "%d,%d" % (lowerNe, upperNe)
-#print(rangeNe)
-
+=
 lowerTheta = 0
 if (args.lT):
     lowerTheta = float(args.lT)
@@ -88,7 +62,6 @@ if (args.uT):
     upperTheta = float(args.uT)
 
 rangeTheta = "%d,%d" % (lowerTheta, upperTheta)
-
 
 numOneSampTrials = 50000
 if (args.s):
@@ -104,7 +77,6 @@ if (args.uD):
 
 rangeDuration = "%d,%d" % (lowerDuration, upperDuration)
 
-
 fileName = "oneSampIn"
 if (args.o):
     fileName = str(args.o)
@@ -114,8 +86,6 @@ else:
 
 if(DEBUG) :
     print("Start calculation of statistics for input population")
-
-#    cmd = "./refactor_main -t1 -rC -b%s -d1 -u%s -v%s  -s -l%s -i%s -o1 -f%s -p > %s" % (NeVals, mutationRate, lowerTheta, numLoci, sampleSize, minAlleleFreq, intermediateFilename)
 
 rangeTheta = "%d,%d" % (lowerTheta, upperTheta)
 
