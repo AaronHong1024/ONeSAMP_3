@@ -13,7 +13,7 @@ class statisticsClass:
     stat4 = 0
     stat5 = 0
     numLoci = 0
-    sampleSize = 0 ##Indivduals
+    sampleSize = 0   ##Indivduals
     totalAlleles = 0
 
     ######################################################################
