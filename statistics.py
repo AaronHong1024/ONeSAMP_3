@@ -17,12 +17,6 @@ class statisticsClass:
 
 
     ######################################################################
-    # writeStatistics                                                   ##
-    ######################################################################
-    def writeStatistics(self, myFileName):
-    outputFile = open(myFileName, "w")
-
-    ######################################################################
     # readData                                                          ##
     ######################################################################
     def readData(self, myFileName):
@@ -60,6 +54,8 @@ class statisticsClass:
             if (len(temp) != currLociCnt):
                 print("ERROR:statistics.py:line 56:: There is an incorrect number of loci. Fatal Error.")
                 exit()
+
+        matrixFile.close()
 
         self.data = data
         self.numLoci = currLociCnt

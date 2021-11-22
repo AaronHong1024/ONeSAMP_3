@@ -3,8 +3,6 @@
 ### -> Filter for individuals with > 20% missing data & lcoi with > 20% missing data
 ### -> Handle missing data
 
-
-
 import sys
 import argparse
 import numpy
@@ -17,6 +15,8 @@ from statistics import statisticsClass
 start_time = time.time()
 
 DEBUG = 0       ## BOUCHER: Change this to 1 for debuggin mode
+OUTPUTFILENAME = "priors.txt"
+POPULATION_GENERATOR = "./refactor_main"
 
 #Creating argument parser
 
@@ -139,7 +139,7 @@ for x in range(numOneSampTrials) :
     loci = inputFileStatistics.numLoci
     sampleSize = inputFileStatistics.sampleSize
     intermediateFilename = "currRefactorFile"
-    cmd = "./refactor_main -u%d -v%s -rC -l%d -i%d -d%s -s -t1 -b%s -f%d -o1 -p > %s" % (mutationRate, rangeTheta, loci, sampleSize, rangeDuration, rangeNe, minAlleleFreq, intermediateFilename)
+    cmd = "%s -u%d -v%s -rC -l%d -i%d -d%s -s -t1 -b%s -f%d -o1 -p > %s" % (POPULATION_GENERATOR, mutationRate, rangeTheta, loci, sampleSize, rangeDuration, rangeNe, minAlleleFreq, intermediateFilename)
 
     if(DEBUG) :
         print(cmd)
@@ -163,10 +163,15 @@ for x in range(numOneSampTrials) :
     statistics4[x] = refactorFileStatistics.stat4
     statistics5[x] = refactorFileStatistics.stat5
 
+
+outputFile = open(OUTPUTFILENAME, "w")
+for x in range(numOneSampTrials) :
+    outputline = "%d %d %d %d %d \n" % (statistics1[x], statistics2[x], statistics3[x], statistics4[x], statistics5[x])
+    outputFile.write(outputline)
+outputFile.close()
+
 if (DEBUG):
     print("Start calculation of statistics for ALL populations")
-
-        ############ Boucher: setting things up for linear regression
 
 if (DEBUG):
     print("Start linear regression")
