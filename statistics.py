@@ -1,5 +1,4 @@
 import math
-#onesampstatistics
 
 class statisticsClass:
 
@@ -18,6 +17,7 @@ class statisticsClass:
     totalAlleles = 0
     sampleSize = 0;
 
+
     ######################################################################
     # readData                                                          ##
     ######################################################################
@@ -33,7 +33,7 @@ class statisticsClass:
                 break
             line = matrixFile.readline()
 
-        if (popReached == 0)
+        if (popReached == 0):
             print("ERROR:statistics.py:line 32:: POP not contained in file. Fatal error")
             exit()
 

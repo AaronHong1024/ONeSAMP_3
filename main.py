@@ -1,22 +1,19 @@
 ### TO DO:
-### 1. Run refactor with correct parameters
-### 2. Check we are using all input parameters, remove those that are unused
-### 3. Regression?
-### 4. Filter for individuals with > 20% missing data & lcoi with > 20% missing data
-### 5. Handle missing data
+### -> Run refactor with correct parameters
+### -> Regression?
+### -> Filter for individuals with > 20% missing data & lcoi with > 20% missing data
+### -> Handle missing data
 
-### 6. Mixed up rows vs columns --> Discussed Fixing
 
-# demon
 
 import sys
 import argparse
 import numpy
-#import oneSampStatistics   ## WHAT IS THIS?
 import os
-import numpy as np
-from sklearn.linear_model import LinearRegression
+#import numpy as np
+#from sklearn.linear_model import LinearRegression
 import time
+from statistics import statisticsClass
 
 start_time = time.time()
 
@@ -79,6 +76,9 @@ upperNe = 500
 if (args.uNe):
     upperNe = int(args.uNe)
 
+rangeNe = "%d,%d" % (lowerNe, upperNe)
+#print(rangeNe)
+
 lowerTheta = 0
 if (args.lT):
     lowerTheta = float(args.lT)
@@ -87,17 +87,23 @@ upperTheta = 10
 if (args.uT):
     upperTheta = float(args.uT)
 
+rangeTheta = "%d,%d" % (lowerTheta, upperTheta)
+
+
 numOneSampTrials = 50000
 if (args.s):
     numOneSampTrials = int(args.s)
 
-durationLower = 2
+lowerDuration = 2
 if (args.lD):
-    durationLower = float(args.lD)
+    lowerDuration = float(args.lD)
 
-durationUpper = 8
+upperDuration = 8
 if (args.uD):
-    durationUpper = float(args.uD)
+    upperDuration = float(args.uD)
+
+rangeDuration = "%d,%d" % (lowerDuration, upperDuration)
+
 
 fileName = "oneSampIn"
 if (args.o):
@@ -109,15 +115,25 @@ else:
 if(DEBUG) :
     print("Start calculation of statistics for input population")
 
-currStatistics = oneSampStatistics.statisticsClass()
-currStatistics.readData(fileName)
-currStatistics.stat1()
-currStatistics.stat2()
-currStatistics.stat3()
-currStatistics.stat4()
-currStatistics.stat5()
-numLoci = currStatistics.numLoci
-sampleSize = currStatistics.sampleSize
+#    cmd = "./refactor_main -t1 -rC -b%s -d1 -u%s -v%s  -s -l%s -i%s -o1 -f%s -p > %s" % (NeVals, mutationRate, lowerTheta, numLoci, sampleSize, minAlleleFreq, intermediateFilename)
+
+rangeTheta = "%d,%d" % (lowerTheta, upperTheta)
+
+loci = 10
+sampleSize = 200
+intermediateFilename = "currRefactorFile"
+cmd = "./refactor_main -u%d -v%s -rC -l%d -i%d -d%s -s -t1 -b%s -f%d -o1 -p > %s" % (mutationRate, rangeTheta, loci, sampleSize, rangeDuration, rangeNe, minAlleleFreq, intermediateFilename)   #  - b$reducedSize   - f$ONESAMP2COAL_MINALLELEFREQUENCY - o1 - g < $OUTPUT > $OUTPUT$suffix
+print(cmd)
+
+inputFileStatistics = statisticsClass()
+inputFileStatistics.readData(fileName)
+inputFileStatistics.stat1()
+inputFileStatistics.stat2()
+inputFileStatistics.stat3()
+inputFileStatistics.stat4()
+inputFileStatistics.stat5()
+numLoci = inputFileStatistics.numLoci
+sampleSize = inputFileStatistics.sampleSize
 
 
 if(DEBUG) :
@@ -145,9 +161,10 @@ statistics5 = [0 for x in range(numOneSampTrials)]
 
 
 for x in range(numOneSampTrials) :
-        NeVals = 256 # This needs to be fixed
-        intermediateFilename = "currRefactorFile"
-        cmd = "./refactor.main -t1 -rC -b%s -d1 -u%s -v%s  -s -l%s -i%s -o1 -f%s -p > %s" % (NeVals, mutationRate, lowerTheta, numLoci, sampleSize, minAlleleFreq, intermediateFilename)
+
+    #    cmd = "./refactor_main -t1 -rC -b%s -d1 -u%s -v%s  -s -l%s -i%s -o1 -f%s -p > %s" % (NeVals, mutationRate, lowerTheta, numLoci, sampleSize, minAlleleFreq, intermediateFilename)
+
+     #   cmd = "-u%d" % (rangeDuration,)$mutationRate - v$theta - rC - l$loci - i$outputSampleSize - b$reducedSize - d$duration -$microsatsOrSNPs - t1 - f$ONESAMP2COAL_MINALLELEFREQUENCY - o1 - g < $OUTPUT > $OUTPUT$suffix
 
         if(DEBUG) :
             print(cmd)
@@ -158,9 +175,8 @@ for x in range(numOneSampTrials) :
             print("ERROR:main:Refactor did not run")
             exit()
 
-
-        refactorFileStatistics = oneSampStatistics.statisticsClass()
-        refactorFileStatistics.readData( intermediateFilename )
+        refactorFileStatistics = statisticsClass()
+        refactorFileStatistics.readData(intermediateFilename)
         refactorFileStatistics.stat1()
         refactorFileStatistics.stat2()
         refactorFileStatistics.stat3()
