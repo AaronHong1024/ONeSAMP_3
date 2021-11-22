@@ -1,5 +1,4 @@
 ### TO DO:
-### -> Run refactor with correct parameters
 ### -> Regression?
 ### -> Filter for individuals with > 20% missing data & lcoi with > 20% missing data
 ### -> Handle missing data
@@ -51,8 +50,20 @@ upperNe = 500
 if (args.uNe):
     upperNe = int(args.uNe)
 
+if (int(lowerNe) > int(upperNe)) :
+    print("ERROR:main:lowerNe > upperNe. Fatal Error")
+    exit()
+
+if(int(lowerNe) < 1) :
+    print("ERROR:main:lowerNe must be a positive value. Fatal Error")
+    exit()
+
+if(int(upperNe) < 1) :
+    print("ERROR:main:upperNe must be a positive value. Fatal Error")
+    exit()
+
 rangeNe = "%d,%d" % (lowerNe, upperNe)
-=
+
 lowerTheta = 0
 if (args.lT):
     lowerTheta = float(args.lT)
@@ -83,17 +94,10 @@ if (args.o):
 else:
     print("WARNING:main: No filename provided.  Using oneSampIn")
 
-
 if(DEBUG) :
     print("Start calculation of statistics for input population")
 
 rangeTheta = "%d,%d" % (lowerTheta, upperTheta)
-
-loci = 10
-sampleSize = 200
-intermediateFilename = "currRefactorFile"
-cmd = "./refactor_main -u%d -v%s -rC -l%d -i%d -d%s -s -t1 -b%s -f%d -o1 -p > %s" % (mutationRate, rangeTheta, loci, sampleSize, rangeDuration, rangeNe, minAlleleFreq, intermediateFilename)   #  - b$reducedSize   - f$ONESAMP2COAL_MINALLELEFREQUENCY - o1 - g < $OUTPUT > $OUTPUT$suffix
-print(cmd)
 
 inputFileStatistics = statisticsClass()
 inputFileStatistics.readData(fileName)
@@ -132,31 +136,32 @@ statistics5 = [0 for x in range(numOneSampTrials)]
 
 for x in range(numOneSampTrials) :
 
-    #    cmd = "./refactor_main -t1 -rC -b%s -d1 -u%s -v%s  -s -l%s -i%s -o1 -f%s -p > %s" % (NeVals, mutationRate, lowerTheta, numLoci, sampleSize, minAlleleFreq, intermediateFilename)
+    loci = inputFileStatistics.numLoci
+    sampleSize = inputFileStatistics.sampleSize
+    intermediateFilename = "currRefactorFile"
+    cmd = "./refactor_main -u%d -v%s -rC -l%d -i%d -d%s -s -t1 -b%s -f%d -o1 -p > %s" % (mutationRate, rangeTheta, loci, sampleSize, rangeDuration, rangeNe, minAlleleFreq, intermediateFilename)
 
-     #   cmd = "-u%d" % (rangeDuration,)$mutationRate - v$theta - rC - l$loci - i$outputSampleSize - b$reducedSize - d$duration -$microsatsOrSNPs - t1 - f$ONESAMP2COAL_MINALLELEFREQUENCY - o1 - g < $OUTPUT > $OUTPUT$suffix
+    if(DEBUG) :
+        print(cmd)
 
-        if(DEBUG) :
-            print(cmd)
+    returned_value = os.system(cmd)  # returns the exit code in unix
 
-        returned_value = os.system(cmd)  # returns the exit code in unix
+    if returned_value :
+        print("ERROR:main:Refactor did not run")
+        exit()
 
-        if returned_value :
-            print("ERROR:main:Refactor did not run")
-            exit()
-
-        refactorFileStatistics = statisticsClass()
-        refactorFileStatistics.readData(intermediateFilename)
-        refactorFileStatistics.stat1()
-        refactorFileStatistics.stat2()
-        refactorFileStatistics.stat3()
-        refactorFileStatistics.stat4()
-        refactorFileStatistics.stat5()
-        statistics1[x] = refactorFileStatistics.stat1
-        statistics2[x] = refactorFileStatistics.stat2
-        statistics3[x] = refactorFileStatistics.stat3
-        statistics4[x] = refactorFileStatistics.stat4
-        statistics5[x] = refactorFileStatistics.stat5
+    refactorFileStatistics = statisticsClass()
+    refactorFileStatistics.readData(intermediateFilename)
+    refactorFileStatistics.stat1()
+    refactorFileStatistics.stat2()
+    refactorFileStatistics.stat3()
+    refactorFileStatistics.stat4()
+    refactorFileStatistics.stat5()
+    statistics1[x] = refactorFileStatistics.stat1
+    statistics2[x] = refactorFileStatistics.stat2
+    statistics3[x] = refactorFileStatistics.stat3
+    statistics4[x] = refactorFileStatistics.stat4
+    statistics5[x] = refactorFileStatistics.stat5
 
 if (DEBUG):
     print("Start calculation of statistics for ALL populations")
