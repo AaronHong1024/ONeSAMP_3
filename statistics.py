@@ -6,17 +6,15 @@ class statisticsClass:
 ####### Members of Class
 
     PERCENT_MISSING = 0.2
-    data = []
-#    numCol = 0      ##  = numLoci
- #   numRow = -1     ##  = sampleSize        ## Matrix is [individuals by loci]
+    data = []      ## Matrix is [individuals by loci]
     stat1 = 0
     stat2 = 0
     stat3 = 0
     stat4 = 0
     stat5 = 0
     numLoci = 0
+    sampleSize = 0 ##Indivduals
     totalAlleles = 0
-    sampleSize = 0;
 
     ######################################################################
     # readData                                                          ##
@@ -33,19 +31,20 @@ class statisticsClass:
                 break
             line = matrixFile.readline()
 
-        if (popReached == 0)
+        if (popReached == 0):
             print("ERROR:statistics.py:line 32:: POP not contained in file. Fatal error")
             exit()
 
 
         # Starts creating data matrix
+        tempLociCnt = 0
         data = self.data
         temp = []
         temp = line.split()
         temp.pop(1)  # Getting rid of comma in array
         data.append(temp)
         line = matrixFile.readline()
-        currLociCnt = tempLociCnt;
+        currLociCnt = tempLociCnt
 
         while(line) :
             temp = line.split()
@@ -59,8 +58,6 @@ class statisticsClass:
         self.data = data
         self.numLoci = currLociCnt
         self.sampleSize = len(self.data)
-    #    self.numRow = self.sampleSize
-     #   self.numCol = self.numLoci
 
     ######################################################################
     # filterIndividuals                                                 ##
@@ -73,7 +70,7 @@ class statisticsClass:
             for j in (individual):
                 if (j == '0100' or j == '0001' or j == '0000'):
                     numMissing += 1
-            if (numMissing > PERCENT_MISSING*self.numLoci):
+            if (numMissing > self.PERCENT_MISSING * self.numLoci):
                 del self.data[j]
 
     ######################################################################
@@ -86,11 +83,11 @@ class statisticsClass:
             for j in (individual):
                 if (j == '0100' or j == '0001' or j == '0000'):
                     numMissing += 1
-            if (numMissing > PERCENT_MISSING*self.numLoci):
+            if (numMissing > self.PERCENT_MISSING * self.numLoci):
                 del self.data[j]
 
     ######################################################################
-    # stat1                                                        ##
+    # stat1 BW Estimator                                                ##
     ######################################################################
     def stat1(self):
         print("printing for stat1 begin:")
@@ -176,100 +173,83 @@ class statisticsClass:
         # return 2*running_sum/(numloci*(numloci-1))
         print("printing for stat1 end")
 
+    ######################################################################
+    # stat2 First Moment of Multilocus Homozygosity                     ##
+    ######################################################################
     def stat2(self):
-        #data = self.data
-    #    numCol = self.numCol
-    #    numRow = self.numRow
-    #    numLoci = self.numLoci
-
-        # Stat 2
-        homoCount = 0
-        totalAlleles = (numCol - 1) * numRow
-        for i in range(numRow):
+        homozygosityCnt = 0
+        for i in range(self.sampleSize):
             for j in (self.data[i]):
-                if (j == '0101' or j == '0202' or j == '0303' or j == '0404'):  # What was actg?
-                    homoCount = homoCount + 1
+                if (j == '0101' or j == '0202' or j == '0303' or j == '0404'):
+                    homozygosityCnt = homozygosityCnt + 1
 
-        stat2 = homoCount / numRow
-        print("(First moment of homozygosity) Stats2 is ", stat2)
+        self.stat2 = homozygosityCnt / self.sampleSize
+        print("(First moment of homozygosity) Stats2 is ", self.stat2)
 
-        self.stat2 = stat2
-        self.totalAlleles = totalAlleles
-
+    ######################################################################
+    # stat3 Second Moment of Multilocus Homozygosity                    ##
+    ######################################################################
     def stat3(self):
-        data = self.data
-        numCol = self.numCol
-        numRow = self.numRow
-        numLoci = self.numLoci
-
-        # Stats3
-        homoDiff = 0
-        homoCount = 0
-        totalHomoDiff = 0
+        homozygosityCnt = 0
+        difference = 0
         # Total count is same as above stats
-        for i in range(numRow):
-            for j in (data[i]):
+        for i in range(self.sampleSize):
+            for j in (self.data[i]):
                 # AA CC TT GG
-                if (j == '0101' or j == '0202' or j == '0303' or j == '0404'):  # What was actg?
-                    homoCount = homoCount + 1
-            homoDiff = homoCount - self.stat2
-            homoCount = 0
-            totalHomoDiff = totalHomoDiff + (homoDiff * homoDiff)
+                if (j == '0101' or j == '0202' or j == '0303' or j == '0404'):
+                    homozygosityCnt = homozygosityCnt + 1
+            difference = homozygosityCnt - self.stat2
+            homozygosityCnt = 0
+            totalHomozygosityDiff = totalHomozygosityDiff + (difference * difference)
 
-        stat3 = (totalHomoDiff) / (self.numRow - 1)
-        print("(Second moment of multilocus homozygosity) Stats3 is ", stat3)
-        self.stat3 = stat3
+        self.stat3 = (totalHomozygosityDiff) / (self.sampleSize - 1)
+        print("(Second moment of multilocus homozygosity) Stats3 is ", self.stat3)
 
+    ######################################################################
+    # stat4 Wrights                                                     ##
+    ######################################################################
     def stat4(self):
-        data = self.data
-        numCol = self.numCol
-        numRow = self.numRow
-        numLoci = self.numLoci
-
-        # Stat4
         stat4 = 0.0
-        tempstat4 = 0.0
         num = []
-        for i in range(numCol):
-            # Setting to zero
+        for i in range(self.numLoci):
             num *= 0
             addStat4 = 0.0
-            homoCount = 0
+            homozygosityCnt = 0
             stat5 = 0
             a = 0
             c = 0
             t = 0
             g = 0
-            for j in range(numRow):
+            for j in range(self.sampleSize):
                 # Checking freq of first two numbers
-                if (data[j][i][2:] == '01'):
+                if (self.data[j][i][2:] == '01'):
                     a = a + 1
-                elif (data[j][i][2:] == '02'):
+                elif (self.data[j][i][2:] == '02'):
                     c = c + 1
-                elif (data[j][i][2:] == '03'):
+                elif (self.data[j][i][2:] == '03'):
                     t = t + 1
-                elif (data[j][i][2:] == '04'):
+                elif (self.data[j][i][2:] == '04'):
                     g = g + 1
 
                 # Checking last two numbers
-                if (data[j][i][:2] == '01'):
+                if (self.data[j][i][:2] == '01'):
                     a = a + 1
-                elif (data[j][i][:2] == '02'):
+                elif (self.data[j][i][:2] == '02'):
                     c = c + 1
-                elif (data[j][i][:2] == '03'):
+                elif (self.data[j][i][:2] == '03'):
                     t = t + 1
-                elif (data[j][i][:2] == '04'):
+                elif (self.data[j][i][:2] == '04'):
                     g = g + 1
 
-                if (data[j][i] == '0101' or data[j][i] == '0202' or data[j][i] == '0303' or data[j][i] == '0404'):
-                    homoCount = homoCount + 1
+                if (self.data[j][i] == '0101' or self.data[j][i] == '0202' or self.data[j][i] == '0303' or self.data[j][i] == '0404'):
+                    homozygosityCnt = homozygosityCnt + 1
 
-            homoCount = homoCount / (numRow)
-            homoCount = homoCount * homoCount
-            temp = 1 - homoCount
+            homozygosityCnt = homozygosityCnt / (self.sampleSize)
+            homozygosityCnt = homozygosityCnt * homozygosityCnt
+            temp = 1 - homozygosityCnt
             stat5 = stat5 + temp
 
-            divisor = numCol * 2
+            divisor = self.numLoci * 2
             a = a / divisor
             c = c / divisor
             t = t / divisor
@@ -292,100 +272,25 @@ class statisticsClass:
             stat4 = stat4 + addStat4
 
 
-        stat4 = stat4 / numLoci
-        stat4 = 1 - stat4
-        print('(Wrights) Stat4 is ',  stat4)
+        stat4 = stat4 / self.totalAlleles
+        self.stat4 = 1 - stat4
+        print('(Wrights) Stat4 is ',  self.stat4)
 
-        self.stat4 = stat4
-
-    def stat5Old(self):
-        data = self.data
-        numCol = self.numCol
-        numRow = self.numRow
-        numLoci = self.numLoci
-
-        # Stat5
-        a = 0
-        c = 0
-        t = 0
-        g = 0
-        stat5 = 0
-        num = []
-        for i in range(numCol):
-            # Setting to zero
-            num *= 0
-            addStat5 = 0
-            a = 0
-            c = 0
-            t = 0
-            g = 0
-            for j in range(numRow):
-                # Checking freq of first two numbers
-                if (data[j][i][2:] == '01'):
-                    a = a + 1
-                elif (data[j][i][2:] == '02'):
-                    c = c + 1
-                elif (data[j][i][2:] == '03'):
-                    t = t + 1
-                elif (data[j][i][2:] == '04'):
-                    g = g + 1
-
-                # Checking last two numbers
-                if (data[j][i][:2] == '01'):
-                    a = a + 1
-                elif (data[j][i][:2] == '02'):
-                    c = c + 1
-                elif (data[j][i][:2] == '03'):
-                    t = t + 1
-                elif (data[j][i][:2] == '04'):
-                    g = g + 1
-
-            divisor = numCol * 2
-            a = a / divisor
-            c = c / divisor
-            t = t / divisor
-            g = g / divisor
-
-            if (a > 0):
-                num.append(float(a))
-            if (c > 0):
-                num.append(float(c))
-            if (t > 0):
-                num.append(float(t))
-            if (g > 0):
-                num.append(float(g))
-
-            if (num):
-                for i in num:
-                    addStat5 = float(addStat5) + float(i * i)
-                y = 1 - addStat5
-                stat5 = stat5 + y
-
-        print('stat5 before dividing', stat5)
-        stat5 = stat5 / numLoci
-        print('Stat5 is ', stat5)
-
-        self.stat5 = stat5
-
+    ######################################################################
+    # stat5 Expected Heterozygosity                                     ##
+    ######################################################################
     def stat5(self):
-        data = self.data
-        numCol = self.numCol
-        numRow = self.numRow
-        numLoci = self.numLoci
-        stat5 = 0
-        totalHomoCount = 0
-
-        for i in range(numCol):
-            homoCount = 0
-
-            for j in (data[i]):
+        totalhomozygosityCnt = 0
+        for i in range(self.numLoci):
+            homozygosityCnt = 0
+            for j in (self.data[i]):
                 if (j == '0101' or j == '0202' or j == '0303' or j == '0404'):
-                    homoCount = homoCount + 1
-            homoCount = homoCount / (numRow)
-            totalHomoCount = homoCount * homoCount
-            temp = 1 - totalHomoCount
-            stat5 = stat5 + temp
+                    homozygosityCnt = homozygosityCnt + 1
+            homozygosityCnt = homozygosityCnt / (self.sampleSize)
+            totalhomozygosityCnt = homozygosityCnt * homozygosityCnt
+            temp = 1 - totalhomozygosityCnt
+            stat5 = stat5 + temp #New heterozygosity value
 
-        stat5 = stat5 / numLoci
+        stat5 = stat5 / self.totalAlleles
         self.stat5 = stat5
-        print("(Expected heterozygosity) stat5 is ", stat5)
+        print("(Expected heterozygosity) stat5 is ", self.stat5)
