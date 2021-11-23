@@ -183,14 +183,15 @@ if (DEBUG):
 
 ## Complete R analysis on output.
 ## Assumes the output is in "priors.txt"
-returned_value = os.system("module load R")
-if (returned_value)
-    print("ERROR:main: Could not Load R.  FATAL ERROR.")
-    exit()
+#returned_value = os.system("module load R")
+#if (returned_value)
+#    print("ERROR:main: Could not Load R.  FATAL ERROR.")
+#    exit()
 
-returned_value = os.system(FINAL_R_ANALYSIS)
-if (returned_value)
-    print("ERROR:main: Could not run R code. Fatal ERROR.")
+#returned_value = os.system(FINAL_R_ANALYSIS)
+#if (returned_value)
+#    print("ERROR:main: Could not run R code. Fatal ERROR.")
+
 if (DEBUG):
     print("Finish linear regression")
 
