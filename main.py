@@ -17,6 +17,7 @@ start_time = time.time()
 DEBUG = 0       ## BOUCHER: Change this to 1 for debuggin mode
 OUTPUTFILENAME = "priors.txt"
 POPULATION_GENERATOR = "./refactor_main"
+FINAL_R_ANALYSIS = "./r_analysis.R"
 
 #Creating argument parser
 
@@ -180,7 +181,16 @@ if (DEBUG):
 #model = LinearRegression()
 #model = LinearRegression().fit(statistics1, statistics2)
 
+## Complete R analysis on output.
+## Assumes the output is in "priors.txt"
+returned_value = os.system("module load R")
+if (returned_value)
+    print("ERROR:main: Could not Load R.  FATAL ERROR.")
+    exit()
 
+returned_value = os.system(FINAL_R_ANALYSIS)
+if (returned_value)
+    print("ERROR:main: Could not run R code. Fatal ERROR.")
 if (DEBUG):
     print("Finish linear regression")
 
