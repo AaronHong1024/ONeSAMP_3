@@ -1,12 +1,14 @@
+#!/usr/bin/python
 ### TO DO:
 ### -> Regression?
 ### -> Filter for individuals with > 20% missing data & lcoi with > 20% missing data
 ### -> Handle missing data
+
+
 import sys
 import argparse
 
 import statistics
-import numpy
 import os
 import numpy as np
 #from sklearn.linear_model import LinearRegression
@@ -14,7 +16,7 @@ import time
 from statistics import statisticsClass
 
 NUMBER_OF_STATISTICS = 5
-DEBUG = 0       ## BOUCHER: Change this to 1 for debuggin mode
+DEBUG = 1       ## BOUCHER: Change this to 1 for debuggin mode
 OUTPUTFILENAME = "priors.txt"
 POPULATION_GENERATOR = "./refactor_main"
 FINAL_R_ANALYSIS = "./r_analysis.R"
@@ -97,7 +99,7 @@ if(int(upperNe) < 1) :
 
 rangeNe = "%d,%d" % (lowerNe, upperNe)
 
-lowerTheta = 0
+lowerTheta = 1
 if (args.lT):
     lowerTheta = float(args.lT)
 
@@ -143,6 +145,7 @@ rangeTheta = "%d,%d" % (lowerTheta, upperTheta)
 inputFileStatistics = statisticsClass()
 inputFileStatistics.readData(fileName)
 inputFileStatistics.stat1()
+inputFileStatistics.newStat4()
 inputFileStatistics.stat2()
 inputFileStatistics.stat3()
 inputFileStatistics.stat4()
@@ -179,7 +182,7 @@ for x in range(numOneSampTrials) :
 
     loci = inputFileStatistics.numLoci
     sampleSize = inputFileStatistics.sampleSize
-    intermediateFilename = "currRefactorFile"
+    intermediateFilename = "genePopTiny"
     cmd = "%s -u%d -v%s -rC -l%d -i%d -d%s -s -t1 -b%s -f%d -o1 -p > %s" % (POPULATION_GENERATOR, mutationRate, rangeTheta, loci, sampleSize, rangeDuration, rangeNe, minAlleleFreq, intermediateFilename)
 
     if(DEBUG) :
@@ -189,7 +192,7 @@ for x in range(numOneSampTrials) :
 
     if returned_value :
         print("ERROR:main:Refactor did not run")
-        exit()
+        #exit()
 
     refactorFileStatistics = statisticsClass()
     refactorFileStatistics.readData(intermediateFilename)
@@ -231,7 +234,7 @@ normalizedInputFileStatistic5 = normalization(inputFileStatistics.stat5, mean(st
 #              (scaled.sumstat[, 7]-target.s[7]) ^ 2 +
 #              (scaled.sumstat[, 8]-target.s[8]) ^ 2)
 
-length = len(data)
+length = len(statisticsClass.self.data)
 dist = [0 for a in length];
 distTransform  = [0 for a in length];
 for i in range(length):
