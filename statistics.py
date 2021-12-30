@@ -224,10 +224,12 @@ class statisticsClass:
                 # AA CC TT GG
                 if (j == '0101' or j == '0202' or j == '0303' or j == '0404'):
                     homozygosityCnt = homozygosityCnt + 1
-            homozygosityCnt = float(homozygosityCnt) / float(self.numLoci)
-            difference = homozygosityCnt - self.stat2
-            homozygosityCnt = 0
-            totalHomozygosityDiff = totalHomozygosityDiff + (difference * difference)
+            if (homozygosityCnt > 0):
+                homozygosityCnt = float(homozygosityCnt) / float(self.numLoci)
+                difference = homozygosityCnt - self.stat2
+                homozygosityCnt = 0
+                totalHomozygosityDiff = totalHomozygosityDiff + (difference * difference)
+                print(totalHomozygosityDiff)
 
         self.stat3 = float(totalHomozygosityDiff) / float(self.sampleSize - 1)
         print("(Second moment of multilocus homozygosity) Stats3 is ", self.stat3)
@@ -317,7 +319,6 @@ class statisticsClass:
                 homozygosityCnt = float(homozygosityCnt) / float(self.sampleSize)
                 totalhomozygosityCnt = homozygosityCnt * homozygosityCnt
                 temp = 1 - totalhomozygosityCnt
-                print(temp)
                 tempstat5 = tempstat5 + temp  # New heterozygosity value
 
         tempstat5 = float(tempstat5) / float(self.numLoci)
@@ -329,10 +330,11 @@ class statisticsClass:
     ######################################################################
     def newStat4(self):
         #https://academic.oup.com/jhered/article/106/3/306/2961865
-        tempObs = 0
         expected = 0
+        homozygosityCnt = 0
+        newstat4 = 0
+
         for i in range(self.numLoci + 1):
-            homozygosityCnt = 0
             for j in range(self.sampleSize):
                 j = self.data[j][i]
                 if (j == '0101' or j == '0202' or j == '0303' or j == '0404'):
@@ -341,13 +343,10 @@ class statisticsClass:
 
             if (homozygosityCnt > 0):
                 homozygosityCnt = float(homozygosityCnt) / float(self.sampleSize)
-                tempObs = 1 - homozygosityCnt
-                homozygosityCnt = float(homozygosityCnt) / float(self.sampleSize)
-                homozygosityCnt = homozygosityCnt * homozygosityCnt
-                temp = 1 - homozygosityCnt
-                expected = expected + temp
-                newstat4 = float(tempObs / expected)
-                print(newstat4)
+                tempObs = 1 - float(homozygosityCnt)
+                expected = 1 - (homozygosityCnt * homozygosityCnt)
+                newstat4 = newstat4 + float(tempObs / expected)
+                homozygosityCnt = 0
 
 
 
