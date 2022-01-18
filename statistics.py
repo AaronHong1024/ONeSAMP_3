@@ -8,7 +8,8 @@ class statisticsClass:
 
 
 
-    PERCENT_MISSING = 0.2
+    PERCENT_MISSINGIndiv = 0.2
+    PERCENT_MISSINGLoci = 0.2
     data = []      ## Matrix is [individuals by loci]
     stat1 = 0
     stat2 = 0
@@ -80,9 +81,14 @@ class statisticsClass:
             for j in (individual):
                 if (j == '0100' or j == '0001' or j == '0000'):
                     numMissing += 1
-            if (numMissing > self.PERCENT_MISSING * self.numLoci):
+            if (numMissing > self.PERCENT_MISSINGIndiv * self.numLoci):
+                print("Deleted:", self.data[j])
                 del self.data[j]
+                self.numLoci = self.numLoci - 1
+                self.sampleSize = len(self.data) - 1 #replace w self.samplesize??
 
+            #add changes to numLoci and sample size
+            #output individ that were deleted
     ######################################################################
     # filterLoci                                                        ##
     ######################################################################
@@ -93,8 +99,14 @@ class statisticsClass:
             for j in (individual):
                 if (j == '0100' or j == '0001' or j == '0000'):
                     numMissing += 1
-            if (numMissing > self.PERCENT_MISSING * self.numLoci):
+            if (numMissing > self.PERCENT_MISSINGLoci * self.numLoci):
+                print("Deleted:", self.data[j])
                 del self.data[j]
+                self.numLoci = self.numLoci - 1
+                self.sampleSize = len(self.data) - 1
+            #add changes to numLoci and sample size
+            #output loci (i) that was deleted
+
 
     ######################################################################
     # stat1 BW Estimator                                                ##

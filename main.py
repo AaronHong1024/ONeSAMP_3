@@ -65,7 +65,11 @@ parser.add_argument("--uT", type = float, help="Upper of Theta Range")
 parser.add_argument("--s", type = int, help="Number of OneSamp Trials")
 parser.add_argument("--lD", type = float, help="Lower of Duration Range")
 parser.add_argument("--uD", type = float, help="Upper of Duration Range")
+parser.add_argument("--i", type = float, help="Missing data for individuals")
+parser.add_argument("--l", type = float, help="Missing data for loci")
 parser.add_argument("--o", type = str, help="The File Name")
+#'i' for indiv (float) and 'l' for loci (float) [for missing data]
+#default: 0.2 for both
 
 args = parser.parse_args()
 
@@ -120,6 +124,15 @@ if (args.lD):
 upperDuration = 8
 if (args.uD):
     upperDuration = float(args.uD)
+
+
+indivMissing = .2
+if (args.i):
+    indivMissing = float(args.i)
+
+lociMissing = .2
+if (args.l):
+    lociMissing = float(args.l)
 
 rangeDuration = "%d,%d" % (lowerDuration, upperDuration)
 
