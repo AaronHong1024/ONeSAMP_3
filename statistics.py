@@ -117,22 +117,32 @@ class statisticsClass:
         alleleA = []  # same dimensions as data but holds the first allele in a locus
         alleleB = []  # same dimensions as data but holds the second allele in a locus
 
+        #print(data)
+
         for i in range(len(data)):  # fills up alleleA and alleleB
             temA = []
             temB = []
+            temA.clear()
+            temB.clear()
+            #print("DATA   ", len(data))
             for j in range(1, len(data[i])):
                 temA.append(data[i][j][:2])
                 temB.append(data[i][j][2:])
 
             alleleA.append(temA)
+            #print("Allele A: ", alleleA)
             alleleB.append(temB)
+            #print("Allele B: ", alleleB)
+
+
 
         allcnt = []  # a 1D array, each element is a dictionary of alleles with frequency counts per loci
         homoloci = []  # maintains frequency counts of homologous alleles per loci
-        for j in range(len(alleleA[0])):  # fills up allcnt
+        #print(len(alleleA))
+        for i in range(len(alleleA)):  # fills up allcnt
             newdic = {}
             temp = 0
-            for i in range(len(alleleA)):
+            for j in range(len(alleleA[0])):
                 if (alleleA[i][j] == alleleB[i][j] and alleleA[i][j] == alleleA[i][0]):
                     temp += 1
 
@@ -148,6 +158,7 @@ class statisticsClass:
 
             homoloci.append(float(temp) / float(len(data)))
             allcnt.append(newdic)
+            #print("Allele count", allcnt)
 
         #print(allcnt[0])
         di = []  # a 1D array that holds the departures of each loci from Hardy-Weinberg equilibrium
@@ -167,12 +178,15 @@ class statisticsClass:
             for j in range(len(alleleB)):
                 keysi = []
                 keysj = []
+                keysj.clear()
 
                 for key, value in allcnt[i].items():
                     keysi.append(key)
 
+
                 for key, value in allcnt[j].items():
                     keysj.append(key)
+
 
                 if (len(keysj) < 2):
                     continue

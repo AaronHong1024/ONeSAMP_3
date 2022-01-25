@@ -18,7 +18,10 @@ from statistics import statisticsClass
 NUMBER_OF_STATISTICS = 5
 DEBUG = 1       ## BOUCHER: Change this to 1 for debuggin mode
 OUTPUTFILENAME = "priors.txt"
-POPULATION_GENERATOR = "./refactor_main"
+
+BASE_PATH = os.path.dirname(os.path.realpath(__file__))
+
+POPULATION_GENERATOR = os.path.join(BASE_PATH, "refactor_main")
 FINAL_R_ANALYSIS = "./r_analysis.R"
 
 
