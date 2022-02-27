@@ -48,9 +48,9 @@ def stdev(data):
 
 def normalization(data, mean, variance):
     from operator import truediv
-    normalized_data = [0 for a in range(len(data))];
-    cnt = 0;
-    for x in data:
+    normalized_data = [0 for a in range(len(str(data)))]
+    cnt = 0
+    for x in range(len(str(data))):
         normalized_data[cnt] = truediv((x - mean), float(np.sqrt(variance)))
         cnt += 1
     return normalized_data
@@ -160,6 +160,10 @@ rangeTheta = "%d,%d" % (lowerTheta, upperTheta)
 
 inputFileStatistics = statisticsClass()
 inputFileStatistics.readData(fileName)
+#MISSIND DATA FUNCTION IS RUN (filter for indiv and loci)
+#Output data to make sure its being removed
+inputFileStatistics.filterIndividuals(indivMissing)
+inputFileStatistics.filterLoci(lociMissing)
 inputFileStatistics.stat1()
 inputFileStatistics.newStat4()
 inputFileStatistics.stat2()
@@ -169,6 +173,10 @@ inputFileStatistics.stat5()
 numLoci = inputFileStatistics.numLoci
 sampleSize = inputFileStatistics.sampleSize
 
+textList = [str(inputFileStatistics.stat1), str(inputFileStatistics.stat2), str(inputFileStatistics.stat3), str(inputFileStatistics.stat4), str(inputFileStatistics.stat5)]
+with open('/blue/boucher/ishayooseph/inputPopStats','w') as file:
+    file.write('\t'.join(textList[0:]) + '\t')
+file.close()
 
 if(DEBUG) :
     print("Finish calculation of statistics for input population")
@@ -194,12 +202,16 @@ statistics4 = [0 for x in range(numOneSampTrials)]
 statistics5 = [0 for x in range(numOneSampTrials)]
 
 
+file = open('/blue/boucher/ishayooseph/allPopStats', 'w+')
 for x in range(numOneSampTrials) :
 
     loci = inputFileStatistics.numLoci
     sampleSize = inputFileStatistics.sampleSize
-    intermediateFilename = "genePopTiny"
+    intermediateFilename = "/blue/boucher/ishayooseph/genePopTiny"
     cmd = "%s -u%d -v%s -rC -l%d -i%d -d%s -s -t1 -b%s -f%d -o1 -p > %s" % (POPULATION_GENERATOR, mutationRate, rangeTheta, loci, sampleSize, rangeDuration, rangeNe, minAlleleFreq, intermediateFilename)
+
+    print(cmd)
+
 
     if(DEBUG) :
         print(cmd)
@@ -222,6 +234,13 @@ for x in range(numOneSampTrials) :
     statistics3[x] = refactorFileStatistics.stat3
     statistics4[x] = refactorFileStatistics.stat4
     statistics5[x] = refactorFileStatistics.stat5
+
+
+
+    textList = [str(refactorFileStatistics.stat1), str(refactorFileStatistics.stat2),
+                    str(refactorFileStatistics.stat3),
+                    str(refactorFileStatistics.stat4), str(refactorFileStatistics.stat5)]
+    file.writelines('\t'.join(textList[0:]) + '\n')
 
 
 if (DEBUG):
@@ -250,15 +269,16 @@ normalizedInputFileStatistic5 = normalization(inputFileStatistics.stat5, mean(st
 #              (scaled.sumstat[, 7]-target.s[7]) ^ 2 +
 #              (scaled.sumstat[, 8]-target.s[8]) ^ 2)
 
-length = len(statisticsClass.self.data)
-dist = [0 for a in length];
-distTransform  = [0 for a in length];
-for i in range(length):
+length = statisticsClass.data
+dist = [0 for a in range(len(str(length)))];
+distTransform  = [0 for a in range(len(str(length)))];
+for i in range(len(length)):
+    #Changing so normalizedInputFileStats have an index
     dist[i] = np.sqrt(normalizedStatistics1[i] - normalizedInputFileStatistic1) \
                 + np.sqrt(normalizedStatistics2[i] - normalizedInputFileStatistic2) \
-                + np.sqrt(normalizedStatistics3[i] - normalizedInputFileStatistic3) \
-                + np.sqrt(normalizedStatistics4[i] - normalizedInputFileStatistic4) \
-                + np.sqrt(normalizedStatistics5[i] - normalizedInputFileStatistic5)
+                + np.sqrt(normalizedStatistics3[i] - normalizedInputFileStatistic3[i]) \
+                + np.sqrt(normalizedStatistics4[i] - normalizedInputFileStatistic4[i]) \
+                + np.sqrt(normalizedStatistics5[i] - normalizedInputFileStatistic5[i])
     #dist[!gwt] <- floor(max(dist[gwt])+10)
     #distTransform[i] = np.floor()
 

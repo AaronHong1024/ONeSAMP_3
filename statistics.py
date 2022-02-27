@@ -8,8 +8,8 @@ class statisticsClass:
 
 
 
-    PERCENT_MISSINGIndiv = 0.2
-    PERCENT_MISSINGLoci = 0.2
+    ARRAY_MISSINGIndiv = []
+    ARRAY_MISSINGLoci = []
     data = []      ## Matrix is [individuals by loci]
     stat1 = 0
     stat2 = 0
@@ -74,38 +74,44 @@ class statisticsClass:
     # filterIndividuals                                                 ##
     # Filters the data for all individuals that have > 20% missing data ##
     ######################################################################
-    def filterIndividuals(self):
+    def filterIndividuals(self, PERCENT_MISSINGIndiv):
         for i in range(self.sampleSize):
             individual = self.data[i]
             numMissing = 0
             for j in (individual):
                 if (j == '0100' or j == '0001' or j == '0000'):
                     numMissing += 1
-            if (numMissing > self.PERCENT_MISSINGIndiv * self.numLoci):
+            if (numMissing > PERCENT_MISSINGIndiv * self.numLoci):
                 print("Deleted:", self.data[j])
+                self.ARRAY_MISSINGIndiv.append(self.data[j])
                 del self.data[j]
                 self.numLoci = self.numLoci - 1
-                self.sampleSize = len(self.data) - 1 #replace w self.samplesize??
+                self.sampleSize = len(self.data) - 1
+        print (self.data)
 
-            #add changes to numLoci and sample size
-            #output individ that were deleted
+
+        #TO DO
+        #Print data to make sure everything that needs to be removed is being removed (same for loci)
+        #add changes to numLoci and sample size
+        #output individ that were deleted
+        #array of items that were deleted
     ######################################################################
     # filterLoci                                                        ##
     ######################################################################
-    def filterLoci(self):
+    def filterLoci(self, PERCENT_MISSINGLoci):
         for i in range(len(self.data)):
             individual = self.data[i]
             numMissing = 0
             for j in (individual):
                 if (j == '0100' or j == '0001' or j == '0000'):
                     numMissing += 1
-            if (numMissing > self.PERCENT_MISSINGLoci * self.numLoci):
+            if (numMissing > PERCENT_MISSINGLoci * self.numLoci):
                 print("Deleted:", self.data[j])
+                self.ARRAY_MISSINGLoci.append(self.data[j])
                 del self.data[j]
                 self.numLoci = self.numLoci - 1
                 self.sampleSize = len(self.data) - 1
-            #add changes to numLoci and sample size
-            #output loci (i) that was deleted
+        print(self.data)
 
 
     ######################################################################
@@ -227,7 +233,6 @@ class statisticsClass:
                 if (j == '0101' or j == '0202' or j == '0303' or j == '0404'):
                     homozygosityCnt = homozygosityCnt + 1
             tempStat2 = float(homozygosityCnt) / float(self.numLoci)
-            print("\n", tempStat2, homozygosityCnt, self.numLoci)
             tempVarStat2 = tempVarStat2 + tempStat2
             tempStat2 = 0
             homozygosityCnt = 0
@@ -255,7 +260,6 @@ class statisticsClass:
                 difference = homozygosityCnt - self.stat2
                 homozygosityCnt = 0
                 totalHomozygosityDiff = totalHomozygosityDiff + (difference * difference)
-                print(totalHomozygosityDiff)
 
         self.stat3 = float(totalHomozygosityDiff) / float(self.sampleSize - 1)
         print("(Second moment of multilocus homozygosity) Stats3 is ", self.stat3)
