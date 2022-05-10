@@ -3,8 +3,7 @@
 ### -> Regression?
 ### -> Filter for individuals with > 20% missing data & lcoi with > 20% missing data
 ### -> Handle missing data
-
-
+import subprocess
 import sys
 import argparse
 
@@ -21,7 +20,7 @@ OUTPUTFILENAME = "priors.txt"
 
 BASE_PATH = os.path.dirname(os.path.realpath(__file__))
 
-POPULATION_GENERATOR = os.path.join(BASE_PATH, "refactor_main")
+POPULATION_GENERATOR = "/blue/boucher/ishayooseph/RefactorRemote/ONeSAMP/build/OneSamp"
 FINAL_R_ANALYSIS = "./r_analysis.R"
 
 
@@ -201,26 +200,24 @@ statistics3 = [0 for x in range(numOneSampTrials)]
 statistics4 = [0 for x in range(numOneSampTrials)]
 statistics5 = [0 for x in range(numOneSampTrials)]
 
-
-file = open('/blue/boucher/ishayooseph/allPopStats', 'w+')
+file = open('/blue/boucher/ishayooseph/RemoteProjects/OneSamp3.0/allPopStats', 'w+')
 for x in range(numOneSampTrials) :
 
     loci = inputFileStatistics.numLoci
     sampleSize = inputFileStatistics.sampleSize
     intermediateFilename = "/blue/boucher/ishayooseph/genePopTiny"
+
     cmd = "%s -u%d -v%s -rC -l%d -i%d -d%s -s -t1 -b%s -f%d -o1 -p > %s" % (POPULATION_GENERATOR, mutationRate, rangeTheta, loci, sampleSize, rangeDuration, rangeNe, minAlleleFreq, intermediateFilename)
-
-    print(cmd)
-
+#Change command line, then output the generated NE value to our text file (read in then save and output)
 
     if(DEBUG) :
         print(cmd)
 
     returned_value = os.system(cmd)  # returns the exit code in unix
 
-    if returned_value :
+    if returned_value:
         print("ERROR:main:Refactor did not run")
-        #exit()
+        exit()
 
     refactorFileStatistics = statisticsClass()
     refactorFileStatistics.readData(intermediateFilename)
@@ -236,106 +233,34 @@ for x in range(numOneSampTrials) :
     statistics5[x] = refactorFileStatistics.stat5
 
 
-
-    textList = [str(refactorFileStatistics.stat1), str(refactorFileStatistics.stat2),
+    textList = []
+    textList = [str(refactorFileStatistics.NE_VALUE), str(refactorFileStatistics.stat1), str(refactorFileStatistics.stat2),
                     str(refactorFileStatistics.stat3),
                     str(refactorFileStatistics.stat4), str(refactorFileStatistics.stat5)]
-    file.writelines('\t'.join(textList[0:]) + '\n')
+    file.writelines('\t'.join(textList) + '\n')
 
 
-if (DEBUG):
-    print("Start calculation of statistics for ALL populations")
+
+#if (DEBUG):
+    #print("Start calculation of statistics for ALL populations")
 
 ###################### Normalization and linear regression
 
-normalizedStatistics1 = normalization(statistics1, mean(statistics1), stdev(statistics1))
-normalizedStatistics2 = normalization(statistics2, mean(statistics2), stdev(statistics2))
-normalizedStatistics3 = normalization(statistics3, mean(statistics3), stdev(statistics3))
-normalizedStatistics4 = normalization(statistics4, mean(statistics4), stdev(statistics4))
-normalizedStatistics5 = normalization(statistics5, mean(statistics5), stdev(statistics5))
 
-normalizedInputFileStatistic1 = normalization(inputFileStatistics.stat1, mean(statistics1), stdev(statistics1))
-normalizedInputFileStatistic2 = normalization(inputFileStatistics.stat2, mean(statistics2), stdev(statistics2))
-normalizedInputFileStatistic3 = normalization(inputFileStatistics.stat3, mean(statistics3), stdev(statistics3))
-normalizedInputFileStatistic4 = normalization(inputFileStatistics.stat4, mean(statistics4), stdev(statistics4))
-normalizedInputFileStatistic5 = normalization(inputFileStatistics.stat5, mean(statistics5), stdev(statistics5))
-
-#dist < - sqrt((scaled.sumstat[, 1]-target.s[1]) ^ 2 +
-#              (scaled.sumstat[, 2]-target.s[2]) ^ 2 +
-#              (scaled.sumstat[, 3]-target.s[3]) ^ 2 +
-#              (scaled.sumstat[, 4]-target.s[4]) ^ 2 +
-#              (scaled.sumstat[, 5]-target.s[5]) ^ 2 +
-#              (scaled.sumstat[, 6]-target.s[6]) ^ 2 +
-#              (scaled.sumstat[, 7]-target.s[7]) ^ 2 +
-#              (scaled.sumstat[, 8]-target.s[8]) ^ 2)
-
-length = statisticsClass.data
-dist = [0 for a in range(len(str(length)))];
-distTransform  = [0 for a in range(len(str(length)))];
-for i in range(len(length)):
-    #Changing so normalizedInputFileStats have an index
-    dist[i] = np.sqrt(normalizedStatistics1[i] - normalizedInputFileStatistic1) \
-                + np.sqrt(normalizedStatistics2[i] - normalizedInputFileStatistic2) \
-                + np.sqrt(normalizedStatistics3[i] - normalizedInputFileStatistic3[i]) \
-                + np.sqrt(normalizedStatistics4[i] - normalizedInputFileStatistic4[i]) \
-                + np.sqrt(normalizedStatistics5[i] - normalizedInputFileStatistic5[i])
-    #dist[!gwt] <- floor(max(dist[gwt])+10)
-    #distTransform[i] = np.floor()
-
-# abstol <- quantile(dist,tol)
-abstol =  10 #numpy.quantile(dist, 0.01)
-
-#wt1 <- dist < abstol
-wt1 = [0 for a in length]
-for i in range(length):
-    if(dist[i] < abstol) :
-        wt1 = 1
+#Comment lines 256-337
 
 
-#regwt < - 1 - dist[wt1] ^ 2 / abstol ^ 2
-#x1 < - scaled.sumstat[, 1][wt1]
-#x2 < - scaled.sumstat[, 2][wt1]
-#x3 < - scaled.sumstat[, 3][wt1]
-#x4 < - scaled.sumstat[, 4][wt1]
-regwt = [0 for a in length]
-x1 = [0 for a in length]
-x2 = [0 for a in length]
-x3 = [0 for a in length]
-x4 = [0 for a in length]
-x5 = [0 for a in length]
-for i in range(length):
-    if(wt1[i]) :
-        regwt[i] = 1 - np.sqrt(dist[i]) / np.sqrt(abstol)
-        x1.insert(normalizedStatistics1[i])
-        x2.insert(normalizedStatistics2[i])
-        x3.insert(normalizedStatistics3[i])
-        x4.insert(normalizedStatistics4[i])
-        x5.insert(normalizedStatistics5[i])
 
-## ADD Ne Value
-outputFile = open(OUTPUTFILENAME, "w")
-for x in range(length):
-    if(wt1[x]) :
-        outputline = "%d %d %d %d %d %d \n" % ( regwt[x], statistics1[x], statistics2[x], statistics3[x], statistics4[x], statistics5[x])
-        outputFile.write(outputline)
-outputFile.close()
+res = subprocess.call(["module load R && Rscript /blue/boucher/ishayooseph/RefactorRemote/ONeSAMP/refactor/release/rScript.r < /blue/boucher/ishayooseph/allPopStats"], shell = True)
+res
 
 
-#predmean <- predict.lm(fit1,data.frame(
-#x1=target.s[1],x2=target.s[2],x3=target.s[3],x4=target.s[4]))
 
-
-#model = LinearRegression()
-#model = LinearRegression().fit(statistics1, statistics2)
-
-## Complete R analysis on output.
-## Assumes the output is in "priors.txt"
-returned_value = os.system("module load R")
 if (returned_value):
     print("ERROR:main: Could not Load R.  FATAL ERROR.")
     exit()
 
-#returned_value = os.system(FINAL_R_ANALYSIS)
+returned_value = os.system(FINAL_R_ANALYSIS)
 if (returned_value):
     print("ERROR:main: Could not run R code. Fatal ERROR.")
 

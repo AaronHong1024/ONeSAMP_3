@@ -18,6 +18,7 @@ class statisticsClass:
     stat5 = 0
     numLoci = 0
     sampleSize = 0  ##Indivduals
+    NE_VALUE = 0
 
 
     ######################################################################
@@ -32,14 +33,18 @@ class statisticsClass:
     def readData(self, myFileName):
         matrixFile = open(myFileName, "r")
         line = matrixFile.readline()
+        sampleSize = 0
 
         # Read until "Pop" in file
         popReached = 0;
         while line:
             if ((line == "Pop\n") or (line == "POP\n") or (line == "pop\n")) :
                 popReached = 1
+                sampleSize = sampleSize - 1
                 break
+            sampleSize = sampleSize + 1
             line = matrixFile.readline()
+
 
         if (popReached == 0):
             print("ERROR:statistics.py:line 32:: POP not contained in file. Fatal error")
@@ -56,7 +61,8 @@ class statisticsClass:
         temp.pop(1)
         currLociCnt = len(temp) #Getting length of first line of data
 
-        while(line) :
+
+        for i in range(sampleSize):
             temp = line.split()
             temp.pop(1)  # Getting rid of comma in array
             data.append(temp)
@@ -66,9 +72,17 @@ class statisticsClass:
                 print("ERROR:statistics.py:line 56:: There is an incorrect number of loci. Fatal Error.")
                 exit()
 
+        #Reading in NE Value
+        NE_VALUEtemp = 0
+        if(line):
+            temp = line.split()
+            NE_VALUEtemp = temp[0]
+
+
         self.data = data
         self.numLoci = currLociCnt - 1 #Subracting 1 bc number takes into acct the indiviudal's number
         self.sampleSize = len(self.data)
+        self.NE_VALUE = NE_VALUEtemp
 
     ######################################################################
     # filterIndividuals                                                 ##
