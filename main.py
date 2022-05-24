@@ -1,8 +1,4 @@
 #!/usr/bin/python
-### TO DO:
-### -> Regression?
-### -> Filter for individuals with > 20% missing data & lcoi with > 20% missing data
-### -> Handle missing data
 import subprocess
 import sys
 import argparse
@@ -15,13 +11,14 @@ import time
 from statistics import statisticsClass
 
 NUMBER_OF_STATISTICS = 5
-DEBUG = 1       ## BOUCHER: Change this to 1 for debuggin mode
+DEBUG = 0       ## BOUCHER: Change this to 1 for debuggin mode
 OUTPUTFILENAME = "priors.txt"
 
 BASE_PATH = os.path.dirname(os.path.realpath(__file__))
 
-POPULATION_GENERATOR = "/blue/boucher/ishayooseph/RefactorRemote/ONeSAMP/build/OneSamp"
-FINAL_R_ANALYSIS = "./r_analysis.R"
+POPULATION_GENERATOR = "./build/OneSamp"
+FINAL_R_ANALYSIS = "./scripts/release/rScript.r"
+
 
 
 #############################################################
@@ -70,10 +67,13 @@ parser.add_argument("--uD", type = float, help="Upper of Duration Range")
 parser.add_argument("--i", type = float, help="Missing data for individuals")
 parser.add_argument("--l", type = float, help="Missing data for loci")
 parser.add_argument("--o", type = str, help="The File Name")
-#'i' for indiv (float) and 'l' for loci (float) [for missing data]
-#default: 0.2 for both
+
 
 args = parser.parse_args()
+
+#########################################
+# INITIALIZING PARAMETERS
+#########################################
 
 minAlleleFreq = 0.005
 if (args.m):
@@ -149,18 +149,12 @@ if(DEBUG) :
 
 rangeTheta = "%d,%d" % (lowerTheta, upperTheta)
 
-#data = np.array([7, 5, 4, 9, 12, 45])
-#normalizedData = normalization(data, mean(data), stdev(data))
-#for x in range(len(data)):
-#    formatted_float = "{:.2f}".format(normalizedData[x])
-#    print(formatted_float)
-   # print("the value of data is % d " % "{:.2f}".format(normalizedData[x]))
-
+#########################################
+# STARTING INITIAL POPULATION
+#########################################
 
 inputFileStatistics = statisticsClass()
 inputFileStatistics.readData(fileName)
-#MISSIND DATA FUNCTION IS RUN (filter for indiv and loci)
-#Output data to make sure its being removed
 inputFileStatistics.filterIndividuals(indivMissing)
 inputFileStatistics.filterLoci(lociMissing)
 inputFileStatistics.stat1()
@@ -172,18 +166,22 @@ inputFileStatistics.stat5()
 numLoci = inputFileStatistics.numLoci
 sampleSize = inputFileStatistics.sampleSize
 
+##Creting input file with intial statistics
 textList = [str(inputFileStatistics.stat1), str(inputFileStatistics.stat2), str(inputFileStatistics.stat3), str(inputFileStatistics.stat4), str(inputFileStatistics.stat5)]
-with open('/blue/boucher/ishayooseph/inputPopStats','w') as file:
+with open('./inputPopStats','w') as file:
     file.write('\t'.join(textList[0:]) + '\t')
 file.close()
 
 if(DEBUG) :
     print("Finish calculation of statistics for input population")
 
+#############################################
+# FINISH STATS FOR INITIAL INPUT  POPULATION
+############################################
 
-############ Boucher: calculate statistics for numOneSampTrials
-############        : call refactor to generate a new population and
-############        : calcualte the statistics for new population, store in an array
+#########################################
+# STARTING ALL POPULATIONS
+#########################################
 
 if(DEBUG) :
     print("Start calculation of statistics for ALL populations")
@@ -200,20 +198,19 @@ statistics3 = [0 for x in range(numOneSampTrials)]
 statistics4 = [0 for x in range(numOneSampTrials)]
 statistics5 = [0 for x in range(numOneSampTrials)]
 
-file = open('/blue/boucher/ishayooseph/RemoteProjects/OneSamp3.0/allPopStats', 'w+')
+file = open('./allPopStats', 'w+')
 for x in range(numOneSampTrials) :
 
     loci = inputFileStatistics.numLoci
     sampleSize = inputFileStatistics.sampleSize
-    intermediateFilename = "/blue/boucher/ishayooseph/genePopTiny"
+    intermediateFilename = "./genePopTiny"
 
     cmd = "%s -u%d -v%s -rC -l%d -i%d -d%s -s -t1 -b%s -f%d -o1 -p > %s" % (POPULATION_GENERATOR, mutationRate, rangeTheta, loci, sampleSize, rangeDuration, rangeNe, minAlleleFreq, intermediateFilename)
-#Change command line, then output the generated NE value to our text file (read in then save and output)
 
     if(DEBUG) :
         print(cmd)
 
-    returned_value = os.system(cmd)  # returns the exit code in unix
+    returned_value = os.system(cmd)
 
     if returned_value:
         print("ERROR:main:Refactor did not run")
@@ -233,39 +230,31 @@ for x in range(numOneSampTrials) :
     statistics5[x] = refactorFileStatistics.stat5
 
 
+    #Making file with stats from all populations
     textList = []
     textList = [str(refactorFileStatistics.NE_VALUE), str(refactorFileStatistics.stat1), str(refactorFileStatistics.stat2),
                     str(refactorFileStatistics.stat3),
                     str(refactorFileStatistics.stat4), str(refactorFileStatistics.stat5)]
     file.writelines('\t'.join(textList) + '\n')
 
+#########################################
+# FINISHING ALL POPULATIONS
+########################################
+# STARTING RSCRIPT
+#########################################
 
+rScriptCMD = "module load R && Rscript ./scripts/rScript.r < ./allPopStats"
+res = os.system(rScriptCMD)
 
-#if (DEBUG):
-    #print("Start calculation of statistics for ALL populations")
-
-###################### Normalization and linear regression
-
-
-#Comment lines 256-337
-
-
-
-res = subprocess.call(["module load R && Rscript /blue/boucher/ishayooseph/RefactorRemote/ONeSAMP/refactor/release/rScript.r < /blue/boucher/ishayooseph/allPopStats"], shell = True)
-res
-
-
-
-if (returned_value):
-    print("ERROR:main: Could not Load R.  FATAL ERROR.")
+if (res):
+    print("ERROR:main: Could not run Rscript.  FATAL ERROR.")
     exit()
-
-returned_value = os.system(FINAL_R_ANALYSIS)
-if (returned_value):
-    print("ERROR:main: Could not run R code. Fatal ERROR.")
 
 if (DEBUG):
     print("Finish linear regression")
 
 print("--- %s seconds ---" % (time.time() - start_time))
 
+##########################
+# END
+#########################

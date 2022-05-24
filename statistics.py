@@ -6,8 +6,6 @@ class statisticsClass:
 
 ####### Members of Class
 
-
-
     ARRAY_MISSINGIndiv = []
     ARRAY_MISSINGLoci = []
     data = []      ## Matrix is [individuals by loci]
@@ -19,13 +17,14 @@ class statisticsClass:
     numLoci = 0
     sampleSize = 0  ##Indivduals
     NE_VALUE = 0
+    DEBUG = 0
 
 
     ######################################################################
     # writeStatistics                                                   ##
     ######################################################################
-   # def writeStatistics(self, myFileName):
-   # outputFile = open(myFileName, "w")
+    # def writeStatistics(self, myFileName):
+    # outputFile = open(myFileName, "w")
 
     ######################################################################
     # readData                                                          ##
@@ -55,7 +54,6 @@ class statisticsClass:
         data = self.data
         temp = []
         temp = line.split()
-        #data.append(temp) Commenting out bc this line adds pop to data matrix
         line = matrixFile.readline()
         temp = line.split()
         temp.pop(1)
@@ -101,14 +99,7 @@ class statisticsClass:
                 del self.data[j]
                 self.numLoci = self.numLoci - 1
                 self.sampleSize = len(self.data) - 1
-        print (self.data)
 
-
-        #TO DO
-        #Print data to make sure everything that needs to be removed is being removed (same for loci)
-        #add changes to numLoci and sample size
-        #output individ that were deleted
-        #array of items that were deleted
     ######################################################################
     # filterLoci                                                        ##
     ######################################################################
@@ -125,14 +116,14 @@ class statisticsClass:
                 del self.data[j]
                 self.numLoci = self.numLoci - 1
                 self.sampleSize = len(self.data) - 1
-        print(self.data)
-
 
     ######################################################################
     # stat1 BW Estimator                                                ##
     ######################################################################
     def stat1(self):
-        print("printing for stat1 begin:")
+        if (self.DEBUG):
+            print("printing for stat1 begin:")
+
         data = self.data
         alleleA = []  # same dimensions as data but holds the first allele in a locus
         alleleB = []  # same dimensions as data but holds the second allele in a locus
@@ -144,21 +135,17 @@ class statisticsClass:
             temB = []
             temA.clear()
             temB.clear()
-            #print("DATA   ", len(data))
             for j in range(1, len(data[i])):
                 temA.append(data[i][j][:2])
                 temB.append(data[i][j][2:])
 
             alleleA.append(temA)
-            #print("Allele A: ", alleleA)
             alleleB.append(temB)
-            #print("Allele B: ", alleleB)
 
 
 
         allcnt = []  # a 1D array, each element is a dictionary of alleles with frequency counts per loci
         homoloci = []  # maintains frequency counts of homologous alleles per loci
-        #print(len(alleleA))
         for i in range(len(alleleA)):  # fills up allcnt
             newdic = {}
             temp = 0
@@ -178,9 +165,7 @@ class statisticsClass:
 
             homoloci.append(float(temp) / float(len(data)))
             allcnt.append(newdic)
-            #print("Allele count", allcnt)
 
-        #print(allcnt[0])
         di = []  # a 1D array that holds the departures of each loci from Hardy-Weinberg equilibrium
         totspots = float(len(data) * 2)  # total number of alleles per locus. used in computing allele freq per locus
 
@@ -229,7 +214,9 @@ class statisticsClass:
 
         numloci = len(alleleA[0])
         self.stat1 = 2*running_sum/(numloci*(numloci-1))
-        print("printing for stat1 end   ---->", self.stat1)
+
+        if (self.DEBUG):
+            print("printing for stat1 end   ---->", self.stat1)
 
     ######################################################################
     # stat2 First Moment of Multilocus Homozygosity                     ##
@@ -238,7 +225,6 @@ class statisticsClass:
         #taking average homozygosity for each indiv then adding that all up and dividing by number of indivudls, so basically avg homozygosity over all indiv
 
         homozygosityCnt = 0
-        tempStat2 = 0
         tempVarStat2 = 0
 
         for i in range(self.sampleSize):
@@ -253,14 +239,15 @@ class statisticsClass:
 
 
         self.stat2 = float(tempVarStat2) / float(self.sampleSize)
-        print("(First moment of homozygosity) Stats2 is ", self.stat2)
+
+        if (self.DEBUG):
+            print("(First moment of homozygosity) Stats2 is ", self.stat2)
 
     ######################################################################
     # stat3 Second Moment of Multilocus Homozygosity                    ##
     ######################################################################
     def stat3(self):
         homozygosityCnt = 0
-        difference = 0
         totalHomozygosityDiff = 0
         # Total count is same as above stats
         for i in range(self.sampleSize):
@@ -276,7 +263,9 @@ class statisticsClass:
                 totalHomozygosityDiff = totalHomozygosityDiff + (difference * difference)
 
         self.stat3 = float(totalHomozygosityDiff) / float(self.sampleSize - 1)
-        print("(Second moment of multilocus homozygosity) Stats3 is ", self.stat3)
+
+        if (self.DEBUG):
+            print("(Second moment of multilocus homozygosity) Stats3 is ", self.stat3)
 
     ######################################################################
     # stat4 Wrights                                                     ##
@@ -287,7 +276,6 @@ class statisticsClass:
         num = []
         for i in range(self.numLoci):
             num *= 0
-            addStat4 = 0.0
             homozygosityCnt = 0
             a = 0
             c = 0
@@ -346,7 +334,9 @@ class statisticsClass:
 
         tempstat4 = float(tempstat4) / float(self.numLoci)
         self.stat4 = 1 - tempstat4
-        print('(Wrights) Stat4 is ',  self.stat4)
+
+        if (self.DEBUG):
+            print('(Wrights) Stat4 is ',  self.stat4)
 
     ######################################################################
     # stat5 Expected Heterozygosity                                     ##
@@ -367,7 +357,9 @@ class statisticsClass:
 
         tempstat5 = float(tempstat5) / float(self.numLoci)
         self.stat5 = tempstat5
-        print("(Expected heterozygosity) stat5 is ", self.stat5)
+
+        if (self.DEBUG):
+            print("(Expected heterozygosity) stat5 is ", self.stat5)
 
     ######################################################################
     # stat4 Updated after meeting w Dav                                 ##
@@ -396,4 +388,6 @@ class statisticsClass:
 
         newstat4 = 1 - (float(newstat4/self.numLoci))
 
-        print ("New stat4:   " ,newstat4)
+
+        if (self.DEBUG):
+            print ("New stat4:   " ,newstat4)
