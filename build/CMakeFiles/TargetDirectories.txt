@@ -1,0 +1,3 @@
+/blue/boucher/ishayooseph/RefactorRemote/ONeSAMP/build/CMakeFiles/rebuild_cache.dir
+/blue/boucher/ishayooseph/RefactorRemote/ONeSAMP/build/CMakeFiles/edit_cache.dir
+/blue/boucher/ishayooseph/RefactorRemote/ONeSAMP/build/CMakeFiles/OneSamp.dir
