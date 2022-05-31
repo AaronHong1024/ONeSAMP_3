@@ -16,8 +16,8 @@ OUTPUTFILENAME = "priors.txt"
 
 BASE_PATH = os.path.dirname(os.path.realpath(__file__))
 
-POPULATION_GENERATOR = "./build/OneSamp"
-FINAL_R_ANALYSIS = "./scripts/release/rScript.r"
+POPULATION_GENERATOR = "./OneSamp"
+FINAL_R_ANALYSIS = "./scripts/rScript.r"
 
 
 
@@ -168,9 +168,9 @@ sampleSize = inputFileStatistics.sampleSize
 
 ##Creting input file with intial statistics
 textList = [str(inputFileStatistics.stat1), str(inputFileStatistics.stat2), str(inputFileStatistics.stat3), str(inputFileStatistics.stat4), str(inputFileStatistics.stat5)]
-with open('./inputPopStats','w') as file:
-    file.write('\t'.join(textList[0:]) + '\t')
-file.close()
+with open('./inputPopStats','w') as fileINPUT:
+    fileINPUT.write('\t'.join(textList[0:]) + '\t')
+fileINPUT.close()
 
 if(DEBUG) :
     print("Finish calculation of statistics for input population")
@@ -198,7 +198,7 @@ statistics3 = [0 for x in range(numOneSampTrials)]
 statistics4 = [0 for x in range(numOneSampTrials)]
 statistics5 = [0 for x in range(numOneSampTrials)]
 
-file = open('./allPopStats', 'w+')
+fileALLPOP = open('./allPopStats', 'w+')
 for x in range(numOneSampTrials) :
 
     loci = inputFileStatistics.numLoci
@@ -235,7 +235,9 @@ for x in range(numOneSampTrials) :
     textList = [str(refactorFileStatistics.NE_VALUE), str(refactorFileStatistics.stat1), str(refactorFileStatistics.stat2),
                     str(refactorFileStatistics.stat3),
                     str(refactorFileStatistics.stat4), str(refactorFileStatistics.stat5)]
-    file.writelines('\t'.join(textList) + '\n')
+    #print (textList)
+    fileALLPOP.write('\t'.join(textList) + '\n')
+fileALLPOP.close()
 
 #########################################
 # FINISHING ALL POPULATIONS
@@ -243,7 +245,9 @@ for x in range(numOneSampTrials) :
 # STARTING RSCRIPT
 #########################################
 
-rScriptCMD = "module load R && Rscript ./scripts/rScript.r < ./allPopStats"
+ALL_POP_STATS_FILE = "./allPopStats"
+
+rScriptCMD = "module load R && Rscript %s < %s" % (FINAL_R_ANALYSIS, ALL_POP_STATS_FILE)
 res = os.system(rScriptCMD)
 
 if (res):
