@@ -2,8 +2,8 @@
 <project version="4">
   <component name="WebServers">
     <option name="servers">
-      <webServer id="4ab9dd06-b1ed-4f09-b20a-f658c03196b7" name="Hipergator">
-        <fileTransfer rootFolder="/blue/boucher/ishayooseph" accessType="SFTP" sshConfigId="c1b4b793-dc1c-4dc7-8d7f-6db5bfd8e9c2" sshConfig="ishayooseph@hpg.rc.ufl.edu:22 password">
+      <webServer id="8087ef3a-2452-4c1f-968b-e96512bf3440" name="hpg">
+        <fileTransfer accessType="SFTP" host="hpg.rc.ufl.edu" port="22" sshConfigId="80a18464-5c73-4fdf-9248-c187b23afeb1" sshConfig="ishayooseph@hpg.rc.ufl.edu:22 password">
           <advancedOptions>
             <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
           </advancedOptions>

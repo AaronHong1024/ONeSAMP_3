@@ -2,17 +2,17 @@
 <project version="4">
   <component name="PublishConfigData" autoUpload="Always" serverName="ishayooseph@hpg.rc.ufl.edu:22 password" remoteFilesAllowedToDisappearOnAutoupload="false">
     <serverData>
-      <paths name="Hipergator">
+      <paths name="hpg">
         <serverdata>
           <mappings>
-            <mapping deploy="RemoteProjects" local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="/blue/boucher/ishayooseph/oneSampTest" local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>
       <paths name="ishayooseph@hpg.rc.ufl.edu:22 password">
         <serverdata>
           <mappings>
-            <mapping deploy="/blue/boucher/ishayooseph/RemoteProjects/OneSamp3.0" local="$PROJECT_DIR$" />
+            <mapping deploy="/blue/boucher/ishayooseph/oneSampTest" local="$PROJECT_DIR$" />
           </mappings>
         </serverdata>
       </paths>
