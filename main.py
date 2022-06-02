@@ -14,7 +14,7 @@ OUTPUTFILENAME = "priors.txt"
 
 BASE_PATH = os.path.dirname(os.path.realpath(__file__))
 
-POPULATION_GENERATOR = "./OneSamp"
+POPULATION_GENERATOR = "./build/OneSamp"
 FINAL_R_ANALYSIS = "./scripts/rScript.r"
 
 
