@@ -133,8 +133,6 @@ class statisticsClass:
         for i in range(len(data)):  # fills up alleleA and alleleB
             temA = []
             temB = []
-            temA.clear()
-            temB.clear()
             for j in range(1, len(data[i])):
                 temA.append(data[i][j][:2])
                 temB.append(data[i][j][2:])
@@ -183,7 +181,6 @@ class statisticsClass:
             for j in range(len(alleleB)):
                 keysi = []
                 keysj = []
-                keysj.clear()
 
                 for key, value in allcnt[i].items():
                     keysi.append(key)

@@ -3,10 +3,8 @@ import subprocess
 import sys
 import argparse
 
-import statistics
 import os
 import numpy as np
-#from sklearn.linear_model import LinearRegression
 import time
 from statistics import statisticsClass
 
@@ -258,6 +256,13 @@ if (DEBUG):
     print("Finish linear regression")
 
 print("--- %s seconds ---" % (time.time() - start_time))
+
+#Deleting temporary files
+delete1 = "rm ./inputPopStats"
+delete_INPUTPOP = os.system(delete1)
+
+delete2 = "rm ./allPopStats"
+delete_ALLPOP = os.system(delete2)
 
 ##########################
 # END
