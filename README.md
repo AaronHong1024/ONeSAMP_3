@@ -16,7 +16,12 @@ summary statistics to conclude the Ne value. The software will take a file in GE
 USAGE OVERVIEW
 
 1. Must have R downloaded in order to run the software
-2. Python 3.8 or later
+        
+   You can download and set up the R environment at this link: 
+        
+        https://www.tutorialspoint.com/r/r_environment_setup.htm
+        
+3. Python 3.8 or later
 
 +++++++++++++++++++++++++++
 
@@ -105,10 +110,10 @@ HOW TO RUN
 1. Clone or download the repository
 2. Go to configurations to add arguments 
 
-        Example of minimum argument needed:
+   Example of minimum argument needed:
         
         --s 2 --o genePop5Ix5L
         
-        The example GENEPOP file is provided under the folder “exampleData”
+   The example GENEPOP file is provided under the folder “exampleData”
 
  
