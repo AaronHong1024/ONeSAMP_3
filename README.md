@@ -101,7 +101,7 @@ Upper Bound: -
 
 +++++++++++++++++++++++++++
 
-HOW TO RUN
+HOW TO EXECUTE
 
 1. Set up R and Python environments
 
