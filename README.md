@@ -128,6 +128,7 @@ HOW TO RUN
    Example of minimum argument needed:
         
         --s 2 --o genePop5Ix5L
+   (Running 2 trials with GENEPOP file names "genePop5Ix5L")
         
    The example GENEPOP file is provided under the folder “exampleData”
 
