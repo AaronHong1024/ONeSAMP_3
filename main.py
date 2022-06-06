@@ -245,7 +245,7 @@ fileALLPOP.close()
 
 ALL_POP_STATS_FILE = "./allPopStats"
 
-rScriptCMD = "module load R && Rscript %s < %s" % (FINAL_R_ANALYSIS, ALL_POP_STATS_FILE)
+rScriptCMD = "Rscript %s < %s" % (FINAL_R_ANALYSIS, ALL_POP_STATS_FILE)
 res = os.system(rScriptCMD)
 
 if (res):
