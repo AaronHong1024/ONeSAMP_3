@@ -107,8 +107,10 @@ Upper Bound: -
 
 HOW TO RUN
 
-1. Clone or download the repository
-2. Go to configurations to add arguments 
+1. Set up R and Python environments
+2. Clone or download the repository using the following command:
+        git clone 
+3. Go to configurations to add arguments 
 
    Example of minimum argument needed:
         
