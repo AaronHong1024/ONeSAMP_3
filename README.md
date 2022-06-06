@@ -108,9 +108,26 @@ Upper Bound: -
 HOW TO RUN
 
 1. Set up R and Python environments
+
+   How to set up R environment:
+        https://linuxize.com/post/how-to-install-r-on-ubuntu-20-04/
+        
+   How to set up Python environment:
+        https://www.digitalocean.com/community/tutorials/how-to-install-python-3-and-set-up-a-programming-environment-on-ubuntu-20-04-quickstart
+        
 2. Clone or download the repository using the following command:
-        git clone 
-3. Go to configurations to add arguments 
+
+
+        git clone git@github.com:IshaYoo/OneSamp3.0.git
+        cd /OneSamp3.0
+        chmod 777 build/OneSamp
+        
+3. To run ONeSAMP3.0:
+
+
+        python3 ./main.py --s 2 --o exampleData/genePop5Ix5L
+        
+   Adjust configurations accordingly
 
    Example of minimum argument needed:
         
