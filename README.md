@@ -17,11 +17,7 @@ USAGE OVERVIEW
 
 1. Must have R downloaded in order to run the software
         
-   You can download and set up the R environment at this link: 
-        
-        https://www.tutorialspoint.com/r/r_environment_setup.htm
-        
-3. Python 3.8 or later
+2. Python 3.8 or later
 
 +++++++++++++++++++++++++++
 
