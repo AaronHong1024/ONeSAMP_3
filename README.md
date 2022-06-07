@@ -101,7 +101,7 @@ Upper Bound: -
 
 +++++++++++++++++++++++++++
 
-HOW TO EXECUTE
+HOW TO EXECUTE USING COMMAND LINES
 
 1. Set up R and Python environments
 
@@ -133,3 +133,22 @@ HOW TO EXECUTE
    The example GENEPOP file is provided under the folder “exampleData”
 
  
+ 
+ +++++++++++++++++++++++++++
+
+HOW TO EXECUTE USING DOCKER
+
+1. Download Docker using the following link:
+
+https://docs.docker.com/get-docker/
+
+2. Use the following command lines:
+
+
+        docker pull aaronhong10245/onesamp:latest
+        
+        export DOCKER_DEFAULT_PLATFORM=linux/amd64   --------> Only execute if your computer has an AMD chip.
+        
+        docker run aaronhong10245/onesamp python3 ./root/OneSamp_python/main.py --s 2 --o /root/OneSamp_python/exampleData/genePop5Ix5L
+        
+        ****Adjust configurations (i.e. numver of trials, the GENEPOP file, other arguments) accordingly****
