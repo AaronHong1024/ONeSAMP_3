@@ -142,16 +142,17 @@ HOW TO EXECUTE USING DOCKER
 
         https://docs.docker.com/get-docker/
 
-2. Use the following command lines:
+2. Run the following command line:
 
-
-        1. docker pull aaronhong10245/onesamp:latest
+        docker pull aaronhong10245/onesamp:latest
         
-------> Only execute if your computer has an AMD chip: 
+3. Only execute if your computer has an AMD chip: 
         
         export DOCKER_DEFAULT_PLATFORM=linux/amd64   
         
-        2. docker run aaronhong10245/onesamp python3 ./root/OneSamp_python/main.py --s 2 --o /root/OneSamp_python/exampleData/genePop5Ix5L
+4. To run:
         
-                ****Adjust configurations (i.e. numver of trials, the GENEPOP file, other arguments) accordingly****
+        docker run aaronhong10245/onesamp python3 ./root/OneSamp_python/main.py --s 2 --o /root/OneSamp_python/exampleData/genePop5Ix5L
+        
+****Adjust configurations (i.e. numver of trials, the GENEPOP file, other arguments) accordingly****
 
