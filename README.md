@@ -3,105 +3,152 @@ ONeSAMP 3.0
 
 By XXXXXXX
 
-+++++++++++++++++++++++++++
 
-ABSTRACT
+## ABSTRACT 
 
 ONeSAMP 3.0 computes the effective population size of gene data sets. The estimation of the genetic effective 
 population size (Ne) has been an established challenge in the field of population genetics. This program uses local linear regression and five 
 summary statistics to conclude the Ne value. The software will take a file in GENEPOP format and provide the user with an effective population size. 
 
-+++++++++++++++++++++++++++
 
-USAGE OVERVIEW
+## DEPENDENCY
 
-1. Must have R downloaded in order to run the software
+1. R 4.1 or later
         
 2. Python 3.8 or later
 
-+++++++++++++++++++++++++++
 
-ARUGMENTS
+## INPUT & OUTPUT
 
-When using ONeSAMP 3.0, the user must input the following arguments at a minimum: **the number of trials and a GENEPOP file**. 
 
-The following are additional arguments with their bounds: 
 
-**--m Minimum Allele Frequency**
+**INPUT**
+##
+The minimum argument needed is a GENEPOP file. Example GENEPOP files are provided under the folder “exampleData”. 
 
-Lower Bound: 0
+Example of minimum argument needed:
+        
+        --o exampleData/genePop5Ix5L
+   (Running ONeSAMP3.0 with a GENEPOP file named "genePop5Ix5L" located under the exampleData folder)
+   
+   
+   
+**PARAMETERS**
+##
+When using ONeSAMP 3.0, the user must input **a GENEPOP file** at minimum. 
 
-Upper Bound: 1
+The following are additional arguments with their bounds and default value: 
 
-**--r Mutation Rate**
+**Minimum Allele Frequency**
 
-Lower Bound: 0
+Default value: 0.005 ** Lower Bound: 0 ** Upper Bound: 1
 
-Upper Bound: 1
+Command Line Argument: 
 
-**--lNe Lower of Ne Range**
+        --m 0.005
 
-Lower Bound: 10
+**Mutation Rate**
 
-Upper Bound: -
+Default value: 0.000000012 ** Lower Bound: 0 ** Upper Bound: 1
 
-**--uNe Upper of Ne Range**
+Command Line Argument: 
 
-Lower Bound: -
+        --r 0.000000012
 
-Upper Bound: 500
+**Lower of Ne Range**
 
-**--lT Lower of Theta Range**
+Default value: 10 ** Lower Bound: 10 ** Upper Bound: -
 
-Lower Bound: 1
+Command Line Argument: 
 
-Upper Bound: -
+        --lNe 10
 
-**--uT Upper of Theta Range**
+**Upper of Ne Range**
 
-Lower Bound: -
+Default value: 500 ** Lower Bound: - ** Upper Bound: 500
 
-Upper Bound: 10
+Command Line Argument: 
 
-**--s Number of OneSamp Trials**
+        --uNe 500
 
-Lower Bound: 2
+**Lower of Theta Range**
 
-Upper Bound: 50,000
+Default value: 1 ** Lower Bound: 1 ** Upper Bound: -
 
-**--lD Lower of Duration Range**
+Command Line Argument: 
 
-Lower Bound: 2
+        --lT 1
 
-Upper Bound: -
+**Upper of Theta Range**
 
-**--uD Upper of Duration Range**
+Default value: 10 ** Lower Bound: - ** Upper Bound: 10
 
-Lower Bound: -
+Command Line Argument: 
 
-Upper Bound: 8
+        --uT 10
 
-**--i Missing data for individuals**
+**Number of OneSamp Trials**
 
-Lower Bound: 0
+Default value: 50000 ** Lower Bound: 2 ** Upper Bound: 50,000
 
-Upper Bound: 1
+Command Line Argument: 
 
-**--l Missing data for loci**
+        --s 50
 
-Lower Bound: 0
+**Lower of Duration Range**
 
-Upper Bound: 1
+Default value: 2 ** Lower Bound: 2 ** Upper Bound: -
 
+Command Line Argument: 
+
+        --lD 2
+
+**Upper of Duration Range**
+
+Default value: 8 ** Lower Bound: - ** Upper Bound: 8
+
+Command Line Argument: 
+
+        --uD 8
+
+**Missing data for individuals**
+
+Default value: 0.2 ** Lower Bound: 0 ** Upper Bound: 1
+
+Command Line Argument: 
+
+        --i 0.2
+
+**Missing data for loci**
+
+Default value: 0.2 ** Lower Bound: 0 ** Upper Bound: 1
+
+Command Line Argument: 
+
+        --l 0.2
+        
 **--o The File Name**
 
-Lower Bound: -
+Default value: - ** Lower Bound: - ** Upper Bound: -
 
-Upper Bound: -
+Command Line Argument: 
 
-+++++++++++++++++++++++++++
+        --o exampleData/genePop5Ix5L
 
-HOW TO EXECUTE USING COMMAND LINES
+
+
+**OUTPUT**
+##
+ONeSAMP3.0 outputs the mean, median, and 95 credible limits for the posterior distribution of the effective population size using standard out. 
+        
+
+
+## RUN
+
+
+**HOW TO EXECUTE USING COMMAND LINES**
+
+
 
 1. Set up R and Python environments
 
@@ -124,19 +171,14 @@ HOW TO EXECUTE USING COMMAND LINES
         python3 ./main.py --s 2 --o exampleData/genePop5Ix5L
         
    Adjust configurations accordingly
-
-   Example of minimum argument needed:
-        
-        --s 2 --o genePop5Ix5L
-   (Running 2 trials with GENEPOP file names "genePop5Ix5L")
-        
-   The example GENEPOP file is provided under the folder “exampleData”
-
  
  
- +++++++++++++++++++++++++++
+## 
 
-HOW TO EXECUTE USING DOCKER
+
+**HOW TO EXECUTE USING DOCKER**
+
+
 
 1. Download Docker using the following link:
 
@@ -150,9 +192,10 @@ HOW TO EXECUTE USING DOCKER
         
         export DOCKER_DEFAULT_PLATFORM=linux/amd64   
         
-4. To run:
+4. To run ONeSAMP3.0:
         
         docker run aaronhong10245/onesamp python3 ./root/OneSamp_python/main.py --s 2 --o /root/OneSamp_python/exampleData/genePop5Ix5L
-        
-****Adjust configurations (i.e. numver of trials, the GENEPOP file, other arguments) accordingly****
+    
+    Adjust configurations accordingly
+
 
