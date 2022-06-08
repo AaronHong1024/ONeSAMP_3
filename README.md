@@ -28,9 +28,13 @@ The minimum argument needed is a GENEPOP file. Example GENEPOP files are provide
 
 Example of minimum argument needed:
         
-        --o exampleData/genePop5Ix5L
+        python3 ./onesamp3.py --o exampleData/genePop5Ix5L
    (Running ONeSAMP3.0 with a GENEPOP file named "genePop5Ix5L" located under the exampleData folder)
    
+Example of another possible set of arguments passed:
+        
+        python3 ./onesamp3.py --i 0.5 --l 0.5 exampleData/genePop5Ix5L
+   (Running ONeSAMP3.0 with a GENEPOP file and possible missing individual and loci data to be set to 0.5)
    
    
 **PARAMETERS**
