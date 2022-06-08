@@ -168,7 +168,7 @@ ONeSAMP3.0 outputs the mean, median, and 95 credible limits for the posterior di
 3. To run ONeSAMP3.0:
 
 
-        python3 ./main.py --s 2 --o exampleData/genePop5Ix5L
+        python3 ./onesamp3.py --s 2 --o exampleData/genePop5Ix5L
         
    Adjust configurations accordingly
  
@@ -194,7 +194,7 @@ ONeSAMP3.0 outputs the mean, median, and 95 credible limits for the posterior di
         
 4. To run ONeSAMP3.0:
         
-        docker run aaronhong10245/onesamp python3 ./root/OneSamp_python/main.py --s 2 --o /root/OneSamp_python/exampleData/genePop5Ix5L
+        docker run aaronhong10245/onesamp python3 ./root/OneSamp_python/onesamp3.py --s 2 --o /root/OneSamp_python/exampleData/genePop5Ix5L
     
     Adjust configurations accordingly
 
