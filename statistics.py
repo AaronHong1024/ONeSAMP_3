@@ -144,23 +144,23 @@ class statisticsClass:
 
 
         allcnt = []  # a 1D array, each element is a dictionary of alleles with frequency counts per loci
-        homoloci = []  # maintains frequency counts of homologous alleles per loci
+    #    homoloci = []  # maintains frequency counts of homologous alleles per loci
         denominator = float(numLoci)
 
         di = []  # a 1D array that holds the departures of each loci from Hardy-Weinberg equilibrium
         totspots = float(len(data) * 2)  # total number of alleles per locus. used in computing allele freq per locus
 
         for i in sampleSize:  # fills up allcnt
-            newdic = [0,0,0,0]
-            temp = 0
+            allele_counts = [0,0,0,0]
+            homozygous_count = 0
             for j in numLoci:
 
                 # check if it is homozygous
                 if (alleleA[i][j] == alleleB[i][j]):
-                    temp += 1
+                    homozygous_count += 1
 
-                newdic[int(alleleA[i][j])] +=1
-                newdic[int(alleleB[i][j])] +=1
+                allele_counts[int(alleleA[i][j]) - 1] +=1
+                allele_counts[int(alleleB[i][j]) - 1] +=1
 
                 #if (alleleA[i][j] in newdic):
                  #   newdic[alleleA[i][j]] += 1
@@ -173,50 +173,50 @@ class statisticsClass:
                  #   newdic[alleleB[i][j]] = 1
                 # END INNER FOR LOOP
 
-            currHomoLoci = (temp / denominator)
-            currDeparture = ( numLoci - temp ) / totspots
-            homoloci.append( currHomoLoci )
-            allcnt.append(newdic)
+            currHomoLoci = (homozygous_count/ denominator)
+            currDeparture = ( numLoci -homozygous_count ) / totspots
+           # homoloci.append( currHomoLoci )
+            allcnt.append(allele_counts)
 
             # vals = []
             # for key, value in allcnt[i].items():
             #    vals.append(float(value) / float(totspots))
             di.append( (currHomoLoci  *  currHomoLoci) - (currDeparture  *  currDeparture ))
         # END OUTER FOR LOOP
-
-        hits = 0
+        ###############################
 
         running_sum = 0
+        ai = 0
+        alA = 0
+        # Loop through Allele A
+        for i in sampleSize:
 
-        for i in range(len(alleleA)):
-            for j in range(len(alleleB)):
-                keysi = []
+            for l in allcnt[i]:
+                if (allcnt[i][l] > 0 )
+                    alA = allcnt[i][l]
+                    ai = allcnt[i][l] / totspots
+                    break
+
+            # Loop through Allele B
+            for j in sampleSize:
+
                 keysj = []
+                for l in allcnt[j]:
+                    if (allcnt[j][l] > 0)
+                        keysj.append(allcnt[j][l])
 
-                for key, value in allcnt[i].items():
-                    keysi.append(key)
+                if (len(keysj) >= 2):
 
+                    alB = keysj[1]
+                    bj = allcnt[j][alB] / totspots
+                    hits = 0
 
-                for key, value in allcnt[j].items():
-                    keysj.append(key)
+                    for k in numLoci :
+                        if ((alleleA[i][k] == alA or alleleB[i][k] == alA) and (alleleA[j][k] == alB or alleleB[j][k] == alB )):
+                            hits += 1
 
-
-                if (len(keysj) < 2):
-                    continue
-
-                alA = keysi[0]
-                alB = keysj[1]
-
-                hits = 0
-                for k in numLoci :
-                    if ((alleleA[i][k] == alA or alleleB[i][k] == alA) and
-                        (alleleA[j][k] == alB or alleleB[j][k] == alB )):
-                        hits += 1
-                ai = allcnt[i][alA] / totspots
-                bj = allcnt[j][alB] / totspots
-
-                x = (hits / (sampleSize - ai *  bj)) / (((ai * (1 - ai) + di[i]) * (float(bj) * float(1 - bj) + di[j])))
-                running_sum += math.sqrt(abs(x))
+                    x = (hits / (sampleSize - ai *  bj)) /  ((ai * (1 - ai) + di[i]) * (bj * (1 - bj) + di[j]))
+                    running_sum += math.sqrt(abs(x))
 
         self.stat1 = 2*running_sum/(numloci*(numloci-1))
 
