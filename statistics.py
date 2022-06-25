@@ -117,6 +117,112 @@ class statisticsClass:
                 self.numLoci = self.numLoci - 1
                 self.sampleSize = len(self.data) - 1
 
+ ######################################################################
+    # stat1_v2 BW Estimator REVISION                                          ##
+    ######################################################################
+    def stat1_v2(self):
+        if (self.DEBUG):
+            print("printing for stat1 begin:")
+
+        data = self.data
+        numLoci = len(alleleA[0])
+        sampleSize = self.sampleSize
+
+        alleleA = []  # same dimensions as data but holds the first allele in a locus
+        alleleB = []  # same dimensions as data but holds the second allele in a locus
+
+
+       for i in range(len(data)):  # fills up alleleA and alleleB
+            temA = []
+            temB = []
+            for j in range(1, len(data[i])):
+                temA.append(data[i][j][:2])
+                temB.append(data[i][j][2:])
+
+            alleleA.append(temA)
+            alleleB.append(temB)
+
+
+        allcnt = []  # a 1D array, each element is a dictionary of alleles with frequency counts per loci
+        homoloci = []  # maintains frequency counts of homologous alleles per loci
+        denominator = float(numLoci)
+
+        di = []  # a 1D array that holds the departures of each loci from Hardy-Weinberg equilibrium
+        totspots = float(len(data) * 2)  # total number of alleles per locus. used in computing allele freq per locus
+
+        for i in sampleSize:  # fills up allcnt
+            newdic = [0,0,0,0]
+            temp = 0
+            for j in numLoci:
+
+                # check if it is homozygous
+                if (alleleA[i][j] == alleleB[i][j]):
+                    temp += 1
+
+                newdic[int(alleleA[i][j])] +=1
+                newdic[int(alleleB[i][j])] +=1
+
+                #if (alleleA[i][j] in newdic):
+                 #   newdic[alleleA[i][j]] += 1
+                #else:
+                 #   newdic[alleleA[i][j]] = 1
+
+                #if (alleleB[i][j] in newdic):
+                 #   newdic[alleleB[i][j]] += 1
+                #else:
+                 #   newdic[alleleB[i][j]] = 1
+                # END INNER FOR LOOP
+
+            currHomoLoci = (temp / denominator)
+            currDeparture = ( numLoci - temp ) / totspots
+            homoloci.append( currHomoLoci )
+            allcnt.append(newdic)
+
+            # vals = []
+            # for key, value in allcnt[i].items():
+            #    vals.append(float(value) / float(totspots))
+            di.append( (currHomoLoci  *  currHomoLoci) - (currDeparture  *  currDeparture ))
+        # END OUTER FOR LOOP
+
+        hits = 0
+
+        running_sum = 0
+
+        for i in range(len(alleleA)):
+            for j in range(len(alleleB)):
+                keysi = []
+                keysj = []
+
+                for key, value in allcnt[i].items():
+                    keysi.append(key)
+
+
+                for key, value in allcnt[j].items():
+                    keysj.append(key)
+
+
+                if (len(keysj) < 2):
+                    continue
+
+                alA = keysi[0]
+                alB = keysj[1]
+
+                hits = 0
+                for k in numLoci :
+                    if ((alleleA[i][k] == alA or alleleB[i][k] == alA) and
+                        (alleleA[j][k] == alB or alleleB[j][k] == alB )):
+                        hits += 1
+                ai = allcnt[i][alA] / totspots
+                bj = allcnt[j][alB] / totspots
+
+                x = (hits / (sampleSize - ai *  bj)) / (((ai * (1 - ai) + di[i]) * (float(bj) * float(1 - bj) + di[j])))
+                running_sum += math.sqrt(abs(x))
+
+        self.stat1 = 2*running_sum/(numloci*(numloci-1))
+
+        if (self.DEBUG):
+            print("printing for stat1 end   ---->", self.stat1)
+
     ######################################################################
     # stat1 BW Estimator                                                ##
     ######################################################################
