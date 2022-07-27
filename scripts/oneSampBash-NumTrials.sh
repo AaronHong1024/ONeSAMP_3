@@ -24,5 +24,5 @@ python3 /blue/boucher/ishayooseph/oneSampTest/main.py --s 5000 --o /blue/boucher
 python3 /blue/boucher/ishayooseph/oneSampTest/main.py --s 10000 --o /blue/boucher/ishayooseph/genePop500Ix500L > 10000NumTrials.txt
 
 #Running w 
-python3 /blue/boucher/ishayooseph/oneSampTest/main.py --s 100000 --o /blue/boucher/ishayooseph/genePop500Ix500L > 100000NumTrials.txt
+python3 /blue/boucher/ishayooseph/oneSampTest/main.py --s 50000 --o /blue/boucher/ishayooseph/genePop500Ix500L > 100000NumTrials.txt
 date
