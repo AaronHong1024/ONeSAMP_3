@@ -17,7 +17,4 @@ echo "Running plot script on a single CPU core"
 #Running w default theta
 python3 /blue/boucher/ishayooseph/oneSampTest/main.py --o /blue/boucher/ishayooseph/genePop500Ix500L > defaultTheta.txt
 
-#Running w 
-python3 /blue/boucher/ishayooseph/oneSampTest/main.py --lT 2 --uT 20 --o /blue/boucher/ishayooseph/genePop500Ix500L > 2-20-Theta.txt
-
 
