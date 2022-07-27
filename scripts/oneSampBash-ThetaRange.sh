@@ -20,9 +20,4 @@ python3 /blue/boucher/ishayooseph/oneSampTest/main.py --o /blue/boucher/ishayoos
 #Running w 
 python3 /blue/boucher/ishayooseph/oneSampTest/main.py --lT 2 --uT 20 --o /blue/boucher/ishayooseph/genePop500Ix500L > 2-20-Theta.txt
 
-#Running w 
-python3 /blue/boucher/ishayooseph/oneSampTest/main.py --lT 3 --uT 30 --o /blue/boucher/ishayooseph/genePop500Ix500L > 3-30-Theta.txt
 
-#Running w 
-python3 /blue/boucher/ishayooseph/oneSampTest/main.py --lT 4 --uT 40 --o /blue/boucher/ishayooseph/genePop500Ix500L > 4-40-Theta.txt
-date
