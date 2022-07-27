@@ -18,11 +18,6 @@ echo "Running plot script on a single CPU core"
 python3 /blue/boucher/ishayooseph/oneSampTest/main.py --o /blue/boucher/ishayooseph/genePop500Ix500L > defaultNe.txt
 
 #Running w 
-python3 /blue/boucher/ishayooseph/oneSampTest/main.py --lD 4 --uD 10 --o /blue/boucher/ishayooseph/genePop500Ix500L > 4-10-Duration.txt
+python3 /blue/boucher/ishayooseph/oneSampTest/main.py --lD 2 --uD 8 --o /blue/boucher/ishayooseph/genePop500Ix500L > 4-10-Duration.txt
 
-#Running w 
-python3 /blue/boucher/ishayooseph/oneSampTest/main.py --lD 6 --uD 12 --o /blue/boucher/ishayooseph/genePop500Ix500L > 6-12-Duration.txt
 
-#Running w 
-python3 /blue/boucher/ishayooseph/oneSampTest/main.py --lD 8 --uD 14 --o /blue/boucher/ishayooseph/genePop500Ix500L > 8-14-Duration.txt
-date
