@@ -9,14 +9,13 @@ import time
 from statistics import statisticsClass
 
 NUMBER_OF_STATISTICS = 5
-DEBUG = 0       ## BOUCHER: Change this to 1 for debuggin mode
+DEBUG = 0  ## BOUCHER: Change this to 1 for debuggin mode
 OUTPUTFILENAME = "priors.txt"
 
 BASE_PATH = os.path.dirname(os.path.realpath(__file__))
 
 POPULATION_GENERATOR = "./build/OneSamp"
 FINAL_R_ANALYSIS = "./scripts/rScript.r"
-
 
 
 #############################################################
@@ -27,6 +26,7 @@ def mean(data):
     mean = sum(data) / n
     return mean
 
+
 def variance(data):
     n = len(data)
     mean = sum(data) / n
@@ -34,11 +34,13 @@ def variance(data):
     variance = sum(deviations) / n
     return variance
 
+
 def stdev(data):
     import math
     var = variance(data)
     std_dev = math.sqrt(var)
     return std_dev
+
 
 def normalization(data, mean, variance):
     from operator import truediv
@@ -49,23 +51,23 @@ def normalization(data, mean, variance):
         cnt += 1
     return normalized_data
 
+
 #############################################################
 start_time = time.time()
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--m", type = float, help="Minimum Allele Frequency")
-parser.add_argument("--r", type = float, help="Mutation Rate")
-parser.add_argument("--lNe", type = int, help="Lower of Ne Range")
-parser.add_argument("--uNe", type = int, help="Upper of Ne Range")
-parser.add_argument("--lT", type = float, help="Lower of Theta Range")
-parser.add_argument("--uT", type = float, help="Upper of Theta Range")
-parser.add_argument("--s", type = int, help="Number of OneSamp Trials")
-parser.add_argument("--lD", type = float, help="Lower of Duration Range")
-parser.add_argument("--uD", type = float, help="Upper of Duration Range")
-parser.add_argument("--i", type = float, help="Missing data for individuals")
-parser.add_argument("--l", type = float, help="Missing data for loci")
-parser.add_argument("--o", type = str, help="The File Name")
-
+parser.add_argument("--m", type=float, help="Minimum Allele Frequency")
+parser.add_argument("--r", type=float, help="Mutation Rate")
+parser.add_argument("--lNe", type=int, help="Lower of Ne Range")
+parser.add_argument("--uNe", type=int, help="Upper of Ne Range")
+parser.add_argument("--lT", type=float, help="Lower of Theta Range")
+parser.add_argument("--uT", type=float, help="Upper of Theta Range")
+parser.add_argument("--s", type=int, help="Number of OneSamp Trials")
+parser.add_argument("--lD", type=float, help="Lower of Duration Range")
+parser.add_argument("--uD", type=float, help="Upper of Duration Range")
+parser.add_argument("--i", type=float, help="Missing data for individuals")
+parser.add_argument("--l", type=float, help="Missing data for loci")
+parser.add_argument("--o", type=str, help="The File Name")
 
 args = parser.parse_args()
 
@@ -89,15 +91,15 @@ upperNe = 500
 if (args.uNe):
     upperNe = int(args.uNe)
 
-if (int(lowerNe) > int(upperNe)) :
+if (int(lowerNe) > int(upperNe)):
     print("ERROR:main:lowerNe > upperNe. Fatal Error")
     exit()
 
-if(int(lowerNe) < 1) :
+if (int(lowerNe) < 1):
     print("ERROR:main:lowerNe must be a positive value. Fatal Error")
     exit()
 
-if(int(upperNe) < 1) :
+if (int(upperNe) < 1):
     print("ERROR:main:upperNe must be a positive value. Fatal Error")
     exit()
 
@@ -125,7 +127,6 @@ upperDuration = 8
 if (args.uD):
     upperDuration = float(args.uD)
 
-
 indivMissing = .2
 if (args.i):
     indivMissing = float(args.i)
@@ -142,7 +143,7 @@ if (args.o):
 else:
     print("WARNING:main: No filename provided.  Using oneSampIn")
 
-if(DEBUG) :
+if (DEBUG):
     print("Start calculation of statistics for input population")
 
 rangeTheta = "%d,%d" % (lowerTheta, upperTheta)
@@ -152,25 +153,29 @@ rangeTheta = "%d,%d" % (lowerTheta, upperTheta)
 #########################################
 
 inputFileStatistics = statisticsClass()
-inputFileStatistics.readData(fileName)
+inputFileStatistics.testRead(fileName)
+#inputFileStatistics.readData(fileName)
 inputFileStatistics.filterIndividuals(indivMissing)
+# inputFileStatistics.testfilerIndividuals(indivMissing)
 inputFileStatistics.filterLoci(lociMissing)
-inputFileStatistics.stat1()
+#inputFileStatistics.stat1()
+inputFileStatistics.new_stat1()
 inputFileStatistics.newStat4()
 inputFileStatistics.stat2()
 inputFileStatistics.stat3()
-inputFileStatistics.stat4()
+# inputFileStatistics.stat4()
 inputFileStatistics.stat5()
 numLoci = inputFileStatistics.numLoci
 sampleSize = inputFileStatistics.sampleSize
 
 ##Creting input file with intial statistics
-textList = [str(inputFileStatistics.stat1), str(inputFileStatistics.stat2), str(inputFileStatistics.stat3), str(inputFileStatistics.stat4), str(inputFileStatistics.stat5)]
-with open('./inputPopStats','w') as fileINPUT:
+textList = [str(inputFileStatistics.stat1), str(inputFileStatistics.stat2), str(inputFileStatistics.stat3),
+            str(inputFileStatistics.stat4), str(inputFileStatistics.stat5)]
+with open('./inputPopStats', 'w') as fileINPUT:
     fileINPUT.write('\t'.join(textList[0:]) + '\t')
 fileINPUT.close()
 
-if(DEBUG) :
+if (DEBUG):
     print("Finish calculation of statistics for input population")
 
 #############################################
@@ -181,7 +186,7 @@ if(DEBUG) :
 # STARTING ALL POPULATIONS
 #########################################
 
-if(DEBUG) :
+if (DEBUG):
     print("Start calculation of statistics for ALL populations")
 
 statistics1 = []
@@ -197,15 +202,18 @@ statistics4 = [0 for x in range(numOneSampTrials)]
 statistics5 = [0 for x in range(numOneSampTrials)]
 
 fileALLPOP = open('./allPopStats', 'w+')
-for x in range(numOneSampTrials) :
+for x in range(numOneSampTrials):
 
     loci = inputFileStatistics.numLoci
     sampleSize = inputFileStatistics.sampleSize
+    #change the intermediate file name
     intermediateFilename = "./genePopTiny"
 
-    cmd = "%s -u%d -v%s -rC -l%d -i%d -d%s -s -t1 -b%s -f%d -o1 -p > %s" % (POPULATION_GENERATOR, mutationRate, rangeTheta, loci, sampleSize, rangeDuration, rangeNe, minAlleleFreq, intermediateFilename)
+    cmd = "%s -u%d -v%s -rC -l%d -i%d -d%s -s -t1 -b%s -f%d -o1 -p > %s" % (
+    POPULATION_GENERATOR, mutationRate, rangeTheta, loci, sampleSize, rangeDuration, rangeNe, minAlleleFreq,
+    intermediateFilename)
 
-    if(DEBUG) :
+    if (DEBUG):
         print(cmd)
 
     returned_value = os.system(cmd)
@@ -215,11 +223,13 @@ for x in range(numOneSampTrials) :
         exit()
 
     refactorFileStatistics = statisticsClass()
-    refactorFileStatistics.readData(intermediateFilename)
-    refactorFileStatistics.stat1()
+    #refactorFileStatistics.readData(intermediateFilename)
+    refactorFileStatistics.testRead(intermediateFilename)
+    #refactorFileStatistics.stat1()
+    refactorFileStatistics.new_stat1()
     refactorFileStatistics.stat2()
     refactorFileStatistics.stat3()
-    refactorFileStatistics.stat4()
+    refactorFileStatistics.newStat4()
     refactorFileStatistics.stat5()
     statistics1[x] = refactorFileStatistics.stat1
     statistics2[x] = refactorFileStatistics.stat2
@@ -227,13 +237,13 @@ for x in range(numOneSampTrials) :
     statistics4[x] = refactorFileStatistics.stat4
     statistics5[x] = refactorFileStatistics.stat5
 
-
-    #Making file with stats from all populations
+    # Making file with stats from all populations
     textList = []
-    textList = [str(refactorFileStatistics.NE_VALUE), str(refactorFileStatistics.stat1), str(refactorFileStatistics.stat2),
-                    str(refactorFileStatistics.stat3),
-                    str(refactorFileStatistics.stat4), str(refactorFileStatistics.stat5)]
-    #print (textList)
+    textList = [str(refactorFileStatistics.NE_VALUE), str(refactorFileStatistics.stat1),
+                str(refactorFileStatistics.stat2),
+                str(refactorFileStatistics.stat3),
+                str(refactorFileStatistics.stat4), str(refactorFileStatistics.stat5)]
+    # print (textList)
     fileALLPOP.write('\t'.join(textList) + '\n')
 fileALLPOP.close()
 
@@ -246,6 +256,7 @@ fileALLPOP.close()
 ALL_POP_STATS_FILE = "./allPopStats"
 
 rScriptCMD = "Rscript %s < %s" % (FINAL_R_ANALYSIS, ALL_POP_STATS_FILE)
+print(rScriptCMD)
 res = os.system(rScriptCMD)
 
 if (res):
@@ -257,7 +268,7 @@ if (DEBUG):
 
 print("--- %s seconds ---" % (time.time() - start_time))
 
-#Deleting temporary files
+# Deleting temporary files
 delete1 = "rm ./inputPopStats"
 delete_INPUTPOP = os.system(delete1)
 
