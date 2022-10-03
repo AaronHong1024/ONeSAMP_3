@@ -26,6 +26,7 @@ class statisticsClass:
     DEBUG = 0
     result = []
     allcnt = []
+    homoLoci = []
 
     ######################################################################
     # writeStatistics                                                   ##
@@ -334,16 +335,22 @@ class statisticsClass:
         # taking average homozygosity for each indiv then adding that all up and dividing by number of indivudls, so basically avg homozygosity over all indiv
 
         tempVarStat2 = 0
-
         data = self.data
+        # store the homo number into a list (use more space but save more time)
+        homoLoci = [0 for _ in range(self.numLoci)]
+        i = 0
+
         for row in data.itertuples():
             homozygosityCnt = 0
             homozygosityCnt += row.count('0101')
             homozygosityCnt += row.count('0202')
             homozygosityCnt += row.count('0303')
             homozygosityCnt += row.count('0404')
+            homoLoci[i] = homozygosityCnt
+            i += 1
             tempVarStat2 += float(homozygosityCnt) / float(self.numLoci)
 
+        self.homoLoci = homoLoci
         self.stat2 = float(tempVarStat2) / float(self.sampleSize)
 
         if (self.DEBUG):
@@ -356,19 +363,29 @@ class statisticsClass:
         homozygosityCnt = 0
         totalHomozygosityDiff = 0
         # Total count is same as above stats
+        data = self.data
+        homoLoci = self.homoLoci
         for i in range(self.sampleSize):
-            for j in range(self.numLoci + 1):
-                j = self.data.iloc[i, j]
-                # AA CC TT GG
-                if (j == '0101' or j == '0202' or j == '0303' or j == '0404'):
-                    homozygosityCnt = homozygosityCnt + 1
-            if (homozygosityCnt > 0):
+            homozygosityCnt = homoLoci[i]
+            if homozygosityCnt > 0:
                 homozygosityCnt = float(homozygosityCnt) / float(self.numLoci)
                 difference = homozygosityCnt - self.stat2
-                homozygosityCnt = 0
                 totalHomozygosityDiff = totalHomozygosityDiff + (difference * difference)
-
         self.stat3 = float(totalHomozygosityDiff) / float(self.sampleSize - 1)
+
+        # for i in range(self.sampleSize):
+        #     for j in range(self.numLoci + 1):
+        #         j = self.data.iloc[i, j]
+        #         # AA CC TT GG
+        #         if (j == '0101' or j == '0202' or j == '0303' or j == '0404'):
+        #             homozygosityCnt = homozygosityCnt + 1
+        #     if (homozygosityCnt > 0):
+        #         homozygosityCnt = float(homozygosityCnt) / float(self.numLoci)
+        #         difference = homozygosityCnt - self.stat2
+        #         homozygosityCnt = 0
+        #         totalHomozygosityDiff = totalHomozygosityDiff + (difference * difference)
+        #
+        # self.stat3 = float(totalHomozygosityDiff) / float(self.sampleSize - 1)
 
         if (self.DEBUG):
             print("(Second moment of multilocus homozygosity) Stats3 is ", self.stat3)
@@ -376,73 +393,73 @@ class statisticsClass:
     ######################################################################
     # stat4 Wrights                                                     ##
     ######################################################################
-    def stat4(self):
-        tempstat4 = 0.0
-        expected = 0
-        num = []
-        for i in range(self.numLoci):
-            num *= 0
-            homozygosityCnt = 0
-            a = 0
-            c = 0
-            t = 0
-            g = 0
-            for j in range(self.sampleSize):
-                # Checking freq of first two numbers by column
-                if (self.data[j][i][2:] == '01'):
-                    a = a + 1
-                elif (self.data[j][i][2:] == '02'):
-                    c = c + 1
-                elif (self.data[j][i][2:] == '03'):
-                    t = t + 1
-                elif (self.data[j][i][2:] == '04'):
-                    g = g + 1
-
-                # Checking last two numbers
-                if (self.data[j][i][:2] == '01'):
-                    a = a + 1
-                elif (self.data[j][i][:2] == '02'):
-                    c = c + 1
-                elif (self.data[j][i][:2] == '03'):
-                    t = t + 1
-                elif (self.data[j][i][:2] == '04'):
-                    g = g + 1
-
-                if (self.data[j][i] == '0101' or self.data[j][i] == '0202' or self.data[j][i] == '0303' or self.data[j][
-                    i] == '0404'):
-                    homozygosityCnt = homozygosityCnt + 1
-
-            homozygosityCnt = float(homozygosityCnt) / float(self.sampleSize)
-            homozygosityCnt = homozygosityCnt * homozygosityCnt
-            temp = 1 - homozygosityCnt
-            expected = expected + temp
-
-            divisor = self.numLoci * 2
-            a = a / float(divisor)
-            c = c / float(divisor)
-            t = t / float(divisor)
-            g = g / float(divisor)
-
-            if (a > 0):
-                num.append(float(a))
-            if (c > 0):
-                num.append(float(c))
-            if (t > 0):
-                num.append(float(t))
-            if (g > 0):
-                num.append(float(g))
-
-            if (num):
-                for i in num:
-                    addStat4 = float(i) / float(expected)
-
-                    tempstat4 = tempstat4 + addStat4
-
-        tempstat4 = float(tempstat4) / float(self.numLoci)
-        self.stat4 = 1 - tempstat4
-
-        if (self.DEBUG):
-            print('(Wrights) Stat4 is ', self.stat4)
+    # def stat4(self):
+    #     tempstat4 = 0.0
+    #     expected = 0
+    #     num = []
+    #     for i in range(self.numLoci):
+    #         num *= 0
+    #         homozygosityCnt = 0
+    #         a = 0
+    #         c = 0
+    #         t = 0
+    #         g = 0
+    #         for j in range(self.sampleSize):
+    #             # Checking freq of first two numbers by column
+    #             if (self.data[j][i][2:] == '01'):
+    #                 a = a + 1
+    #             elif (self.data[j][i][2:] == '02'):
+    #                 c = c + 1
+    #             elif (self.data[j][i][2:] == '03'):
+    #                 t = t + 1
+    #             elif (self.data[j][i][2:] == '04'):
+    #                 g = g + 1
+    #
+    #             # Checking last two numbers
+    #             if (self.data[j][i][:2] == '01'):
+    #                 a = a + 1
+    #             elif (self.data[j][i][:2] == '02'):
+    #                 c = c + 1
+    #             elif (self.data[j][i][:2] == '03'):
+    #                 t = t + 1
+    #             elif (self.data[j][i][:2] == '04'):
+    #                 g = g + 1
+    #
+    #             if (self.data[j][i] == '0101' or self.data[j][i] == '0202' or self.data[j][i] == '0303' or self.data[j][
+    #                 i] == '0404'):
+    #                 homozygosityCnt = homozygosityCnt + 1
+    #
+    #         homozygosityCnt = float(homozygosityCnt) / float(self.sampleSize)
+    #         homozygosityCnt = homozygosityCnt * homozygosityCnt
+    #         temp = 1 - homozygosityCnt
+    #         expected = expected + temp
+    #
+    #         divisor = self.numLoci * 2
+    #         a = a / float(divisor)
+    #         c = c / float(divisor)
+    #         t = t / float(divisor)
+    #         g = g / float(divisor)
+    #
+    #         if (a > 0):
+    #             num.append(float(a))
+    #         if (c > 0):
+    #             num.append(float(c))
+    #         if (t > 0):
+    #             num.append(float(t))
+    #         if (g > 0):
+    #             num.append(float(g))
+    #
+    #         if (num):
+    #             for i in num:
+    #                 addStat4 = float(i) / float(expected)
+    #
+    #                 tempstat4 = tempstat4 + addStat4
+    #
+    #     tempstat4 = float(tempstat4) / float(self.numLoci)
+    #     self.stat4 = 1 - tempstat4
+    #
+    #     if (self.DEBUG):
+    #         print('(Wrights) Stat4 is ', self.stat4)
 
     ######################################################################
     # stat5 Expected Heterozygosity                                     ##

@@ -14,6 +14,9 @@ makepd8 <- function(target,x,sumstat,tol,gwt,rejmethod=T)
   scaled.sumstat[,3] <- normalise(sumstat[,3],sumstat[,3][gwt])
   scaled.sumstat[,4] <- normalise(sumstat[,4],sumstat[,4][gwt])
   scaled.sumstat[,5] <- normalise(sumstat[,5],sumstat[,5][gwt])
+  scaled.sumstat[,6] <- normalise(sumstat[,6],sumstat[,6][gwt])
+  scaled.sumstat[,7] <- normalise(sumstat[,7],sumstat[,7][gwt])
+  scaled.sumstat[,8] <- normalise(sumstat[,8],sumstat[,8][gwt])
 
   target.s <- target
   target.s[1] <- normalise(target[1],sumstat[,1][gwt])
@@ -21,13 +24,19 @@ makepd8 <- function(target,x,sumstat,tol,gwt,rejmethod=T)
   target.s[3] <- normalise(target[3],sumstat[,3][gwt])
   target.s[4] <- normalise(target[4],sumstat[,4][gwt])
   target.s[5] <- normalise(target[5],sumstat[,5][gwt])
+  target.s[6] <- normalise(target[6],sumstat[,6][gwt])
+  target.s[7] <- normalise(target[7],sumstat[,7][gwt])
+  target.s[8] <- normalise(target[8],sumstat[,8][gwt])
 
   dist <- sqrt(
   (scaled.sumstat[,1]-target.s[1])^2 + 
   (scaled.sumstat[,2]-target.s[2])^2 + 
   (scaled.sumstat[,3]-target.s[3])^2 +
   (scaled.sumstat[,4]-target.s[4])^2 +
-  (scaled.sumstat[,5]-target.s[5])^2 
+  (scaled.sumstat[,5]-target.s[5])^2 +
+  (scaled.sumstat[,6]-target.s[6])^2 +
+  (scaled.sumstat[,7]-target.s[7])^2 +
+  (scaled.sumstat[,8]-target.s[8])^2
   )
   dist[!gwt] <- floor(max(dist[gwt])+10)
 
@@ -44,14 +53,17 @@ makepd8 <- function(target,x,sumstat,tol,gwt,rejmethod=T)
     x3 <- scaled.sumstat[,3][wt1]
     x4 <- scaled.sumstat[,4][wt1]
     x5 <- scaled.sumstat[,5][wt1]
+    x6 <- scaled.sumstat[,6][wt1]
+    x7 <- scaled.sumstat[,7][wt1]
+    x8 <- scaled.sumstat[,8][wt1]
     fit1 <- lm(x[wt1] ~ x1+x2+x3+x4+x5+x6+x7+x8,weight=regwt)
     predmean <- suppressWarnings(predict.lm(fit1,data.frame(
-      x1=target.s[1],x2=target.s[2],x3=target.s[3],x4=target.s[4],x5=target.s[5])))
+      x1=target.s[1],x2=target.s[2],x3=target.s[3],x4=target.s[4],x5=target.s[5],x6=target.s[6],x7=target.s[7],x8=target.s[8])))
 
     fv <- predict.lm(fit1)
 
     l1 <- list(x=x[wt1]+predmean-fv,vals = x[wt1],wt=regwt,ss = cbind(sumstat[,1][wt1],sumstat[,2][wt1],
-  sumstat[,3][wt1],sumstat[,4][wt1],sumstat[,5][wt1]),predmean = predmean, fv = fv)
+  sumstat[,3][wt1],sumstat[,4][wt1],sumstat[,5][wt1],sumstat[,6][wt1],sumstat[,7][wt1],sumstat[,8][wt1]),predmean = predmean, fv = fv)
   }
   l1
 }
@@ -67,7 +79,7 @@ normalise <- function(x,y){
 }
 
 
-numStatistics <- 5
+numStatistics <- 8
 standardIn = file("stdin")
 open(standardIn)
 
@@ -85,7 +97,11 @@ numSamples <- dim(m1)[1] - 1
     ldExpected <- m1[1,3]
    lnbExpected <- m1[1,4]
   hetxExpected <- m1[1,5]
-targetStatVals <- c(mExpected, ldExpected, lnbExpected, hetxExpected, xhetExpected);
+  xhetExpected <- m1[1,6]
+  nalsExpected <- m1[1,7]
+   mhoExpected <- m1[1,8]
+   vhoExpected <- m1[1,9]
+targetStatVals <- c(mExpected, ldExpected, lnbExpected, hetxExpected, xhetExpected, nalsExpected, mhoExpected, vhoExpected);
 
             ne <- m1[2:numSamples]
              m <- m1[2:numSamples,2]
@@ -93,6 +109,10 @@ targetStatVals <- c(mExpected, ldExpected, lnbExpected, hetxExpected, xhetExpect
            lnb <- m1[2:numSamples,4]
 
           hetx <- m1[2:numSamples,5]
+          xhet <- m1[2:numSamples,6]
+          nals <- m1[2:numSamples,7]
+           mho <- m1[2:numSamples,8]
+           vho <- m1[2:numSamples,9]
 
 # Box Cox transform of Ne data
 lambda <- (-0.2)
