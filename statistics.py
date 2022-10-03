@@ -67,7 +67,7 @@ class statisticsClass:
         temp = line.split()
         temp.pop(1)
         currLociCnt = len(temp)  # Getting length of first line of data
-        print("currLociCnt: ", currLociCnt)
+        # print("currLociCnt: ", currLociCnt)
         for i in range(sampleSize):
             line = re.sub(",", "", line)
             # print("line: ", line)
@@ -94,8 +94,8 @@ class statisticsClass:
         # print("data: ", self.data)
         # print("sample size: ", self.sampleSize)
         self.NE_VALUE = NE_VALUEtemp
-        print("NE value: ", NE_VALUEtemp)
-        print("-----------------------------------------------------------------")
+        # print("NE value: ", NE_VALUEtemp)
+        # print("-----------------------------------------------------------------")
 
     def testRead(self, myFileName):
         print("test read filename: ", myFileName)
@@ -112,7 +112,6 @@ class statisticsClass:
                 break
             sampleSize = sampleSize + 1
             line = matrixFile.readline()
-        print(sampleSize)
         if (popReached == 0):
             print("ERROR:statistics.py:line 32:: POP not contained in file. Fatal error")
             exit()
@@ -129,9 +128,9 @@ class statisticsClass:
         #                    keep_default_na=False, error_bad_lines=False, warn_bad_lines=False)
         data = pd.read_csv(myFileName, skiprows=sampleSize + 2, header=None, sep=' , | ', dtype='str', engine='python',
                            keep_default_na=False, skipfooter=skipfooter, warn_bad_lines=False)
-        print(data)
-
-        print(test)
+        # print(data)
+        #
+        # print(test)
         NE_VALUEtemp = 0
         if len(test) != data.shape[1] + 1:
             NE_VALUEtemp = test[0]
@@ -205,112 +204,6 @@ class statisticsClass:
                 self.numLoci = self.numLoci - 1
                 self.sampleSize = len(self.data) - 1
 
- ######################################################################
-    # stat1_v2 BW Estimator REVISION                                          ##
-    ######################################################################
-    def stat1_v2(self):
-        if (self.DEBUG):
-            print("printing for stat1 begin:")
-
-        data = self.data
-        numLoci = len(alleleA[0])
-        sampleSize = self.sampleSize
-
-        alleleA = []  # same dimensions as data but holds the first allele in a locus
-        alleleB = []  # same dimensions as data but holds the second allele in a locus
-
-
-       for i in range(len(data)):  # fills up alleleA and alleleB
-            temA = []
-            temB = []
-            for j in range(1, len(data[i])):
-                temA.append(data[i][j][:2])
-                temB.append(data[i][j][2:])
-
-            alleleA.append(temA)
-            alleleB.append(temB)
-
-
-        allcnt = []  # a 1D array, each element is a dictionary of alleles with frequency counts per loci
-    #    homoloci = []  # maintains frequency counts of homologous alleles per loci
-        denominator = float(numLoci)
-
-        di = []  # a 1D array that holds the departures of each loci from Hardy-Weinberg equilibrium
-        totspots = float(len(data) * 2)  # total number of alleles per locus. used in computing allele freq per locus
-
-        for i in sampleSize:  # fills up allcnt
-            allele_counts = [0,0,0,0]
-            homozygous_count = 0
-            for j in numLoci:
-
-                # check if it is homozygous
-                if (alleleA[i][j] == alleleB[i][j]):
-                    homozygous_count += 1
-
-                allele_counts[int(alleleA[i][j]) - 1] +=1
-                allele_counts[int(alleleB[i][j]) - 1] +=1
-
-                #if (alleleA[i][j] in newdic):
-                 #   newdic[alleleA[i][j]] += 1
-                #else:
-                 #   newdic[alleleA[i][j]] = 1
-
-                #if (alleleB[i][j] in newdic):
-                 #   newdic[alleleB[i][j]] += 1
-                #else:
-                 #   newdic[alleleB[i][j]] = 1
-                # END INNER FOR LOOP
-
-            currHomoLoci = (homozygous_count/ denominator)
-            currDeparture = ( numLoci -homozygous_count ) / totspots
-           # homoloci.append( currHomoLoci )
-            allcnt.append(allele_counts)
-
-            # vals = []
-            # for key, value in allcnt[i].items():
-            #    vals.append(float(value) / float(totspots))
-            di.append( (currHomoLoci  *  currHomoLoci) - (currDeparture  *  currDeparture ))
-        # END OUTER FOR LOOP
-        ###############################
-
-        running_sum = 0
-        ai = 0
-        alA = 0
-        # Loop through Allele A
-        for i in sampleSize:
-
-            for l in allcnt[i]:
-                if (allcnt[i][l] > 0 )
-                    alA = allcnt[i][l]
-                    ai = allcnt[i][l] / totspots
-                    break
-
-            # Loop through Allele B
-            for j in sampleSize:
-
-                keysj = []
-                for l in allcnt[j]:
-                    if (allcnt[j][l] > 0)
-                        keysj.append(allcnt[j][l])
-
-                if (len(keysj) >= 2):
-
-                    alB = keysj[1]
-                    bj = allcnt[j][alB] / totspots
-                    hits = 0
-
-                    for k in numLoci :
-                        if ((alleleA[i][k] == alA or alleleB[i][k] == alA) and (alleleA[j][k] == alB or alleleB[j][k] == alB )):
-                            hits += 1
-
-                    x = (hits / (sampleSize - ai *  bj)) /  ((ai * (1 - ai) + di[i]) * (bj * (1 - bj) + di[j]))
-                    running_sum += math.sqrt(abs(x))
-
-        self.stat1 = 2*running_sum/(numloci*(numloci-1))
-
-        if (self.DEBUG):
-            print("printing for stat1 end   ---->", self.stat1)
-
     ######################################################################
     # stat1 BW Estimator                                                ##
     ######################################################################
@@ -344,8 +237,8 @@ class statisticsClass:
 
             alleleA.append(temA)
             alleleB.append(temB)
-        print("alleleA: ", alleleA)
-        print("alleleB: ", alleleB)
+        # print("alleleA: ", alleleA)
+        # print("alleleB: ", alleleB)
         allcnt = []
         homoloci = []
 
@@ -367,8 +260,8 @@ class statisticsClass:
             homoloci.append(float(temp) / float(self.sampleSize))
             allcnt.append(newdic)
 
-        print("homoloci: ", homoloci)
-        print("allcnt: ", allcnt)
+        # print("homoloci: ", homoloci)
+        # print("allcnt: ", allcnt)
         self.allcnt = allcnt
         di = []  # a 1D array that holds the departures of each loci from Hardy-Weinberg equilibrium
         totspots = float(
@@ -378,10 +271,10 @@ class statisticsClass:
             vals = []
             for key, value in allcnt[i].items():
                 vals.append(float(value) / float(totspots))
-            print("vals: ", vals)
+            # print("vals: ", vals)
             di.append(homoloci[i] - math.pow(vals[0], 2))
 
-        print("di: ", di)
+        # print("di: ", di)
         hits = 0
 
         running_sum = 0
@@ -440,18 +333,16 @@ class statisticsClass:
     def stat2(self):
         # taking average homozygosity for each indiv then adding that all up and dividing by number of indivudls, so basically avg homozygosity over all indiv
 
-        homozygosityCnt = 0
         tempVarStat2 = 0
 
-        for i in range(self.sampleSize):
-            for j in range(self.numLoci + 1):
-                j = self.data.iloc[i, j]
-                if (j == '0101' or j == '0202' or j == '0303' or j == '0404'):
-                    homozygosityCnt = homozygosityCnt + 1
-            tempStat2 = float(homozygosityCnt) / float(self.numLoci)
-            tempVarStat2 = tempVarStat2 + tempStat2
-            tempStat2 = 0
+        data = self.data
+        for row in data.itertuples():
             homozygosityCnt = 0
+            homozygosityCnt += row.count('0101')
+            homozygosityCnt += row.count('0202')
+            homozygosityCnt += row.count('0303')
+            homozygosityCnt += row.count('0404')
+            tempVarStat2 += float(homozygosityCnt) / float(self.numLoci)
 
         self.stat2 = float(tempVarStat2) / float(self.sampleSize)
 
