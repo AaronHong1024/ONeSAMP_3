@@ -393,21 +393,19 @@ class statisticsClass:
         ######################################################################
         # slightly different form paper. Need to be reviewed.
 
-
     def stat5(self):
         tempstat5 = 0
         data =self.data
         allCnt = self.allcnt
-        Individual_Number = self.sampleSize * 2
-        FreqCount = 0
-        for i in range(len(allCnt)):
+        totalNum = self.sampleSize * 2
 
-            #Get the first allele's number, then divide the whole individual number
-            FreqH = list(allCnt[i].values())[0] / Individual_Number
-            FreqCount += FreqH
-            # print(FreqH)
-        # tempstat5 = FreqCount / self.numLoci
-        self.stat5 = FreqCount / self.numLoci
+        for i in range(self.numLoci):
+            freqP = 0
+            for value in allCnt[i].values():
+                freqP = freqP + (value/totalNum) ** 2
+            tempstat5 = tempstat5 + (1 - freqP)
+        self.stat5 = tempstat5 / self.numLoci
+
 
         if (self.DEBUG):
             print("(Expected heterozygosity) stat5 is ", self.stat5)
