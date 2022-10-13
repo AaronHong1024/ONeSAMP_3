@@ -201,7 +201,7 @@ statistics3 = [0 for x in range(numOneSampTrials)]
 statistics4 = [0 for x in range(numOneSampTrials)]
 statistics5 = [0 for x in range(numOneSampTrials)]
 
-fileALLPOP = open('./allPopStats', 'w+')
+fileALLPOP = open('exampleData/allPopStats', 'w+')
 for x in range(numOneSampTrials):
 
     loci = inputFileStatistics.numLoci
@@ -253,7 +253,7 @@ fileALLPOP.close()
 # STARTING RSCRIPT
 #########################################
 
-ALL_POP_STATS_FILE = "./allPopStats"
+ALL_POP_STATS_FILE = "exampleData/allPopStats"
 
 rScriptCMD = "Rscript %s < %s" % (FINAL_R_ANALYSIS, ALL_POP_STATS_FILE)
 print(rScriptCMD)

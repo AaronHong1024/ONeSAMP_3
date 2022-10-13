@@ -23,7 +23,7 @@ class statisticsClass:
     numLoci = 0
     sampleSize = 0  ##Indivduals
     NE_VALUE = 0
-    DEBUG = 0
+    DEBUG = 1
     result = []
     allcnt = []
     homoLoci = []
@@ -249,8 +249,6 @@ class statisticsClass:
             homoloci.append(float(temp) / float(self.sampleSize))
             allcnt.append(newdic)
 
-        # print("homoloci: ", homoloci)
-        # print("allcnt: ", allcnt)
         self.allcnt = allcnt
         di = []  # a 1D array that holds the departures of each loci from Hardy-Weinberg equilibrium
         totspots = float(
@@ -260,10 +258,10 @@ class statisticsClass:
             vals = []
             for key, value in allcnt[i].items():
                 vals.append(float(value) / float(totspots))
-            # print("vals: ", vals)
+
             di.append(homoloci[i] - math.pow(vals[0], 2))
 
-        # print("di: ", di)
+
         hits = 0
 
         running_sum = 0
@@ -278,6 +276,7 @@ class statisticsClass:
                     continue
                 alA = next(iter(allcnt[i]))
                 alB = next(iter(allcnt[j]))
+
                 hits = 0
                 # the hit is wrong need to change
                 for k in range(self.sampleSize):
@@ -334,10 +333,10 @@ class statisticsClass:
             homozygosityCnt += row.count('0404')
             homoLoci[i] = homozygosityCnt
             i += 1
-            tempVarStat2 += float(homozygosityCnt) / float(self.numLoci)
-
+            # tempVarStat2 += homozygosityCnt
         self.homoLoci = homoLoci
-        self.stat2 = float(tempVarStat2) / float(self.sampleSize)
+        self.stat2 = np.mean(homoLoci)
+        # self.stat2 = float(tempVarStat2) / float(self.sampleSize)
 
         if (self.DEBUG):
             print("(First moment of homozygosity) Stats2 is ", self.stat2)
@@ -345,22 +344,15 @@ class statisticsClass:
     ######################################################################
     # stat3 Second Moment of Multilocus Homozygosity                    ##
     ######################################################################
-    def stat3(self):
-        homozygosityCnt = 0
-        totalHomozygosityDiff = 0
-        # Total count is same as above stats
-        data = self.data
-        homoLoci = self.homoLoci
-        for i in range(self.sampleSize):
-            homozygosityCnt = homoLoci[i]
-            if homozygosityCnt > 0:
-                homozygosityCnt = float(homozygosityCnt) / float(self.numLoci)
-                difference = homozygosityCnt - self.stat2
-                totalHomozygosityDiff = totalHomozygosityDiff + np.power(difference, 2)
-        self.stat3 = float(totalHomozygosityDiff) / float(self.sampleSize - 1)
 
-        if (self.DEBUG):
+    def stat3(self):
+        homoLoci = self.homoLoci
+        ## Compute the sample variance
+        self.stat3 = np.var(homoLoci,ddof = 1)
+
+        if self.DEBUG:
             print("(Second moment of multilocus homozygosity) Stats3 is ", self.stat3)
+
 
     ######################################################################
     # stat4 Updated after meeting w Dav                                 ##
@@ -387,7 +379,6 @@ class statisticsClass:
                     continue
                 valB = list(allcnt[i - 1].values())[1] / totalNum
                 # print("valA, valB", valA, valB)
-
                 expected = 1 - math.pow(valA, 2) - math.pow(valB, 2)
                 newstat4 = newstat4 + float(observed / expected)
                 homozygosityCnt = 0

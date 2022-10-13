@@ -160,10 +160,9 @@ inputFileStatistics.filterIndividuals(indivMissing)
 inputFileStatistics.filterLoci(lociMissing)
 #inputFileStatistics.stat1()
 inputFileStatistics.new_stat1()
-inputFileStatistics.newStat4()
 inputFileStatistics.stat2()
 inputFileStatistics.stat3()
-# inputFileStatistics.stat4()
+inputFileStatistics.newStat4()
 inputFileStatistics.stat5()
 numLoci = inputFileStatistics.numLoci
 sampleSize = inputFileStatistics.sampleSize
@@ -201,7 +200,7 @@ statistics3 = [0 for x in range(numOneSampTrials)]
 statistics4 = [0 for x in range(numOneSampTrials)]
 statistics5 = [0 for x in range(numOneSampTrials)]
 
-fileALLPOP = open('./allPopStats', 'w+')
+fileALLPOP = open('exampleData/allPopStats', 'w+')
 for x in range(numOneSampTrials):
 
     loci = inputFileStatistics.numLoci
@@ -253,7 +252,7 @@ fileALLPOP.close()
 # STARTING RSCRIPT
 #########################################
 
-ALL_POP_STATS_FILE = "./allPopStats"
+ALL_POP_STATS_FILE = "exampleData/allPopStats"
 
 rScriptCMD = "Rscript %s < %s" % (FINAL_R_ANALYSIS, ALL_POP_STATS_FILE)
 print(rScriptCMD)
