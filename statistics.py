@@ -208,18 +208,6 @@ class statisticsClass:
     ######################################################################
     # stat1 BW Estimator                                                ##
     ######################################################################
-    # def test_stat1(self):
-    #     if (self.DEBUG):
-    #         print("printing for stat1 begin:")
-    #     data = self.result
-    #     alleleA = []  # same dimensions as data but holds the first allele in a locus
-    #     alleleB = []  # same dimensions as data but holds the second allele in a locus
-    #
-    #     # fills up alleleA and alleleB
-    #     matrix = np.array(data)
-    #     a = matrix[:, 1:]
-    #
-    #     print(a)
 
     def new_stat1(self):
         if self.DEBUG:
@@ -371,20 +359,6 @@ class statisticsClass:
                 totalHomozygosityDiff = totalHomozygosityDiff + np.power(difference, 2)
         self.stat3 = float(totalHomozygosityDiff) / float(self.sampleSize - 1)
 
-        # for i in range(self.sampleSize):
-        #     for j in range(self.numLoci + 1):
-        #         j = self.data.iloc[i, j]
-        #         # AA CC TT GG
-        #         if (j == '0101' or j == '0202' or j == '0303' or j == '0404'):
-        #             homozygosityCnt = homozygosityCnt + 1
-        #     if (homozygosityCnt > 0):
-        #         homozygosityCnt = float(homozygosityCnt) / float(self.numLoci)
-        #         difference = homozygosityCnt - self.stat2
-        #         homozygosityCnt = 0
-        #         totalHomozygosityDiff = totalHomozygosityDiff + (difference * difference)
-        #
-        # self.stat3 = float(totalHomozygosityDiff) / float(self.sampleSize - 1)
-
         if (self.DEBUG):
             print("(Second moment of multilocus homozygosity) Stats3 is ", self.stat3)
 
@@ -428,6 +402,7 @@ class statisticsClass:
         ######################################################################
         # slightly different form paper. Need to be reviewed.
 
+
     def stat5(self):
         tempstat5 = 0
         data =self.data
@@ -446,23 +421,3 @@ class statisticsClass:
         if (self.DEBUG):
             print("(Expected heterozygosity) stat5 is ", self.stat5)
 
-
-    # def stat5(self):
-    #     tempstat5 = 0
-    #     for i in range(self.numLoci + 1):
-    #         homozygosityCnt = 0
-    #         for j in range(self.sampleSize):
-    #             j = self.data.iloc[j, i]
-    #             if (j == '0101' or j == '0202' or j == '0303' or j == '0404'):
-    #                 homozygosityCnt = homozygosityCnt + 1
-    #         if (homozygosityCnt > 0):
-    #             homozygosityCnt = float(homozygosityCnt) / float(self.sampleSize)
-    #             totalhomozygosityCnt = homozygosityCnt * homozygosityCnt
-    #             temp = 1 - totalhomozygosityCnt
-    #             tempstat5 = tempstat5 + temp  # New heterozygosity value
-    #
-    #     tempstat5 = float(tempstat5) / float(self.numLoci)
-    #     self.stat5 = tempstat5
-    #
-    #     if (self.DEBUG):
-    #         print("(Expected heterozygosity) stat5 is ", self.stat5)
