@@ -153,17 +153,27 @@ rangeTheta = "%d,%d" % (lowerTheta, upperTheta)
 #########################################
 
 inputFileStatistics = statisticsClass()
-inputFileStatistics.testRead(fileName)
-#inputFileStatistics.readData(fileName)
-inputFileStatistics.filterIndividuals(indivMissing)
-# inputFileStatistics.testfilerIndividuals(indivMissing)
-inputFileStatistics.filterLoci(lociMissing)
-#inputFileStatistics.stat1()
-inputFileStatistics.new_stat1()
-inputFileStatistics.stat2()
-inputFileStatistics.stat3()
-inputFileStatistics.newStat4()
-inputFileStatistics.stat5()
+
+# t = time.time()
+inputFileStatistics.readData(fileName)
+inputFileStatistics.test_stat1()
+inputFileStatistics.test_stat2()
+inputFileStatistics.test_stat3()
+inputFileStatistics.test_stat4()
+inputFileStatistics.test_stat5()
+# print(f'coast:{time.time() - t:.4f}s')
+#
+# t = time.time()
+# inputFileStatistics.testRead(fileName)
+# # inputFileStatistics.filterIndividuals(indivMissing)
+# # inputFileStatistics.filterLoci(lociMissing)
+# inputFileStatistics.new_stat1()
+# inputFileStatistics.stat2()
+# inputFileStatistics.stat3()
+# inputFileStatistics.newStat4()
+#
+# inputFileStatistics.stat5()
+# print(f'coast:{time.time() - t:.4f}s')
 numLoci = inputFileStatistics.numLoci
 sampleSize = inputFileStatistics.sampleSize
 
@@ -222,14 +232,21 @@ for x in range(numOneSampTrials):
         exit()
 
     refactorFileStatistics = statisticsClass()
-    #refactorFileStatistics.readData(intermediateFilename)
-    refactorFileStatistics.testRead(intermediateFilename)
-    #refactorFileStatistics.stat1()
-    refactorFileStatistics.new_stat1()
-    refactorFileStatistics.stat2()
-    refactorFileStatistics.stat3()
-    refactorFileStatistics.newStat4()
-    refactorFileStatistics.stat5()
+    # refactorFileStatistics.testRead(intermediateFilename)
+    # refactorFileStatistics.new_stat1()
+    # refactorFileStatistics.stat2()
+    # refactorFileStatistics.stat3()
+    # refactorFileStatistics.newStat4()
+    # refactorFileStatistics.stat5()
+
+    refactorFileStatistics.readData(intermediateFilename)
+    refactorFileStatistics.test_stat1()
+    refactorFileStatistics.test_stat2()
+    refactorFileStatistics.test_stat3()
+    refactorFileStatistics.test_stat4()
+    refactorFileStatistics.test_stat5()
+
+
     statistics1[x] = refactorFileStatistics.stat1
     statistics2[x] = refactorFileStatistics.stat2
     statistics3[x] = refactorFileStatistics.stat3
