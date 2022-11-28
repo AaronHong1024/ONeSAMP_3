@@ -128,11 +128,15 @@ result1$x <- (lambda*result1$x+1)^(1/lambda) # Inverse Box Cox transform
 mean <- (lambda*result1$predmean+1)^(1/lambda) # Inverse Box Cox transform
 median <- median(result1$x)
 vari <- var(result1$x)
-qntlci <- quantile(result1$x,c(0.025,0.975))
+min <- min(result1$x)
+max <- max(result1$x)
+# maybe we should use 0.25 and 0.75?
+# qntlci <- quantile(result1$x,c(0.025,0.975))
+qntlci <- quantile(result1$x,c(0.25,0.75))
 
 # Display the final output
-invisible(cat(sprintf("mean        median      lower95CL   upper95CL\n")))
-invisible(cat(sprintf("%.2f      %.2f      %.2f      %.2f\n", mean, median, qntlci[1], qntlci[2])))
+invisible(cat(sprintf("min        max        mean        median      lower95CL   upper95CL\n")))
+invisible(cat(sprintf("%.2f      %.2f      %.2f      %.2f      %.2f      %.2f\n", min, max, mean, median, qntlci[1], qntlci[2])))
 #invisible(fflush(stdout))
 
 #library(locfit)

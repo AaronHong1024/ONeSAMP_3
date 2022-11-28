@@ -24,7 +24,16 @@ m = {'0101': [0, 0],
      '0401': [3, 0],
      '0402': [3, 1],
      '0403': [3, 2],
-     '0404': [3, 3]}
+     '0404': [3, 3],
+     '0000': [-1,-1],
+     '0100': [0,-1],
+     '0001': [-1,0],
+     '0200': [1,-1],
+     '0300': [2,-1],
+     '0400': [3,-1],
+     '0002': [-1,1],
+     '0003': [-1,2],
+     '0004': [-1,3]}
 
 
 class statisticsClass:
@@ -75,52 +84,6 @@ class statisticsClass:
         self.numLoci = self.data.shape[1]
         self.sampleSize = self.data.shape[0]
 
-    def testRead(self, myFileName):
-        print("test read filename: ", myFileName)
-        matrixFile = open(myFileName, "r")
-        line = matrixFile.readline()
-        sampleSize = 0
-
-        # Read until "Pop" in file
-        popReached = 0;
-        while line:
-            if ((line == "Pop\n") or (line == "POP\n") or (line == "pop\n")):
-                popReached = 1
-                sampleSize = sampleSize - 1
-                break
-            sampleSize = sampleSize + 1
-            line = matrixFile.readline()
-        if (popReached == 0):
-            print("ERROR:statistics.py:line 32:: POP not contained in file. Fatal error")
-            exit()
-        # Import the data matrix
-        test = []
-        last_line = self.get_file_last_line(os.path.abspath(myFileName))
-        skipfooter = 0
-        if "," not in last_line:
-            skipfooter = 1
-
-        test = last_line.strip().split(" ")
-
-        # data = pd.read_csv(myFileName, skiprows=sampleSize + 2, header=None, sep=' , | ', dtype='str', engine='python',
-        #                    keep_default_na=False, error_bad_lines=False, warn_bad_lines=False)
-        data = pd.read_csv(myFileName, skiprows=sampleSize + 2, header=None, sep=' , | ', dtype='str', engine='python',
-                           keep_default_na=False, skipfooter=skipfooter, warn_bad_lines=False)
-        # print(data)
-        #
-        # print(test)
-        NE_VALUEtemp = 0
-        if len(test) != data.shape[1] + 1:
-            NE_VALUEtemp = test[0]
-
-        self.numLoci = data.shape[1] - 1
-
-        self.NE_VALUE = NE_VALUEtemp
-        self.sampleSize = data.shape[0]
-        self.data = data
-
-        # print(data)
-        # print("-----------------------------------------------------------------")
 
     def get_file_last_line(self, inputfile):
         with open(inputfile, 'rb') as f:
@@ -141,47 +104,70 @@ class statisticsClass:
     # Filters the data for all individuals that have > 20% missing data ##
     ######################################################################
     def filterIndividuals(self, PERCENT_MISSINGIndiv):
+        data = self.data
+        deleteRow = []
+        # to each row, if there exist 0*00 delete this row.
         for i in range(self.sampleSize):
-            individual = self.data.loc[i]
             numMissing = 0
-            for j in (individual):
-                if (j == '0100' or j == '0001' or j == '0000'):
-                    numMissing += 1
-            if (numMissing > PERCENT_MISSINGIndiv * self.numLoci):
-                print("Deleted:", self.data[j])
-                self.ARRAY_MISSINGIndiv.append(self.data[j])
-                del self.data[j]
-                self.numLoci = self.numLoci - 1
-                self.sampleSize = len(self.data) - 1
+            temp = data[i,:,:]
+            numMissing += np.sum(np.logical_or(temp[:,0] == -1, temp[:,1] == -1)) - np.sum((temp==[-1,-1]).all())
+            if numMissing > 0:
+                deleteRow.append(i)
+        if len(deleteRow) != 0:
+            newData = np.delete(data, deleteRow, axis = 0)
+            self.data = newData
+            self.sampleSize = self.sampleSize - 1
+
+
+
+        # for i in range(self.sampleSize):
+        #     individual = self.data.loc[i]
+        #     numMissing = 0
+        #     for j in (individual):
+        #         if (j == '0100' or j == '0001' or j == '0000'):
+        #             numMissing += 1
+        #     if (numMissing > PERCENT_MISSINGIndiv * self.numLoci):
+        #         print("Deleted:", self.data[j])
+        #         self.ARRAY_MISSINGIndiv.append(self.data[j])
+        #         del self.data[j]
+        #         self.numLoci = self.numLoci - 1
+        #         self.sampleSize = len(self.data) - 1
 
                 # only that place., but double check with David
-
-    def testfilerIndividuals(self, PERCENT_MISSINGIndiv):
-        data = self.result
-        for row in data.itertuples():
-            num = row.count("0100") + row.count("0001") + row.count("0000")
-            if num > PERCENT_MISSINGIndiv * self.numLoci:
-                self.ARRAY_MISSINGIndiv.append(row)
-                print(data.drop(row.Index))
-                self.sampleSize = data.shape[0]
-            # print(row.Index)
 
     ######################################################################
     # filterLoci                                                        ##
     ######################################################################
     def filterLoci(self, PERCENT_MISSINGLoci):
+        data = self.data
+        deleteCol = []
+
         for i in range(self.numLoci):
-            individual = self.data[i]
+            temp = data[:,i,:]
             numMissing = 0
-            for j in (individual):
-                if (j == '0100' or j == '0001' or j == '0000'):
-                    numMissing += 1
-            if (numMissing > PERCENT_MISSINGLoci * self.numLoci):
-                print("Deleted:", self.data[j])
-                self.ARRAY_MISSINGLoci.append(self.data[j])
-                del self.data[j]
-                self.numLoci = self.numLoci - 1
-                self.sampleSize = len(self.data) - 1
+            numMissing += np.sum(np.logical_or(temp[:,0] == -1, temp[:,1] == -1)) - np.sum((temp==[-1,-1]).all())
+
+            if numMissing > 0:
+                deleteCol.append(i)
+
+        if len(deleteCol) != 0:
+            newData = np.delete(data, deleteCol, axis = 1)
+            self.data = newData
+            self.numLoci = self.numLoci - 1
+        #
+        #
+        # for i in range(self.numLoci):
+        #     individual = self.data[i]
+        #     numMissing = 0
+        #     for j in (individual):
+        #         if (j == '0100' or j == '0001' or j == '0000'):
+        #             numMissing += 1
+        #     if (numMissing > PERCENT_MISSINGLoci * self.numLoci):
+        #         print("Deleted:", self.data[j])
+        #         self.ARRAY_MISSINGLoci.append(self.data[j])
+        #         del self.data[j]
+        #         self.numLoci = self.numLoci - 1
+        #         self.sampleSize = len(self.data) - 1
 
     ######################################################################
     # stat1 BW Estimator                                                ##

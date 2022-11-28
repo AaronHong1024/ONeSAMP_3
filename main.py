@@ -17,40 +17,9 @@ BASE_PATH = os.path.dirname(os.path.realpath(__file__))
 POPULATION_GENERATOR = "./build/OneSamp"
 FINAL_R_ANALYSIS = "./scripts/rScript.r"
 
-
-#############################################################
-## Helper functions
-#############################################################
-def mean(data):
-    n = len(data)
-    mean = sum(data) / n
-    return mean
-
-
-def variance(data):
-    n = len(data)
-    mean = sum(data) / n
-    deviations = [(x - mean) ** 2 for x in data]
-    variance = sum(deviations) / n
-    return variance
-
-
-def stdev(data):
-    import math
-    var = variance(data)
-    std_dev = math.sqrt(var)
-    return std_dev
-
-
-def normalization(data, mean, variance):
-    from operator import truediv
-    normalized_data = [0 for a in range(len(str(data)))]
-    cnt = 0
-    for x in range(len(str(data))):
-        normalized_data[cnt] = truediv((x - mean), float(np.sqrt(variance)))
-        cnt += 1
-    return normalized_data
-
+def getName(filename):
+    (_, filename) = os.path.split(filename)
+    return filename
 
 #############################################################
 start_time = time.time()
@@ -156,6 +125,8 @@ inputFileStatistics = statisticsClass()
 
 # t = time.time()
 inputFileStatistics.readData(fileName)
+inputFileStatistics.filterIndividuals(indivMissing)
+inputFileStatistics.filterLoci(lociMissing)
 inputFileStatistics.test_stat1()
 inputFileStatistics.test_stat2()
 inputFileStatistics.test_stat3()
@@ -180,7 +151,8 @@ sampleSize = inputFileStatistics.sampleSize
 ##Creting input file with intial statistics
 textList = [str(inputFileStatistics.stat1), str(inputFileStatistics.stat2), str(inputFileStatistics.stat3),
             str(inputFileStatistics.stat4), str(inputFileStatistics.stat5)]
-with open('./inputPopStats', 'w') as fileINPUT:
+inputPopStats = "inputPopStats_" + getName(fileName)
+with open(inputPopStats, 'w') as fileINPUT:
     fileINPUT.write('\t'.join(textList[0:]) + '\t')
 fileINPUT.close()
 
@@ -210,17 +182,18 @@ statistics3 = [0 for x in range(numOneSampTrials)]
 statistics4 = [0 for x in range(numOneSampTrials)]
 statistics5 = [0 for x in range(numOneSampTrials)]
 
-fileALLPOP = open('allPopStats', 'w+')
+allPopStats = "allPopStats_" + getName(fileName)
+fileALLPOP = open(allPopStats, 'w+')
 for x in range(numOneSampTrials):
 
     loci = inputFileStatistics.numLoci
     sampleSize = inputFileStatistics.sampleSize
-    #change the intermediate file name
-    intermediateFilename = "./genePopTiny"
+    # change the intermediate file name
+    intermediateFilename = "intermediate_" + getName(fileName)
 
     cmd = "%s -u%d -v%s -rC -l%d -i%d -d%s -s -t1 -b%s -f%d -o1 -p > %s" % (
-    POPULATION_GENERATOR, mutationRate, rangeTheta, loci, sampleSize, rangeDuration, rangeNe, minAlleleFreq,
-    intermediateFilename)
+        POPULATION_GENERATOR, mutationRate, rangeTheta, loci, sampleSize, rangeDuration, rangeNe, minAlleleFreq,
+        intermediateFilename)
 
     if (DEBUG):
         print(cmd)
@@ -232,12 +205,6 @@ for x in range(numOneSampTrials):
         exit()
 
     refactorFileStatistics = statisticsClass()
-    # refactorFileStatistics.testRead(intermediateFilename)
-    # refactorFileStatistics.new_stat1()
-    # refactorFileStatistics.stat2()
-    # refactorFileStatistics.stat3()
-    # refactorFileStatistics.newStat4()
-    # refactorFileStatistics.stat5()
 
     refactorFileStatistics.readData(intermediateFilename)
     refactorFileStatistics.test_stat1()
@@ -245,7 +212,6 @@ for x in range(numOneSampTrials):
     refactorFileStatistics.test_stat3()
     refactorFileStatistics.test_stat4()
     refactorFileStatistics.test_stat5()
-
 
     statistics1[x] = refactorFileStatistics.stat1
     statistics2[x] = refactorFileStatistics.stat2
@@ -268,8 +234,8 @@ fileALLPOP.close()
 ########################################
 # STARTING RSCRIPT
 #########################################
-
-ALL_POP_STATS_FILE = "allPopStats"
+# TODO double check there
+ALL_POP_STATS_FILE = allPopStats
 
 rScriptCMD = "Rscript %s < %s" % (FINAL_R_ANALYSIS, ALL_POP_STATS_FILE)
 print(rScriptCMD)
@@ -285,10 +251,10 @@ if (DEBUG):
 print("--- %s seconds ---" % (time.time() - start_time))
 
 # Deleting temporary files
-delete1 = "rm ./inputPopStats"
+delete1 = "rm " + inputPopStats
 delete_INPUTPOP = os.system(delete1)
 
-delete2 = "rm ./allPopStats"
+delete2 = "rm " + allPopStats
 delete_ALLPOP = os.system(delete2)
 
 ##########################
