@@ -117,6 +117,7 @@ class statisticsClass:
             newData = np.delete(data, deleteRow, axis = 0)
             self.data = newData
             self.sampleSize = self.sampleSize - 1
+            print("filter individuals")
 
 
 
@@ -154,6 +155,7 @@ class statisticsClass:
             newData = np.delete(data, deleteCol, axis = 1)
             self.data = newData
             self.numLoci = self.numLoci - 1
+            print("filter loci")
         #
         #
         # for i in range(self.numLoci):
@@ -196,19 +198,21 @@ class statisticsClass:
             allcnt.append(currCnt)
             currDi = homoloci - ((currCnt / totalspots) ** 2)
             di.append(currDi)
-# TODO verify the hits, do we need to compute both LociA and LociB?
+
         for i in range(self.numLoci):
             if di[i] == 0:
                 continue
+            LociA = data[:,i,:]
             for j in range(i + 1, self.numLoci):
                 if di[j] == 0:
                     continue
                 LociB = data[:, j, :]
-                hits = np.sum(LociB == LociB[0][0])
+
+                hits = np.sum(LociB == LociB[0][0]) + np.sum(LociA == LociA[0][0])
                 ai = allcnt[i] / totalspots
                 bj = allcnt[j] / totalspots
                 if ai * (1 - ai) + di[i] == 0 or bj * (1 - bj) + di[j] == 0:
-                    print("denominator is 0")
+                    # print("denominator is 0")
                     continue
                     # x = (float(hits) / float(allcnt[i][alA]) - ai * bj) / (
                     #     (ai*(1-ai) + di[i]) * (bj*(1-bj) + di[j]))

@@ -130,6 +130,7 @@ median <- median(result1$x)
 vari <- var(result1$x)
 min <- min(result1$x)
 max <- max(result1$x)
+
 # maybe we should use 0.25 and 0.75?
 # qntlci <- quantile(result1$x,c(0.025,0.975))
 qntlci <- quantile(result1$x,c(0.25,0.75))

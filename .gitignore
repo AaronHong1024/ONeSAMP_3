@@ -215,7 +215,8 @@ exampleData
 DataSet
 benchmarks
 .snakemake
-DataSet
+logs
+Ne_256Result
 
 
 

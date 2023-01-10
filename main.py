@@ -52,7 +52,7 @@ mutationRate = 0.000000012
 if (args.r):
     mutationRate = float(args.r)
 
-lowerNe = 10
+lowerNe = 100
 if (args.lNe):
     lowerNe = int(args.lNe)
 
@@ -74,15 +74,15 @@ if (int(upperNe) < 1):
 
 rangeNe = "%d,%d" % (lowerNe, upperNe)
 
-lowerTheta = 1
+lowerTheta = 0.000048
 if (args.lT):
     lowerTheta = float(args.lT)
 
-upperTheta = 10
+upperTheta = 0.0048
 if (args.uT):
     upperTheta = float(args.uT)
 
-rangeTheta = "%d,%d" % (lowerTheta, upperTheta)
+rangeTheta = "%f,%f" % (lowerTheta, upperTheta)
 
 numOneSampTrials = 50000
 if (args.s):
@@ -115,7 +115,7 @@ else:
 if (DEBUG):
     print("Start calculation of statistics for input population")
 
-rangeTheta = "%d,%d" % (lowerTheta, upperTheta)
+rangeTheta = "%f,%f" % (lowerTheta, upperTheta)
 
 #########################################
 # STARTING INITIAL POPULATION
