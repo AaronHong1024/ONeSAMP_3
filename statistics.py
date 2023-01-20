@@ -199,6 +199,7 @@ class statisticsClass:
             currDi = homoloci - ((currCnt / totalspots) ** 2)
             di.append(currDi)
 
+
         for i in range(self.numLoci):
             if di[i] == 0:
                 continue
@@ -207,8 +208,9 @@ class statisticsClass:
                 if di[j] == 0:
                     continue
                 LociB = data[:, j, :]
-
-                hits = np.sum(LociB == LociB[0][0]) + np.sum(LociA == LociA[0][0])
+                index_A = np.sum((LociA == LociA[0][0]).astype(int),axis=1)
+                index_B = np.sum((LociB == LociB[0][0]).astype(int),axis=1)
+                hits = np.sum(index_A*index_B)
                 ai = allcnt[i] / totalspots
                 bj = allcnt[j] / totalspots
                 if ai * (1 - ai) + di[i] == 0 or bj * (1 - bj) + di[j] == 0:
@@ -217,7 +219,7 @@ class statisticsClass:
                     # x = (float(hits) / float(allcnt[i][alA]) - ai * bj) / (
                     #     (ai*(1-ai) + di[i]) * (bj*(1-bj) + di[j]))
                     # print(ai,bj,i,j)
-                x = (float(hits) / float(2 * self.sampleSize) - ai * bj) / (
+                x = (float(hits) / float(2*self.sampleSize) - ai * bj) / (
                         (ai * (1 - ai) + di[i]) * (bj * (1 - bj) + di[j]))
                 running_sum += math.sqrt(abs(x))
 

@@ -44,7 +44,7 @@ args = parser.parse_args()
 # INITIALIZING PARAMETERS
 #########################################
 
-minAlleleFreq = 0.005
+minAlleleFreq = 0.05
 if (args.m):
     minAlleleFreq = float(args.m)
 
@@ -52,7 +52,7 @@ mutationRate = 0.000000012
 if (args.r):
     mutationRate = float(args.r)
 
-lowerNe = 100
+lowerNe = 10
 if (args.lNe):
     lowerNe = int(args.lNe)
 
