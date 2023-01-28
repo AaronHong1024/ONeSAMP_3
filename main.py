@@ -52,11 +52,11 @@ mutationRate = 0.000000012
 if (args.r):
     mutationRate = float(args.r)
 
-lowerNe = 10
+lowerNe = 4
 if (args.lNe):
     lowerNe = int(args.lNe)
 
-upperNe = 500
+upperNe = 400
 if (args.uNe):
     upperNe = int(args.uNe)
 
@@ -104,7 +104,7 @@ lociMissing = .2
 if (args.l):
     lociMissing = float(args.l)
 
-rangeDuration = "%d,%d" % (lowerDuration, upperDuration)
+rangeDuration = "%f,%f" % (lowerDuration, upperDuration)
 
 fileName = "oneSampIn"
 if (args.o):
@@ -191,7 +191,7 @@ for x in range(numOneSampTrials):
     # change the intermediate file name
     intermediateFilename = "intermediate_" + getName(fileName)
 
-    cmd = "%s -u%d -v%s -rC -l%d -i%d -d%s -s -t1 -b%s -f%d -o1 -p > %s" % (
+    cmd = "%s -u%.9f -v%s -rC -l%d -i%d -d%s -s -t1 -b%s -f%f -o1 -p > %s" % (
         POPULATION_GENERATOR, mutationRate, rangeTheta, loci, sampleSize, rangeDuration, rangeNe, minAlleleFreq,
         intermediateFilename)
 
@@ -237,7 +237,7 @@ fileALLPOP.close()
 # TODO double check there
 ALL_POP_STATS_FILE = allPopStats
 
-rScriptCMD = "Rscript %s < %s" % (FINAL_R_ANALYSIS, ALL_POP_STATS_FILE)
+rScriptCMD = "Rscript %s %s %s" % (FINAL_R_ANALYSIS, ALL_POP_STATS_FILE, inputPopStats)
 print(rScriptCMD)
 res = os.system(rScriptCMD)
 
@@ -251,11 +251,12 @@ if (DEBUG):
 print("--- %s seconds ---" % (time.time() - start_time))
 
 # Deleting temporary files
-delete1 = "rm " + inputPopStats
-delete_INPUTPOP = os.system(delete1)
+# delete1 = "rm " + inputPopStats
+# delete_INPUTPOP = os.system(delete1)
+#
+# delete2 = "rm " + allPopStats
+# delete_ALLPOP = os.system(delete2)
 
-delete2 = "rm " + allPopStats
-delete_ALLPOP = os.system(delete2)
 
 ##########################
 # END

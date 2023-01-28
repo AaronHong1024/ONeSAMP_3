@@ -67,7 +67,6 @@ class statisticsClass:
     # readData                                                          ##
     ######################################################################
     def readData(self, myFileName):
-        print("test read filename: ", myFileName)
         with open(myFileName, 'r') as f:
             lines = f.readlines()
         result = []
@@ -188,6 +187,8 @@ class statisticsClass:
         totalspots = self.sampleSize * 2
         running_sum = 0
         numloci = self.numLoci
+        sampCorrection = 2 / (numloci * (numloci - 1))
+        r = 0
         for i in range(self.numLoci):
             temp = data[:, i, :]
             # Can be optimized
@@ -211,20 +212,29 @@ class statisticsClass:
                 index_A = np.sum((LociA == LociA[0][0]).astype(int),axis=1)
                 index_B = np.sum((LociB == LociB[0][0]).astype(int),axis=1)
                 hits = np.sum(index_A*index_B)
-                ai = allcnt[i] / totalspots
-                bj = allcnt[j] / totalspots
+                ai = float(allcnt[i] / totalspots)
+                bj = float(allcnt[j] / totalspots)
                 if ai * (1 - ai) + di[i] == 0 or bj * (1 - bj) + di[j] == 0:
                     # print("denominator is 0")
                     continue
                     # x = (float(hits) / float(allcnt[i][alA]) - ai * bj) / (
                     #     (ai*(1-ai) + di[i]) * (bj*(1-bj) + di[j]))
                     # print(ai,bj,i,j)
-                x = (float(hits) / float(2*self.sampleSize) - ai * bj) / (
-                        (ai * (1 - ai) + di[i]) * (bj * (1 - bj) + di[j]))
-                running_sum += math.sqrt(abs(x))
+                jointAB = float(hits / (2 * totalspots))
+
+                denominator = (ai * (1 - ai) + di[i]) * (bj * (1 - bj) + di[j])
+
+                r_intermdediate = 4*float((jointAB - ai*bj) ** 2) / denominator
+
+                r += r_intermdediate
+
+
+        running_sum = r
 
         self.allcnt = allcnt
-        self.stat1 = 2 * running_sum / (numloci * (numloci - 1))
+
+        self.stat1 = running_sum * sampCorrection
+
 
         if (self.DEBUG):
             print("printing for teststat1 end   ---->", self.stat1)
@@ -406,12 +416,16 @@ class statisticsClass:
             homoloci = np.sum(temp[:, 1] == temp[:, 0]) / self.sampleSize
 
             if homoloci > 0:
-                observed = homoloci
+                observed = 1 - homoloci
                 valA = allcnt[i] / totalNum
                 if valA == 1:
                     continue
-                valB = 1 - valA
+                valB = float(1 - valA)
                 expected = 1 - math.pow(valA, 2) - math.pow(valB, 2)
+                # print("A: ",valA)
+                # print("B: ",valB)
+                # print("observed: ", observed)
+                # print("expected: ", expected)
                 newstat4 = newstat4 + float(observed / expected)
 
 

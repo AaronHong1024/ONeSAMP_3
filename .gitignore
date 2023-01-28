@@ -217,6 +217,7 @@ benchmarks
 .snakemake
 logs
 Ne_256Result
+temp
 
 
 
