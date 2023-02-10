@@ -110,12 +110,12 @@ class statisticsClass:
             numMissing = 0
             temp = data[i,:,:]
             numMissing += np.sum(np.logical_or(temp[:,0] == -1, temp[:,1] == -1)) - np.sum((temp==[-1,-1]).all())
-            if numMissing > 0:
+            if numMissing > self.numLoci * PERCENT_MISSINGIndiv:
                 deleteRow.append(i)
         if len(deleteRow) != 0:
             newData = np.delete(data, deleteRow, axis = 0)
             self.data = newData
-            self.sampleSize = self.sampleSize - 1
+            self.sampleSize = self.sampleSize - len(deleteRow)
             print("filter individuals")
 
 
@@ -147,13 +147,13 @@ class statisticsClass:
             numMissing = 0
             numMissing += np.sum(np.logical_or(temp[:,0] == -1, temp[:,1] == -1)) - np.sum((temp==[-1,-1]).all())
 
-            if numMissing > 0:
+            if numMissing > self.sampleSize * PERCENT_MISSINGLoci:
                 deleteCol.append(i)
 
         if len(deleteCol) != 0:
             newData = np.delete(data, deleteCol, axis = 1)
             self.data = newData
-            self.numLoci = self.numLoci - 1
+            self.numLoci = self.numLoci - len(deleteCol)
             print("filter loci")
         #
         #
