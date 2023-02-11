@@ -124,6 +124,7 @@ coverage.xml
 .hypothesis/
 .pytest_cache/
 cover/
+ParseIslandData/
 
 # Translations
 *.mo
