@@ -73,7 +73,8 @@ class statisticsClass:
         for line in lines[1:]:
             if (len(line.split()) > 10):
                 result.append([m[i] for i in line.split()[2:]])
-        self.data = np.asarray(result)
+        data = np.asarray(result)
+        self.data = data
         last_line = self.get_file_last_line(os.path.abspath(myFileName))
         test = last_line.strip().split(" ")
         NE_VALUEtemp = 0
@@ -120,21 +121,6 @@ class statisticsClass:
 
 
 
-        # for i in range(self.sampleSize):
-        #     individual = self.data.loc[i]
-        #     numMissing = 0
-        #     for j in (individual):
-        #         if (j == '0100' or j == '0001' or j == '0000'):
-        #             numMissing += 1
-        #     if (numMissing > PERCENT_MISSINGIndiv * self.numLoci):
-        #         print("Deleted:", self.data[j])
-        #         self.ARRAY_MISSINGIndiv.append(self.data[j])
-        #         del self.data[j]
-        #         self.numLoci = self.numLoci - 1
-        #         self.sampleSize = len(self.data) - 1
-
-                # only that place., but double check with David
-
     ######################################################################
     # filterLoci                                                        ##
     ######################################################################
@@ -155,20 +141,7 @@ class statisticsClass:
             self.data = newData
             self.numLoci = self.numLoci - len(deleteCol)
             print("filter loci")
-        #
-        #
-        # for i in range(self.numLoci):
-        #     individual = self.data[i]
-        #     numMissing = 0
-        #     for j in (individual):
-        #         if (j == '0100' or j == '0001' or j == '0000'):
-        #             numMissing += 1
-        #     if (numMissing > PERCENT_MISSINGLoci * self.numLoci):
-        #         print("Deleted:", self.data[j])
-        #         self.ARRAY_MISSINGLoci.append(self.data[j])
-        #         del self.data[j]
-        #         self.numLoci = self.numLoci - 1
-        #         self.sampleSize = len(self.data) - 1
+
 
     ######################################################################
     # stat1 BW Estimator                                                ##
@@ -179,21 +152,31 @@ class statisticsClass:
             print("printing for stat1 begin: ")
 
         data = self.data
+        deletecol = []
+        for i in range(len(data[0])):
+            temp = data[:, i, :]
+            unique = np.unique(temp)
+            if len(unique) == 1:
+                deletecol.append(i)
+
+        if len(deletecol) != 0:
+            data = np.delete(data, deletecol, axis=1)
+        numloci = data.shape[1]
+        sampleSize = data.shape[0]
         # compute the frequency of each allele
         allcnt = []
         # compute the homoloci number for data matrix
         homolociArray = []
         di = []
-        totalspots = self.sampleSize * 2
+        totalspots = sampleSize * 2
         running_sum = 0
-        numloci = self.numLoci
         sampCorrection = 2 / (numloci * (numloci - 1))
         r = 0
-        for i in range(self.numLoci):
+        for i in range(numloci):
             temp = data[:, i, :]
             # Can be optimized
             homoloci = np.sum(np.logical_and(temp[:, 1] == temp[:, 0], temp[:, 1] == temp[0][0],
-                                             temp[:, 0] == temp[0][0]) == True) / self.sampleSize
+                                             temp[:, 0] == temp[0][0]) == True) / sampleSize
             homolociArray.append(homoloci)
             currCnt = np.sum(temp == temp[0][0])
             allcnt.append(currCnt)
@@ -201,11 +184,11 @@ class statisticsClass:
             di.append(currDi)
 
 
-        for i in range(self.numLoci):
+        for i in range(numloci):
             if di[i] == 0:
                 continue
             LociA = data[:,i,:]
-            for j in range(i + 1, self.numLoci):
+            for j in range(i + 1, numloci):
                 if di[j] == 0:
                     continue
                 LociB = data[:, j, :]
@@ -231,7 +214,7 @@ class statisticsClass:
 
         running_sum = r
 
-        self.allcnt = allcnt
+        # self.allcnt = allcnt
 
         self.stat1 = running_sum * sampCorrection
 
@@ -240,104 +223,6 @@ class statisticsClass:
             print("printing for teststat1 end   ---->", self.stat1)
 
 
-    # def new_stat1(self):
-    #     if self.DEBUG:
-    #         print("printing for stat1 begin: ")
-    #
-    #     data = self.data
-    #     alleleA = []
-    #     alleleB = []
-    #
-    #     for row in data.itertuples(index=False):
-    #         temA = []
-    #         temB = []
-    #         for col in range(1, len(row)):
-    #             temA.append(row[col][0:2])
-    #             temB.append(row[col][2:])
-    #
-    #         alleleA.append(temA)
-    #         alleleB.append(temB)
-    #
-    #     allcnt = []
-    #     homoloci = []
-    #
-    #     for i in range(len(alleleA[0])):
-    #         newdic = {}
-    #         temp = 0
-    #         for j in range(len(alleleA)):
-    #             if alleleA[j][i] == alleleB[j][i] and alleleA[j][i] == alleleA[0][i]:
-    #                 temp += 1
-    #             if alleleA[j][i] in newdic:
-    #                 newdic[alleleA[j][i]] += 1
-    #             else:
-    #                 newdic[alleleA[j][i]] = 1
-    #             if alleleB[j][i] in newdic:
-    #                 newdic[alleleB[j][i]] += 1
-    #             else:
-    #                 newdic[alleleB[j][i]] = 1
-    #
-    #         homoloci.append(float(temp) / float(self.sampleSize))
-    #         allcnt.append(newdic)
-    #
-    #     self.allcnt = allcnt
-    #     di = []  # a 1D array that holds the departures of each loci from Hardy-Weinberg equilibrium
-    #     totspots = float(
-    #         self.sampleSize * 2)  # total number of alleles per locus. used in computing allele freq per locus
-    #     # print("totspots: ", totspots)
-    #     for i in range(len(allcnt)):  # fills up di
-    #         vals = []
-    #         for key, value in allcnt[i].items():
-    #             vals.append(float(value) / float(totspots))
-    #         di.append(homoloci[i] - math.pow(vals[0], 2))
-    #
-    #     hits = 0
-    #
-    #     running_sum = 0
-    #
-    #     for i in range(self.numLoci):
-    #         # skip the same column
-    #         if di[i] == 0:
-    #             continue
-    #         for j in range(i + 1, self.numLoci):
-    #             # skip the same column
-    #             if di[j] == 0:
-    #                 continue
-    #             alA = next(iter(allcnt[i]))
-    #             alB = next(iter(allcnt[j]))
-    #             hits = 0
-    #             # the hit is wrong need to change
-    #             for k in range(self.sampleSize):
-    #                 # if alleleA[k][i] == alA and alleleA[k][j] == alB:
-    #                 #     hits += 1
-    #                 # if alleleB[k][i] == alA and alleleB[k][j] == alB:
-    #                 #     hits += 1
-    #                 if alleleA[k][j] == alB:
-    #                     hits += 1
-    #                 if alleleB[k][j] == alB:
-    #                     hits += 1
-    #             ai = float(allcnt[i][alA]) / float(totspots)
-    #             bj = float(allcnt[j][alB]) / float(totspots)
-    #             # NEVER GOES IN HITS???? -- did I fix it correctly? Email King
-    #             # x = (float((float(hits) / float(len(data) - ai * bj)))) / (
-    #             #     float(((ai * float(1 - ai) + float(di[i])) * (float(bj) * float(1 - bj) + di[j]))))
-    #             # print(hits, alA, alB)
-    #             if ai * (1 - ai) + di[i] == 0 or bj * (1 - bj) + di[j] == 0:
-    #                 print("denominator is 0")
-    #                 continue
-    #             # x = (float(hits) / float(allcnt[i][alA]) - ai * bj) / (
-    #             #     (ai*(1-ai) + di[i]) * (bj*(1-bj) + di[j]))
-    #             # print(ai,bj,i,j)
-    #             x = (float(hits) / float(2 * self.sampleSize) - ai * bj) / (
-    #                     (ai * (1 - ai) + di[i]) * (bj * (1 - bj) + di[j]))
-    #
-    #             running_sum += math.sqrt(abs(x))
-    #
-    #     numloci = len(alleleA[0])
-    #     self.stat1 = 2 * running_sum / (numloci * (numloci - 1))
-    #
-    #     if (self.DEBUG):
-    #         print("printing for stat1 end   ---->", self.stat1)
-    #     # print("-----------------------------------------------------------------")
 
     def test_stat2(self):
         data = self.data
@@ -407,63 +292,30 @@ class statisticsClass:
 
     def test_stat4(self):
         data = self.data
-        allcnt = self.allcnt
         totalNum = self.sampleSize * 2
         newstat4 = 0
+        allcnt = []
         for i in range(self.numLoci):
             temp = data[:,i, :]
             # Can be optimized
             homoloci = np.sum(temp[:, 1] == temp[:, 0]) / self.sampleSize
-
+            currCnt = np.sum(temp == temp[0][0])
+            allcnt.append(currCnt)
             if homoloci > 0:
                 observed = 1 - homoloci
-                valA = allcnt[i] / totalNum
+                valA = currCnt / totalNum
                 if valA == 1:
                     continue
                 valB = float(1 - valA)
                 expected = 1 - math.pow(valA, 2) - math.pow(valB, 2)
-                # print("A: ",valA)
-                # print("B: ",valB)
-                # print("observed: ", observed)
-                # print("expected: ", expected)
                 newstat4 = newstat4 + float(observed / expected)
 
 
         newstat4 = 1 - (float(newstat4 / self.numLoci))
         self.stat4 = newstat4
+        self.allcnt = allcnt
         if (self.DEBUG):
             print("New stat4:   ", newstat4)
-
-
-    # def newStat4(self):
-    #     # https://academic.oup.com/jhered/article/106/3/306/2961865
-    #     expected = 0
-    #     homozygosityCnt = 0
-    #     newstat4 = 0
-    #     allcnt = self.allcnt
-    #     totalNum = self.sampleSize * 2
-    #     # Not sure why need to add 1? email isha to ask about this
-    #     for i in range(self.numLoci + 1):
-    #         for j in range(self.sampleSize):
-    #             j = self.data.iloc[j, i]
-    #             if (j == '0101' or j == '0202' or j == '0303' or j == '0404'):
-    #                 homozygosityCnt = homozygosityCnt + 1
-    #         if (homozygosityCnt > 0):
-    #             homozygosityCnt = float(homozygosityCnt) / float(self.sampleSize)
-    #             observed = homozygosityCnt
-    #             # print(allcnt[i-1].values())
-    #             valA = list(allcnt[i - 1].values())[0] / totalNum
-    #             if valA == 1:
-    #                 continue
-    #             valB = list(allcnt[i - 1].values())[1] / totalNum
-    #             expected = 1 - math.pow(valA, 2) - math.pow(valB, 2)
-    #             newstat4 = newstat4 + float(observed / expected)
-    #             homozygosityCnt = 0
-    #
-    #     newstat4 = 1 - (float(newstat4 / self.numLoci))
-    #     self.stat4 = newstat4
-    #     if (self.DEBUG):
-    #         print("New stat4:   ", newstat4)
 
         ######################################################################
         # stat5 Expected Heterozygosity                                     ##
@@ -485,19 +337,3 @@ class statisticsClass:
             print("(Expected heterozygosity) stat5 is ", self.stat5)
 
 
-
-    # def stat5(self):
-    #     tempstat5 = 0
-    #     data = self.data
-    #     allCnt = self.allcnt
-    #     totalNum = self.sampleSize * 2
-    #
-    #     for i in range(self.numLoci):
-    #         freqP = 0
-    #         for value in allCnt[i].values():
-    #             freqP = freqP + (value / totalNum) ** 2
-    #         tempstat5 = tempstat5 + (1 - freqP)
-    #     self.stat5 = tempstat5 / self.numLoci
-    #
-    #     if (self.DEBUG):
-    #         print("(Expected heterozygosity) stat5 is ", self.stat5)

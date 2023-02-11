@@ -12,6 +12,7 @@ NUMBER_OF_STATISTICS = 5
 DEBUG = 0  ## BOUCHER: Change this to 1 for debuggin mode
 OUTPUTFILENAME = "priors.txt"
 
+
 BASE_PATH = os.path.dirname(os.path.realpath(__file__))
 
 POPULATION_GENERATOR = "./build/OneSamp"
