@@ -152,15 +152,7 @@ class statisticsClass:
             print("printing for stat1 begin: ")
 
         data = self.data
-        deletecol = []
-        for i in range(len(data[0])):
-            temp = data[:, i, :]
-            unique = np.unique(temp)
-            if len(unique) == 1:
-                deletecol.append(i)
 
-        if len(deletecol) != 0:
-            data = np.delete(data, deletecol, axis=1)
         numloci = data.shape[1]
         sampleSize = data.shape[0]
         # compute the frequency of each allele
@@ -172,6 +164,8 @@ class statisticsClass:
         running_sum = 0
         sampCorrection = 2 / (numloci * (numloci - 1))
         r = 0
+        index = 0
+        deletecol=[]
         for i in range(numloci):
             temp = data[:, i, :]
             # Can be optimized
@@ -179,10 +173,18 @@ class statisticsClass:
                                              temp[:, 0] == temp[0][0]) == True) / sampleSize
             homolociArray.append(homoloci)
             currCnt = np.sum(temp == temp[0][0])
+            if currCnt == totalspots:
+                deletecol.append(i)
             allcnt.append(currCnt)
             currDi = homoloci - ((currCnt / totalspots) ** 2)
             di.append(currDi)
 
+# delete the poly column and recalculate the numloci and sample size
+        if len(deletecol) != 0:
+            data = np.delete(data, deletecol, axis=1)
+            numloci = data.shape[1]
+            sampleSize = data.shape[0]
+            sampCorrection = 2 / (numloci * (numloci - 1))
 
         for i in range(numloci):
             if di[i] == 0:
@@ -195,14 +197,14 @@ class statisticsClass:
                 index_A = np.sum((LociA == LociA[0][0]).astype(int),axis=1)
                 index_B = np.sum((LociB == LociB[0][0]).astype(int),axis=1)
                 hits = np.sum(index_A*index_B)
-                ai = float(allcnt[i] / totalspots)
-                bj = float(allcnt[j] / totalspots)
+                currCntA = np.sum(LociA == LociA[0][0])
+                currCntB = np.sum(LociB == LociB[0][0])
+                ai = float(currCntA / totalspots)
+                bj = float(currCntB / totalspots)
+
                 if ai * (1 - ai) + di[i] == 0 or bj * (1 - bj) + di[j] == 0:
-                    # print("denominator is 0")
+
                     continue
-                    # x = (float(hits) / float(allcnt[i][alA]) - ai * bj) / (
-                    #     (ai*(1-ai) + di[i]) * (bj*(1-bj) + di[j]))
-                    # print(ai,bj,i,j)
                 jointAB = float(hits / (2 * totalspots))
 
                 denominator = (ai * (1 - ai) + di[i]) * (bj * (1 - bj) + di[j])
@@ -214,9 +216,9 @@ class statisticsClass:
 
         running_sum = r
 
-        # self.allcnt = allcnt
-
+        self.allcnt = allcnt
         self.stat1 = running_sum * sampCorrection
+        print(allcnt)
 
 
         if (self.DEBUG):
@@ -309,7 +311,6 @@ class statisticsClass:
                 valB = float(1 - valA)
                 expected = 1 - math.pow(valA, 2) - math.pow(valB, 2)
                 newstat4 = newstat4 + float(observed / expected)
-
 
         newstat4 = 1 - (float(newstat4 / self.numLoci))
         self.stat4 = newstat4
