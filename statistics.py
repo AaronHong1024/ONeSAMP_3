@@ -54,6 +54,9 @@ class statisticsClass:
     result = []
     allcnt = []
     homoLoci = []
+    homoLociCol = []
+    hexp = []
+    hob = []
 
     # m is the transfer array
 
@@ -179,6 +182,7 @@ class statisticsClass:
             currDi = homoloci - ((currCnt / totalspots) ** 2)
             di.append(currDi)
 
+
 # delete the poly column and recalculate the numloci and sample size
         if len(deletecol) != 0:
             data = np.delete(data, deletecol, axis=1)
@@ -215,10 +219,9 @@ class statisticsClass:
 
 
         running_sum = r
-
         self.allcnt = allcnt
         self.stat1 = running_sum * sampCorrection
-        print(allcnt)
+        self.homoLociCol = homolociArray
 
 
         if (self.DEBUG):
@@ -295,26 +298,12 @@ class statisticsClass:
     def test_stat4(self):
         data = self.data
         totalNum = self.sampleSize * 2
-        newstat4 = 0
-        allcnt = []
-        for i in range(self.numLoci):
-            temp = data[:,i, :]
-            # Can be optimized
-            homoloci = np.sum(temp[:, 1] == temp[:, 0]) / self.sampleSize
-            currCnt = np.sum(temp == temp[0][0])
-            allcnt.append(currCnt)
-            if homoloci > 0:
-                observed = 1 - homoloci
-                valA = currCnt / totalNum
-                if valA == 1:
-                    continue
-                valB = float(1 - valA)
-                expected = 1 - math.pow(valA, 2) - math.pow(valB, 2)
-                newstat4 = newstat4 + float(observed / expected)
+        hexp = np.asarray(self.hexp)
+        heob = np.asarray(self.hob)
+        fis = 1 - heob/hexp
+        self.stat4 = np.sum(fis) / self.numLoci
 
-        newstat4 = 1 - (float(newstat4 / self.numLoci))
-        self.stat4 = newstat4
-        self.allcnt = allcnt
+
         if (self.DEBUG):
             print("New stat4:   ", newstat4)
 
@@ -323,15 +312,25 @@ class statisticsClass:
         ######################################################################
         # slightly different form paper. Need to be reviewed.
 
+    #Currently, we have the missing data not filted.
+    # thus, slightly different from the David example
     def test_stat5(self):
-        tempstat5 = 0
+        sampleCorrection = self.sampleSize / (self.sampleSize - 1)
+        totalNum = self.sampleSize * 2
+        homoloci = np.asarray(self.homoLociCol)
+        # ones = np.ones(len(homoloci))
+        # h_obser = (ones-homoloci)/self.sampleSize/2
+        # print(h_obser)
         data = self.data
         allcnt = np.asarray(self.allcnt)
-        totalNum = self.sampleSize * 2
         freqA = (allcnt / totalNum)
         freqB = 1 - freqA
-        freqRes = 1 - freqA ** 2 - freqB ** 2
+        h_obser = (1-homoloci)/totalNum
+
+        freqRes = (1 - freqA ** 2 - freqB ** 2 - h_obser)*sampleCorrection
         # stat5 = np.sum(freqRes) / self.numLoci
+        self.hexp = freqRes
+        self.hob = h_obser*totalNum
         self.stat5 = np.sum(freqRes) / self.numLoci
 
         if (self.DEBUG):
