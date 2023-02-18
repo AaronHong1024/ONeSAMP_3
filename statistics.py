@@ -169,6 +169,7 @@ class statisticsClass:
         r = 0
         index = 0
         deletecol=[]
+        # can be optimized. Merge it into the next for loop
         for i in range(numloci):
             temp = data[:, i, :]
             # Can be optimized
@@ -188,8 +189,9 @@ class statisticsClass:
             data = np.delete(data, deletecol, axis=1)
             numloci = data.shape[1]
             sampleSize = data.shape[0]
+            new_di = [di[i] for i in range(len(di)) if i not in deletecol]
+            di = new_di
             sampCorrection = 2 / (numloci * (numloci - 1))
-
         for i in range(numloci):
             if di[i] == 0:
                 continue
@@ -207,7 +209,6 @@ class statisticsClass:
                 bj = float(currCntB / totalspots)
 
                 if ai * (1 - ai) + di[i] == 0 or bj * (1 - bj) + di[j] == 0:
-
                     continue
                 jointAB = float(hits / (2 * totalspots))
 
@@ -228,6 +229,9 @@ class statisticsClass:
             print("printing for teststat1 end   ---->", self.stat1)
 
 
+    ######################################################################
+    # stat2 First Moment of Multilocus Homozygosity                     ##
+    ######################################################################
 
     def test_stat2(self):
         data = self.data
@@ -244,33 +248,6 @@ class statisticsClass:
             print("(First moment of homozygosity) test Stats2 is ", self.stat2)
 
 
-    ######################################################################
-    # stat2 First Moment of Multilocus Homozygosity                     ##
-    ######################################################################
-    # def stat2(self):
-    #     # taking average homozygosity for each indiv then adding that all up and dividing by number of indivudls, so basically avg homozygosity over all indiv
-    #
-    #     tempVarStat2 = 0
-    #     data = self.data
-    #     # store the homo number into a list (use more space but save more time)
-    #     homoLoci = [0 for _ in range(self.sampleSize)]
-    #     i = 0
-    #
-    #     for row in data.itertuples():
-    #         homozygosityCnt = 0
-    #         homozygosityCnt += row.count('0101')
-    #         homozygosityCnt += row.count('0202')
-    #         homozygosityCnt += row.count('0303')
-    #         homozygosityCnt += row.count('0404')
-    #         homoLoci[i] = homozygosityCnt
-    #         i += 1
-    #         # tempVarStat2 += homozygosityCnt
-    #     self.homoLoci = homoLoci
-    #     self.stat2 = np.mean(homoLoci)
-    #     # self.stat2 = float(tempVarStat2) / float(self.sampleSize)
-    #
-    #     if (self.DEBUG):
-    #         print("(First moment of homozygosity) Stats2 is ", self.stat2)
 
     ######################################################################
     # stat3 Second Moment of Multilocus Homozygosity                    ##
@@ -283,13 +260,6 @@ class statisticsClass:
         if self.DEBUG:
             print("(Second moment of multilocus homozygosity) Stats3 is ", self.stat3)
 
-    # def stat3(self):
-    #     homoLoci = self.homoLoci
-    #     ## Compute the sample variance
-    #     self.stat3 = np.var(homoLoci, ddof=1)
-    #
-    #     if self.DEBUG:
-    #         print("(Second moment of multilocus homozygosity) Stats3 is ", self.stat3)
 
     ######################################################################
     # stat4 Updated after meeting w Dav                                 ##
