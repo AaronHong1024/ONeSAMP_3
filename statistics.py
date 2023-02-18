@@ -266,12 +266,19 @@ class statisticsClass:
     ######################################################################
 
     def test_stat4(self):
+
+        # According to the gene diversities equation,
+        # if the observe is 0, then the expected will also be 0
+
         data = self.data
         totalNum = self.sampleSize * 2
         hexp = np.asarray(self.hexp)
         heob = np.asarray(self.hob)
+        hexp = hexp[hexp != 0]
+        heob = heob[heob != 0]
         fis = 1 - heob/hexp
         self.stat4 = np.sum(fis) / self.numLoci
+        print(self.stat4)
 
 
         if (self.DEBUG):
@@ -284,13 +291,11 @@ class statisticsClass:
 
     #Currently, we have the missing data not filted.
     # thus, slightly different from the David example
+
     def test_stat5(self):
         sampleCorrection = self.sampleSize / (self.sampleSize - 1)
         totalNum = self.sampleSize * 2
         homoloci = np.asarray(self.homoLociCol)
-        # ones = np.ones(len(homoloci))
-        # h_obser = (ones-homoloci)/self.sampleSize/2
-        # print(h_obser)
         data = self.data
         allcnt = np.asarray(self.allcnt)
         freqA = (allcnt / totalNum)
@@ -298,7 +303,6 @@ class statisticsClass:
         h_obser = (1-homoloci)/totalNum
 
         freqRes = (1 - freqA ** 2 - freqB ** 2 - h_obser)*sampleCorrection
-        # stat5 = np.sum(freqRes) / self.numLoci
         self.hexp = freqRes
         self.hob = h_obser*totalNum
         self.stat5 = np.sum(freqRes) / self.numLoci
