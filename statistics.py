@@ -35,6 +35,8 @@ m = {'0101': [0, 0],
      '0003': [-1,2],
      '0004': [-1,3]}
 
+elements = np.array([[0, 0], [1, 1], [2, 2], [3, 3]])
+
 
 class statisticsClass:
     ####### Members of Class
@@ -173,9 +175,13 @@ class statisticsClass:
         for i in range(numloci):
             temp = data[:, i, :]
             # Can be optimized
+            # test = (temp == [0,0] + temp == [1,1] + temp == [2,2] + temp == [3,3]).any()
+
             homoloci = np.sum(np.logical_and(temp[:, 1] == temp[:, 0], temp[:, 1] == temp[0][0],
                                              temp[:, 0] == temp[0][0]) == True) / sampleSize
-            homolociArray.append(homoloci)
+
+            allHomoloci = np.sum(np.count_nonzero((temp[:, np.newaxis, :] == elements).all(axis=2), axis=0)) / sampleSize
+            homolociArray.append(allHomoloci)
             currCnt = np.sum(temp == temp[0][0])
             if currCnt == totalspots:
                 deletecol.append(i)
@@ -278,7 +284,6 @@ class statisticsClass:
         heob = heob[heob != 0]
         fis = 1 - heob/hexp
         self.stat4 = np.sum(fis) / self.numLoci
-        print(self.stat4)
 
 
         if (self.DEBUG):
@@ -301,7 +306,6 @@ class statisticsClass:
         freqA = (allcnt / totalNum)
         freqB = 1 - freqA
         h_obser = (1-homoloci)/totalNum
-
         freqRes = (1 - freqA ** 2 - freqB ** 2 - h_obser)*sampleCorrection
         self.hexp = freqRes
         self.hob = h_obser*totalNum
