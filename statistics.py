@@ -280,9 +280,17 @@ class statisticsClass:
         totalNum = self.sampleSize * 2
         hexp = np.asarray(self.hexp)
         heob = np.asarray(self.hob)
-        hexp = hexp[hexp != 0]
-        heob = heob[heob != 0]
-        fis = 1 - heob/hexp
+        # hexp = hexp[hexp != 0]
+        # heob = heob[heob != 0]
+        # fis = 1 - heob/hexp
+
+        fis = np.zeros_like(hexp)
+        mask = hexp != 0
+        fis[mask] = 1 - heob[mask] / hexp[mask]
+        fis[np.logical_and(hexp == 0, heob == 0)] = 0
+        if not mask[0] and heob[0] == 0:
+            fis[0] = 0
+
         self.stat4 = np.sum(fis) / self.numLoci
 
 
