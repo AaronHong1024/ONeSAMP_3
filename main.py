@@ -9,6 +9,7 @@ import time
 from statistics import statisticsClass
 
 NUMBER_OF_STATISTICS = 5
+t = 30
 DEBUG = 0  ## BOUCHER: Change this to 1 for debuggin mode
 OUTPUTFILENAME = "priors.txt"
 
@@ -37,12 +38,15 @@ parser.add_argument("--uD", type=float, help="Upper of Duration Range")
 parser.add_argument("--i", type=float, help="Missing data for individuals")
 parser.add_argument("--l", type=float, help="Missing data for loci")
 parser.add_argument("--o", type=str, help="The File Name")
+parser.add_argument("--t", type=int, help="Repeat times")
 
 args = parser.parse_args()
 
 #########################################
 # INITIALIZING PARAMETERS
 #########################################
+if (args.t):
+    t = int(args.t)
 
 minAlleleFreq = 0.05
 if (args.m):
@@ -52,11 +56,11 @@ mutationRate = 0.000000012
 if (args.r):
     mutationRate = float(args.r)
 
-lowerNe = 4
+lowerNe = 150
 if (args.lNe):
     lowerNe = int(args.lNe)
 
-upperNe = 400
+upperNe = 250
 if (args.uNe):
     upperNe = int(args.uNe)
 
@@ -125,13 +129,13 @@ inputFileStatistics = statisticsClass()
 
 # t = time.time()
 inputFileStatistics.readData(fileName)
-inputFileStatistics.filterIndividuals(indivMissing)
-inputFileStatistics.filterLoci(lociMissing)
+# inputFileStatistics.filterIndividuals(indivMissing)
+# inputFileStatistics.filterLoci(lociMissing)
 inputFileStatistics.test_stat1()
 inputFileStatistics.test_stat2()
 inputFileStatistics.test_stat3()
-inputFileStatistics.test_stat4()
 inputFileStatistics.test_stat5()
+inputFileStatistics.test_stat4()
 # print(f'coast:{time.time() - t:.4f}s')
 #
 # t = time.time()
@@ -151,7 +155,7 @@ sampleSize = inputFileStatistics.sampleSize
 ##Creting input file with intial statistics
 textList = [str(inputFileStatistics.stat1), str(inputFileStatistics.stat2), str(inputFileStatistics.stat3),
             str(inputFileStatistics.stat4), str(inputFileStatistics.stat5)]
-inputPopStats = "inputPopStats_" + getName(fileName)
+inputPopStats = "inputPopStats_" + getName(fileName) + "_" + str(t)
 with open(inputPopStats, 'w') as fileINPUT:
     fileINPUT.write('\t'.join(textList[0:]) + '\t')
 fileINPUT.close()
@@ -179,17 +183,17 @@ statistics5 = []
 statistics1 = [0 for x in range(numOneSampTrials)]
 statistics2 = [0 for x in range(numOneSampTrials)]
 statistics3 = [0 for x in range(numOneSampTrials)]
-statistics4 = [0 for x in range(numOneSampTrials)]
 statistics5 = [0 for x in range(numOneSampTrials)]
+statistics4 = [0 for x in range(numOneSampTrials)]
 
-allPopStats = "allPopStats_" + getName(fileName)
+allPopStats = "allPopStats_" + getName(fileName) + "_" + str(t)
 fileALLPOP = open(allPopStats, 'w+')
 for x in range(numOneSampTrials):
 
     loci = inputFileStatistics.numLoci
     sampleSize = inputFileStatistics.sampleSize
     # change the intermediate file name
-    intermediateFilename = "intermediate_" + getName(fileName)
+    intermediateFilename = "intermediate_" + getName(fileName)+ "_" + str(t)
 
     cmd = "%s -u%.9f -v%s -rC -l%d -i%d -d%s -s -t1 -b%s -f%f -o1 -p > %s" % (
         POPULATION_GENERATOR, mutationRate, rangeTheta, loci, sampleSize, rangeDuration, rangeNe, minAlleleFreq,
@@ -210,14 +214,14 @@ for x in range(numOneSampTrials):
     refactorFileStatistics.test_stat1()
     refactorFileStatistics.test_stat2()
     refactorFileStatistics.test_stat3()
-    refactorFileStatistics.test_stat4()
     refactorFileStatistics.test_stat5()
+    refactorFileStatistics.test_stat4()
 
     statistics1[x] = refactorFileStatistics.stat1
     statistics2[x] = refactorFileStatistics.stat2
     statistics3[x] = refactorFileStatistics.stat3
-    statistics4[x] = refactorFileStatistics.stat4
     statistics5[x] = refactorFileStatistics.stat5
+    statistics4[x] = refactorFileStatistics.stat4
 
     # Making file with stats from all populations
     textList = []

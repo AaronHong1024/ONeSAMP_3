@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="6cc102e7-cb89-4088-bfab-1f345e366eb7" name="hipergator">
+        <fileTransfer accessType="SFTP" host="hpg.rc.ufl.edu" port="22" sshConfigId="bc2f127b-7132-4eb4-83ec-8b35d0f07593" sshConfig="yu.hong@hpg.rc.ufl.edu:22 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

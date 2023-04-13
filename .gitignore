@@ -219,6 +219,11 @@ benchmarks
 logs
 Ne_256Result
 temp
+benchmarks
+Ne_*
+ParseIslandData
+test_100.sh
+island_result
 
 
 

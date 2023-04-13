@@ -151,7 +151,7 @@ class statisticsClass:
     ######################################################################
     # stat1 BW Estimator                                                ##
     ######################################################################
-
+#TODO: when we have small individuals the r result is slightly different from the LDNE
     def test_stat1(self):
         if self.DEBUG:
             print("printing for stat1 begin: ")
