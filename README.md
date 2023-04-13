@@ -1,7 +1,7 @@
 # OneSamp3.0
 ONeSAMP 3.0
 
-By Aaron Hong^1 Kingshuk Mukherjee1 Isha Yooseph1 Marco Oliva1
+By Aaron Hong1 Kingshuk Mukherjee1 Isha Yooseph1 Marco Oliva1
 Mark Heim2 Chris Funk3 David Tallmon4,† Christina Boucher
 
 
