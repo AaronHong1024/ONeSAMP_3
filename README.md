@@ -1,7 +1,10 @@
 # OneSamp3.0
 ONeSAMP 3.0
 
-By XXXXXXX
+By Aaron Hong^1 Kingshuk Mukherjee1 Isha Yooseph1 Marco Oliva1
+Mark Heim2 Chris Funk3 David Tallmon4,† Christina Boucher
+
+
 
 +++++++++++++++++++++++++++
 
@@ -108,12 +111,24 @@ Upper Bound: -
 HOW TO RUN
 
 1. Clone or download the repository
-2. Go to configurations to add arguments 
+        
+        cd <OneSamp file address>
+
+2. Give permission to the OneSamp file under the build directory (We are working with applying the gene simulator source to this project)
+        
+        chmod 777 build/OneSamp
+        
+3. Go to configurations to add arguments (at least 1000 trails) 
 
    Example of minimum argument needed:
         
-        --s 2 --o genePop5Ix5L
+        --s 1000 --o exampleData/genePop10Ix30L
         
-   The example GENEPOP file is provided under the folder “exampleData”
+Full command will be:
+
+python main --s 1000 --o exampleData/genePop10Ix30L
+
+Feel free to add any parameters you want to use. We are working with adding this program to bioconda and docker, It will be much easier to use in future.
+
 
  
