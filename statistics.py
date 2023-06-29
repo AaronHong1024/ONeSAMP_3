@@ -94,6 +94,21 @@ class statisticsClass:
         self.sampleSize = self.data.shape[0]
 
 
+    def filterMonomorphicLoci(self):
+        data = self.data
+        deleteCol = []
+        for i in range(self.numLoci):
+            temp = data[:,i,:]
+            if len(np.unique(temp)) == 1:
+                deleteCol.append(i)
+        print(deleteCol)
+        if len(deleteCol) != 0:
+            newData = np.delete(data, deleteCol, axis = 1)
+            self.data = newData
+            self.numLoci = self.numLoci - len(deleteCol)
+            print("filter monomorphic loci")
+
+
     def get_file_last_line(self, inputfile):
         with open(inputfile, 'rb') as f:
             first_line = f.readline()

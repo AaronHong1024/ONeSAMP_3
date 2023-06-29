@@ -39,6 +39,7 @@ parser.add_argument("--i", type=float, help="Missing data for individuals")
 parser.add_argument("--l", type=float, help="Missing data for loci")
 parser.add_argument("--o", type=str, help="The File Name")
 parser.add_argument("--t", type=int, help="Repeat times")
+parser.add_argument("--n", type=bool, help="whether to filter the monomorphic loci", default=False)
 
 args = parser.parse_args()
 
@@ -116,6 +117,7 @@ if (args.o):
 else:
     print("WARNING:main: No filename provided.  Using oneSampIn")
 
+
 if (DEBUG):
     print("Start calculation of statistics for input population")
 
@@ -129,8 +131,10 @@ inputFileStatistics = statisticsClass()
 
 # t = time.time()
 inputFileStatistics.readData(fileName)
-# inputFileStatistics.filterIndividuals(indivMissing)
-# inputFileStatistics.filterLoci(lociMissing)
+inputFileStatistics.filterIndividuals(indivMissing)
+inputFileStatistics.filterLoci(lociMissing)
+if (args.n):
+    inputFileStatistics.filterMonomorphicLoci()
 inputFileStatistics.test_stat1()
 inputFileStatistics.test_stat2()
 inputFileStatistics.test_stat3()
