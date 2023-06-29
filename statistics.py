@@ -1,4 +1,5 @@
 #!/usr/bin/python
+import sys
 
 import math
 import os
@@ -87,6 +88,9 @@ class statisticsClass:
             NE_VALUEtemp = test[0]
         self.NE_VALUE = NE_VALUEtemp
         self.numLoci = self.data.shape[1]
+        if self.numLoci > 5000:
+            print("error: loci size should be smaller than 5000")
+            sys.exit(1)
         self.sampleSize = self.data.shape[0]
 
 
