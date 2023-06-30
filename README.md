@@ -34,6 +34,9 @@ When using ONeSAMP 3.0, the user must input the following arguments at a minimum
 
 The following are additional arguments with their bounds: 
 
+**--n Flag for Monomorphic loci**
+default: False
+
 **--m Minimum Allele Frequency**
 
 Lower Bound: 0
@@ -114,7 +117,7 @@ HOW TO RUN
         
         cd <OneSamp file address>
 
-2. Give permission to the OneSamp file under the build directory (We are working with applying the gene simulator source to this project)
+2. Give permission to the OneSamp file under the build directory (We are working on applying the gene simulator source to this project)
         
         chmod 777 build/OneSamp
         
@@ -127,6 +130,8 @@ HOW TO RUN
 Full command will be:
 
 python main --s 1000 --o exampleData/genePop10Ix30L
+
+The input dataset should have a locus size smaller than 5 thousand, Or it will be super time-consuming.
 
 Feel free to add any parameters you want to use. We are working with adding this program to bioconda and docker, It will be much easier to use in future.
 
