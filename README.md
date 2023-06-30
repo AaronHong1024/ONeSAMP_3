@@ -1,8 +1,8 @@
 # OneSamp3.0
 ONeSAMP 3.0
 
-By Aaron Hong1 Kingshuk Mukherjee1 Isha Yooseph1 Marco Oliva1
-Mark Heim2 Chris Funk3 David Tallmon4,† Christina Boucher
+By Aaron Hong, Rebecca Cheek, Kingshuk Mukherjee, Isha Yooseph, Marco Oliva,
+Mark Heim, Chris Funk, David Tallmon, Christina Boucher
 
 
 
@@ -10,25 +10,39 @@ Mark Heim2 Chris Funk3 David Tallmon4,† Christina Boucher
 
 ABSTRACT
 
-ONeSAMP 3.0 computes the effective population size of gene data sets. The estimation of the genetic effective 
-population size (Ne) has been an established challenge in the field of population genetics. This program uses local linear regression and five 
-summary statistics to conclude the Ne value. The software will take a file in GENEPOP format and provide the user with an effective population size. 
+ONeSAMP 3.0 computes the effective population size of genomic data sets.
+This program takes a file in GENEPOP format and computes five summary statistics. 
+The software then uses linear regression based on these summary statistics to estimate of effective population size.  
+
+It is strongly recommended that users read the accompanying manuscript before applying ONeSAMP to their data. 
+The manuscript is published in SOME JOURNAL %%%%%%{include link here} %%%%%%%
 
 +++++++++++++++++++++++++++
 
 USAGE OVERVIEW
+1. The system should be Linux.
 
-1. Must have R downloaded in order to run the software
+2. Must have R downloaded in order to run the software
         
    You can download and set up the R environment at this link: 
         
         https://www.tutorialspoint.com/r/r_environment_setup.htm
-        
+
 3. Python 3.8 or later is required to run the program
-
 +++++++++++++++++++++++++++
+INSTALLATION
+1. Make a new ONeSAMP directory
 
-ARUGMENTS
+        mkdir OneSamp
+        cd OneSamp
+2. Clone the repository
+
+        git clone git@github.com:AaronHong1024/OneSamp.git
+3. Give the Permission to the ONeSAMP file under the build directory
+
+        chmod 777 build/OneSamp
+
+HOW TO RUN
 
 usage: python main [--s number of trails] [--o input]
 ```
@@ -50,27 +64,10 @@ optional arguments:
     --l     Missing data for loci (size: 0-1)
 ```
 
-HOW TO RUN
 
-1. Clone or download the repository
-
-        git clone git@github.com:AaronHong1024/OneSamp.git
-        cd <OneSamp file address>
-
-2. Give permission to the OneSamp file under the build directory (We are working on applying the gene simulator source to this project)
-        
-        chmod 777 build/OneSamp
-        
-3. Go to configurations to add arguments (at least 1,000 trails and the loci size should be smaller than 5,000) 
-
-   Example of minimum argument needed:
-        
-        --s 1000 --o exampleData/genePop10Ix30L
-
-4. Run the program
+Run the program
 
         python main --s 1000 --o exampleData/genePop10Ix30L > output.txt
-
 
 Feel free to add any parameters you want to use. We are working with adding this program to bioconda and docker, It will be much easier to use in future.
 
