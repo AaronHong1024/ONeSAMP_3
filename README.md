@@ -17,7 +17,7 @@ The software then uses linear regression based on these summary statistics to es
 It is strongly recommended that users read the accompanying manuscript before applying ONeSAMP to their data. 
 The manuscript is published in SOME JOURNAL %%%%%%{include link here} %%%%%%%
 
-+++++++++++++++++++++++++++
+
 
 USAGE OVERVIEW
 1. The system should be Linux.
@@ -29,7 +29,7 @@ USAGE OVERVIEW
         https://www.tutorialspoint.com/r/r_environment_setup.htm
 
 3. Python 3.8 or later is required to run the program
-+++++++++++++++++++++++++++
+
 INSTALLATION
 1. Make a new ONeSAMP directory
 
