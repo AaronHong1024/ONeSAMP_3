@@ -15,7 +15,6 @@ This program takes a file in GENEPOP format and computes five summary statistics
 The software then uses linear regression based on these summary statistics to estimate of effective population size.  
 
 It is strongly recommended that users read the accompanying manuscript before applying ONeSAMP to their data. 
-The manuscript is published in SOME JOURNAL %%%%%%{include link here} %%%%%%%
 
 
 
@@ -69,7 +68,6 @@ Run the program
 
         python main --s 1000 --o exampleData/genePop10Ix30L > output.txt
 
-Feel free to add any parameters you want to use. We are working with adding this program to bioconda and docker, It will be much easier to use in future.
 
 
  
