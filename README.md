@@ -1,9 +1,7 @@
 # OneSamp3.0
 ONeSAMP 3.0
 
-
-
-
+By Aaron Hong, Rebecca Cheek, Kingshuk Mukherjee, Isha Yooseph, Marco Oliva, Mark Heim, Chris Funk, David Tallmon, Christina Boucher
 
 +++++++++++++++++++++++++++
 
