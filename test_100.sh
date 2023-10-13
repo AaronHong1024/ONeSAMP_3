@@ -9,7 +9,7 @@
 pwd; hostname; date
 
 module load R/4.1
-chmod 777 /blue/boucher/yu.hong/OneSampTest/build/OneSamp
+chmod +rwx /blue/boucher/yu.hong/OneSampTest/build/OneSamp
 
 echo "Running plot script on a single CPU core"
 
