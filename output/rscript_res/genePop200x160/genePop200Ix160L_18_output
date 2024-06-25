@@ -1,5 +1,0 @@
-WARNING:main: No filename provided.  Using ridge.joblib
-Below are the mean, median, and 95 credible limits for the posterior distribution of the effective population size from OneSamp
-min        max        mean        median      lower95CL   upper95CL
-79.04      123.06      101.54      101.65      87.96      117.13
---- 337.4747009277344 seconds ---
