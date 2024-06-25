@@ -1,26 +1,16 @@
-# OneSamp3.0
-ONeSAMP 3.0
 
-By Aaron Hong, Rebecca Cheek, Kingshuk Mukherjee, Isha Yooseph, Marco Oliva,
-Mark Heim, Chris Funk, David Tallmon, Christina Boucher
-
-
-
-+++++++++++++++++++++++++++
-
-ABSTRACT
+# ONeSAMP3.0  ![GitHub Release](https://img.shields.io/github/v/release/AaronHong1024/ONeSAMP_3) ![GitHub License](https://img.shields.io/github/license/AaronHong1024/ONeSAMP_3)
 
 ONeSAMP 3.0 computes the effective population size of genomic data sets.
 This program takes a file in GENEPOP format and computes five summary statistics. 
 The software then uses linear regression based on these summary statistics to estimate of effective population size.  
 
 It is strongly recommended that users read the accompanying manuscript before applying ONeSAMP to their data. 
-The manuscript is published in SOME JOURNAL %%%%%%{include link here} %%%%%%%
 
 
 
-USAGE OVERVIEW
-1. The system should be Linux.
+# Usage Overview
+1. The program can be executed on MAC OS or LINUX system.
 
 2. Must have R downloaded in order to run the software
         
@@ -30,11 +20,11 @@ USAGE OVERVIEW
 
 3. Python 3.8 or later is required to run the program
 
-INSTALLATION
+# Getting Started
 1. Make a new ONeSAMP directory
 
-        mkdir OneSamp
-        cd OneSamp
+        mkdir ONeSAMP
+        cd ONeSAMP
 2. Clone the repository
 
         git clone git@github.com:AaronHong1024/OneSamp.git
@@ -42,7 +32,7 @@ INSTALLATION
 
         chmod 777 build/OneSamp
 
-HOW TO RUN
+# Running ONeSAMP
 
 usage: python main [--s number of trails] [--o input]
 ```
@@ -57,7 +47,7 @@ optional arguments:
     --uNe   Upper of Ne Range (size: -500)
     --lT    Lower of Theta Range (size: 1-)
     --uT    Upper of Theta Range (size: -10)
-    --s     Number of OneSamp Trials (size: 1000-50000)
+    --s     Number of ONeSAMP Trials (size: 1000-50000)
     --lD    Lower of Duration Range (size: 2-)
     --uD    Upper of Duration Range (size: -8)
     --i     Missing data for individuals (size: 0-1)
@@ -69,7 +59,15 @@ Run the program
 
         python main --s 1000 --o exampleData/genePop10Ix30L > output.txt
 
-Feel free to add any parameters you want to use. We are working with adding this program to bioconda and docker, It will be much easier to use in future.
+# Getting Help
+
+If you have any issues or anyquestions, please feel free to contact us at yu.hong@ufl.edu or through the GitHub Issues.
+
+# Citing ONeSAMP
+If you use the ONeSAMP in your research project, please cite: 
+
+Hong, A., Cheek, R.G., Mukherjee, K., Yooseph, I., Oliva, M., Heim, M., Funk, W.C., Tallmon, D. and Boucher, C., 2023. ONeSAMP 3.0: Effective Population Size via SNP Data for One Population Sample.
+
 
 
  
