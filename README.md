@@ -1,5 +1,7 @@
 
-# OneSamp3.0 ![GitHub Release](https://img.shields.io/github/v/release/AaronHong1024/ONeSAMP_3)
+# OneSamp3.0  ![GitHub Release](https://img.shields.io/github/v/release/AaronHong1024/ONeSAMP_3)
+![GitHub License](https://img.shields.io/github/license/AaronHong1024/ONeSAMP_3)
+
 
 
 
