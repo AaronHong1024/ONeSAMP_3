@@ -1,5 +1,7 @@
 
-# OneSamp3.0 ![Static Badge](https://img.shields.io/badge/release-v3.0-brightgreen?link=https%3A%2F%2Fgithub.com%2FAaronHong1024%2FONeSAMP_3%2Freleases%2Ftag%2F3.0)
+# OneSamp3.0 ![GitHub Release](https://img.shields.io/github/v/release/AaronHong1024/ONeSAMP_3)
+
+
 
 
 
