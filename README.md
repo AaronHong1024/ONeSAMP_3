@@ -28,7 +28,7 @@ It is strongly recommended that users read the accompanying manuscript before ap
         cd ONeSAMP
 2. Clone the repository
 
-        git clone git@github.com:AaronHong1024/OneSamp.git
+        git clone https://github.com/AaronHong1024/ONeSAMP_3.git
 3. Give the Permission to the ONeSAMP file under the build directory
 
         chmod 777 build/OneSamp
