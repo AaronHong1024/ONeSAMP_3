@@ -11,7 +11,7 @@ It is strongly recommended that users read the accompanying manuscript before ap
 
 
 # Usage Overview
-1. The program can be executed on MAC OS or LINUX system.
+1. The program can be executed on LINUX system.
 
 2. Must have R downloaded in order to run the software
         
