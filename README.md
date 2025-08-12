@@ -31,7 +31,7 @@ It is strongly recommended that users read the accompanying manuscript before ap
         git clone https://github.com/AaronHong1024/ONeSAMP_3.git
 3. Give the Permission to the ONeSAMP file under the build directory
 
-        chmod 777 build/OneSamp
+        chmod u=rwx,go=rx build/OneSamp
 
 # Running ONeSAMP
 
