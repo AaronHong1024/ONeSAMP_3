@@ -39,9 +39,9 @@ for i in range(n_iterations):
     stats.append(res)
 
 # confidence intervals
-stats = np.array(stats)  # 确保res是NumPy数组
+stats = np.array(stats)  # chaneg the res to numpy array
 
-# 计算95%置信区间
+# compute the 95% area
 alpha = 0.975
 p = ((1.0-alpha)/2.0) * 100
 lower = np.percentile(stats, p)
