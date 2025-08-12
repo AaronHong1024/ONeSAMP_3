@@ -330,50 +330,7 @@ if (DEBUG):
 print("--- %s seconds ---" % (time.time() - start_time))
 
 
-################################
-# LINEAR REGRESSION WITH SKLEARN
-################################
 
-# Assign input and all population stats to dataframes with column names
-# allPopStatistics = pd.DataFrame(results_list, columns=['Ne', 'Emean_exhyt', 'Fix_index', 'Mlocus_homozegosity_mean', 'Mlocus_homozegosity_variance', 'Gametic_disequilibrium'])
-# inputStatsList = pd.DataFrame([inputStatsList], columns=['Emean_exhyt', 'Fix_index', 'Mlocus_homozegosity_mean', 'Mlocus_homozegosity_variance', 'Gametic_disequilibrium'])
-#
-# Z = np.array(inputStatsList[['Emean_exhyt','Fix_index','Mlocus_homozegosity_mean','Mlocus_homozegosity_variance','Gametic_disequilibrium']])
-# X = np.array(allPopStatistics[['Emean_exhyt','Fix_index','Mlocus_homozegosity_mean','Mlocus_homozegosity_variance','Gametic_disequilibrium']])
-# y = np.array(allPopStatistics['Ne'])
-#
-#
-# X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1, random_state=40)
-#
-
-
-# Z_scaled = scaler.transform(Z)
-
-
-# alphas=np.logspace(1, 12, 13)
-# ridge_model = RidgeCV(alphas, cv=5)
-# #
-# ridge_model.fit(X_train, y_train)
-# predict_res = ridge_model.predict(X_test)
-# #compare the predicted results with the actual results
-# predict_res = np.array(predict_res).astype(float)
-#
-# # 确保 y_test 也是浮点数类型的数组
-# y_test = np.array(y_test).astype(float)
-#
-# # 现在进行减法操作
-# temp = predict_res - y_test
-# #绝对值小于10的个数
-#
-# num_greater = np.sum(np.abs(temp) < 10)
-# print("Number of greater: ", num_greater)
-# print("Selected alpha: ", ridge_model.alpha_)
-# # train_res = ridge_model.predict(X_test)
-# # num_greater = np.sum(train_res > y_test)
-#
-# # print("Number of greater: ", num_greater)
-#
-# dump(ridge_model, modelName)
 
 
 
