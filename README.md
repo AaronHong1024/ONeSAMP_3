@@ -29,7 +29,7 @@ It is strongly recommended that users read the accompanying manuscript before ap
 2. Clone the repository
 
         git clone https://github.com/AaronHong1024/ONeSAMP_3.git
-3. Give the Permission to the ONeSAMP file under the build directory
+3. Give Permissions to the ONeSAMP file under the build directory
 
         chmod u=rwx,go=rx build/OneSamp
 
@@ -58,7 +58,7 @@ optional arguments:
 
 Run the program
 
-        python main --s 1000 --o exampleData/genePop10Ix30L > output.txt
+        python main --s 1000 --o data/genePop10Ix30L > output.txt
 
 # Getting Help
 
