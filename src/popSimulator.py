@@ -1,3 +1,7 @@
+#
+# Copyright (c) Boucher Lab. All rights reserved.
+# Licensed under the GNU license. See the LICENSE file in the repository root for complete license information.
+
 import msprime
 import numpy as np
 import random
