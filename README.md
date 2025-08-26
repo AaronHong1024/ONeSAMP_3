@@ -7,6 +7,8 @@
 [![License](https://img.shields.io/github/license/<owner>/ONeSAMP_3)]()
 -->
 
+[ONeSAMP 3.0: estimation of effective population size via single nucleotide polymorphism data from one population](https://academic.oup.com/g3journal/article/14/10/jkae153/7712987)
+
 ONeSAMP 3.0 reads a dataset in **GENEPOP** format, computes five summary statistics, and fits a linear regression model to estimate the effective population size. We **strongly recommend** reading the accompanying manuscript before applying ONeSAMP to your data.
 
 ---
@@ -16,7 +18,6 @@ ONeSAMP 3.0 reads a dataset in **GENEPOP** format, computes five summary statist
 - Single-population **Ne** estimation from SNP data  
 - Input: **GENEPOP** format  
 - Configurable ranges for **Ne**, **θ**, and population size/duration  
-- Handles missing data (per-individual and per-locus thresholds)
 
 ---
 
@@ -128,13 +129,6 @@ python main   --o path/to/your_dataset.gen   --s 20000   --lNe 20 --uNe 400   --
   `chmod u=rwx,go=rx build/OneSamp`.
 - **R not found**: Ensure `R` is installed and available in your `PATH` (e.g., `R --version` should work).
 - **GENEPOP parsing issues**: Check that locus names and per-individual genotype lines follow the GENEPOP spec and that allele codes are consistent across loci.
-
----
-
-## Getting Help
-
-- Open an issue on the repository’s **GitHub Issues** page.
-- Or email: **yu.hong@ufl.edu**
 
 ---
 
