@@ -1,6 +1,5 @@
 # ONeSAMP 3.0 ![GitHub Release](https://img.shields.io/github/v/release/AaronHong1024/ONeSAMP_3) ![GitHub License](https://img.shields.io/github/license/AaronHong1024/ONeSAMP_3)
 
-> Estimate effective population size (**Ne**) from SNP data in a single population using summary statistics and linear regression.
 
 <!-- Badges (optional)
 [![GitHub release](https://img.shields.io/github/v/release/<owner>/ONeSAMP_3)]()
