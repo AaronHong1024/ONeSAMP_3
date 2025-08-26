@@ -135,9 +135,7 @@ python main   --o path/to/your_dataset.gen   --s 20000   --lNe 20 --uNe 400   --
 
 If you use **ONeSAMP 3.0** in your research, please cite:
 
-> Hong, A., Cheek, R. G., Mukherjee, K., Yooseph, I., Oliva, M., Heim, M., Funk, W. C., Tallmon, D., & Boucher, C. (2023). **ONeSAMP 3.0: Effective Population Size via SNP Data for One Population Sample**.
-
-(Full citation details and DOI to be added upon publication; please update this section as needed.)
+> Aaron Hong, Rebecca G Cheek, Suhashi Nihara De Silva, Kingshuk Mukherjee, Isha Yooseph, Marco Oliva, Mark Heim, Chris W. Funk, David Tallmon, Christina Boucher, ONeSAMP 3.0: estimation of effective population size via single nucleotide polymorphism data from one population, G3 Genes|Genomes|Genetics, Volume 14, Issue 10, October 2024, jkae153, https://doi.org/10.1093/g3journal/jkae153
 
 ---
 
