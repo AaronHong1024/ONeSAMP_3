@@ -1,3 +1,6 @@
+#
+# Copyright (c) Boucher Lab. All rights reserved.
+# Licensed under the GNU license. See the LICENSE file in the repository root for complete license information.
 import argparse
 import pandas as pd
 import numpy as np
