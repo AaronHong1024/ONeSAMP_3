@@ -46,7 +46,6 @@ cd ONeSAMP_3
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
-pip install -r requirements.txt    # if present
 ```
 
 ### 3) Ensure the bundled binary is executable
