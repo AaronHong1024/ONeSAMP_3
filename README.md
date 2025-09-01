@@ -1,5 +1,4 @@
-# ONeSAMP 3.0 ![Latest Release](https://img.shields.io/github/v/release/AaronHong1024/ONeSAMP_3?display_name=tag&sort=semver)
-![License](https://img.shields.io/github/license/AaronHong1024/ONeSAMP_3)
+# ONeSAMP 3.0 ![Latest Release](https://img.shields.io/github/v/release/AaronHong1024/ONeSAMP_3?display_name=tag&sort=semver) ![License](https://img.shields.io/github/license/AaronHong1024/ONeSAMP_3)
 
 
 <!-- Badges (optional)
