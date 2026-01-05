@@ -61,16 +61,32 @@ chmod u=rwx,go=rx build/OneSamp
 - **Format:** GENEPOP (standard header, locus names line, followed by per-individual allele codes per locus).
 - **Example data:** `exampleData/genePop10Ix30L`
 
-Important: This pipeline assumes *base-coded* loci (SNP/nucleotide states), not multi-allelic allele-index encoding.
+**Important:** This pipeline assumes **base-coded loci** (SNP/nucleotide states), not multi-allelic allele-index encoding.  
 Each locus is encoded using the following two-digit codes:
-  N/missing = 00, A = 01, C = 02, G = 03, T = 04
-Therefore, the only valid diploid genotype codes per locus are combinations of 00–04 (e.g., 0101, 0104, 0001, 0404).
 
-Quick format checklist:
-- Locus names appear once after the header line.
-- After the line "Pop", each individual line follows:
-    SampleID , a1a2 a1a2 a1a2 ...
-  where each a1a2 is a 4-digit diploid code formed by concatenating two 2-digit base codes.
+- N / missing = `00`
+- A = `01`
+- C = `02`
+- G = `03`
+- T = `04`
+
+Therefore, the only valid diploid genotype codes per locus are combinations of `00–04` (e.g., `0101`, `0104`, `0001`, `0404`).
+
+### Minimal example
+
+```text
+Auto-generated genotype output.
+1
+2
+3
+4
+5
+Pop
+1 , 0200 0101 0202 0402 0101
+2 , 0101 0100 0202 0202 0101
+3 , 0101 0401 0202 0204 0101
+4 , 0101 0101 0402 0402 0401
+5 , 0101 0104 0404 0202 0101
 
 ---
 
