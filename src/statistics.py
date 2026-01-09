@@ -75,14 +75,87 @@ class statisticsClass:
 
     ######################################################################
     # readData                                                          ##
+    # Reads GENEPOP format file and validates:                         ##
+    # - File exists and is readable                                    ##
+    # - Contains 'Pop' separator                                       ##
+    # - All genotype codes are valid (combinations of 00-04)           ##
+    # - All individuals have the same number of loci                   ##
     ######################################################################
     def readData(self, myFileName):
-        with open(myFileName, 'r') as f:
-            lines = f.readlines()
+        # Validate file exists
+        if not os.path.exists(myFileName):
+            print(f"ERROR:statistics: File '{myFileName}' does not exist")
+            sys.exit(1)
+
+        # Try to read file
+        try:
+            with open(myFileName, 'r') as f:
+                lines = f.readlines()
+        except IOError as e:
+            print(f"ERROR:statistics: Cannot read file '{myFileName}': {e}")
+            sys.exit(1)
+
+        # Validate minimum file structure (header + at least one locus + Pop + at least one individual)
+        if len(lines) < 3:
+            print(f"ERROR:statistics: File '{myFileName}' is too short to be a valid GENEPOP file (minimum 3 lines required)")
+            sys.exit(1)
+
+        # Check for 'Pop' separator
+        has_pop = False
+        for line in lines:
+            if line.strip().lower() == 'pop':
+                has_pop = True
+                break
+
+        if not has_pop:
+            print(f"ERROR:statistics: File '{myFileName}' does not contain 'Pop' separator. Not a valid GENEPOP file")
+            sys.exit(1)
+
         result = []
-        for line in lines[1:]:
-            if (len(line.split()) > 10):
-                result.append([m[i] for i in line.split()[2:]])
+        expected_loci_count = None
+
+        # Parse individual genotype data
+        for line_num, line in enumerate(lines[1:], start=2):
+            # Skip lines with fewer elements (header lines, Pop separator, etc.)
+            # Valid individual lines have: ID + comma + at least one genotype (minimum 3 elements)
+            if len(line.split()) >= 3 and ',' in line:
+                genotypes = line.split()[2:]
+
+                # Validate loci count consistency across all individuals
+                if expected_loci_count is None:
+                    expected_loci_count = len(genotypes)
+                    if self.DEBUG:
+                        print(f"INFO:statistics: Detected {expected_loci_count} loci from first individual")
+                elif len(genotypes) != expected_loci_count:
+                    print(f"ERROR:statistics: Inconsistent number of loci at line {line_num}")
+                    print(f"  Expected: {expected_loci_count} loci (from first individual)")
+                    print(f"  Found: {len(genotypes)} loci")
+                    sys.exit(1)
+
+                # Validate each genotype code and convert to numeric representation
+                individual_genotypes = []
+                for locus_idx, genotype_code in enumerate(genotypes, start=1):
+                    # Check if genotype code is valid (exists in mapping dictionary)
+                    if genotype_code not in m:
+                        print(f"ERROR:statistics: Invalid genotype code '{genotype_code}' at line {line_num}, locus {locus_idx}")
+                        print(f"  Valid codes are combinations of:")
+                        print(f"    00 = missing/N")
+                        print(f"    01 = A")
+                        print(f"    02 = C")
+                        print(f"    03 = G")
+                        print(f"    04 = T")
+                        print(f"  Examples: 0101 (A/A), 0102 (A/C), 0404 (T/T), 0000 (missing)")
+                        sys.exit(1)
+                    individual_genotypes.append(m[genotype_code])
+
+                result.append(individual_genotypes)
+
+        # Validate that at least one individual was found
+        if len(result) == 0:
+            print(f"ERROR:statistics: No valid individual data found in file '{myFileName}'")
+            print(f"  Each individual line should have format: 'ID , genotype1 genotype2 ...'")
+            sys.exit(1)
+
         data = np.asarray(result)
         self.data = data
         last_line = self.get_file_last_line(os.path.abspath(myFileName))
@@ -93,9 +166,13 @@ class statisticsClass:
         self.NE_VALUE = NE_VALUEtemp
         self.numLoci = self.data.shape[1]
         if self.numLoci > 5000:
-            print("error: loci size should be smaller than 5000")
+            print("ERROR:statistics: Number of loci exceeds maximum limit of 5000")
+            print(f"  Found: {self.numLoci} loci")
             sys.exit(1)
         self.sampleSize = self.data.shape[0]
+
+        if self.DEBUG:
+            print(f"INFO:statistics: Successfully loaded {self.sampleSize} individuals with {self.numLoci} loci")
 
 
     def filterMonomorphicLoci(self):

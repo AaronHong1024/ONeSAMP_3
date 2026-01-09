@@ -139,6 +139,46 @@ lociMissing = .2
 if (args.l):
     lociMissing = float(args.l)
 
+#########################################
+# PARAMETER VALIDATION
+#########################################
+
+# Validate minAlleleFreq is in valid range [0, 1]
+if not (0 <= minAlleleFreq <= 1):
+    print(f"ERROR:main: Minimum allele frequency (--m) must be in range [0, 1]. Got {minAlleleFreq}. Fatal Error")
+    exit(1)
+
+# Validate mutationRate is in valid range [0, 1]
+if not (0 <= mutationRate <= 1):
+    print(f"ERROR:main: Mutation rate (--r) must be in range [0, 1]. Got {mutationRate}. Fatal Error")
+    exit(1)
+
+# Validate indivMissing is in valid range [0, 1]
+if not (0 <= indivMissing <= 1):
+    print(f"ERROR:main: Individual missing data threshold (--i) must be in range [0, 1]. Got {indivMissing}. Fatal Error")
+    exit(1)
+
+# Validate lociMissing is in valid range [0, 1]
+if not (0 <= lociMissing <= 1):
+    print(f"ERROR:main: Loci missing data threshold (--l) must be in range [0, 1]. Got {lociMissing}. Fatal Error")
+    exit(1)
+
+# Validate numOneSampTrials (recommended range: 1000-50000)
+if numOneSampTrials < 1000:
+    print(f"WARNING:main: Number of trials (--s) is {numOneSampTrials}, which is less than recommended minimum of 1000")
+if numOneSampTrials > 50000:
+    print(f"WARNING:main: Number of trials (--s) is {numOneSampTrials}, which exceeds recommended maximum of 50000")
+
+# Validate theta range
+if lowerTheta > upperTheta:
+    print(f"ERROR:main: lowerTheta ({lowerTheta}) > upperTheta ({upperTheta}). Fatal Error")
+    exit(1)
+
+# Validate duration range
+if lowerDuration > upperDuration:
+    print(f"ERROR:main: lowerDuration ({lowerDuration}) > upperDuration ({upperDuration}). Fatal Error")
+    exit(1)
+
 rangeDuration = "%f,%f" % (lowerDuration, upperDuration)
 
 fileName = "oneSampIn"
@@ -146,6 +186,11 @@ if (args.o):
     fileName = str(args.o)
 else:
     print("WARNING:main: No filename provided.  Using oneSampIn")
+
+# Validate that input file exists
+if not os.path.exists(fileName):
+    print(f"ERROR:main: Input file '{fileName}' does not exist. Fatal Error")
+    exit(1)
 
 modelName = "ridge.joblib"
 if (args.md):
